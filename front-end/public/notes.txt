@@ -1,0 +1,46 @@
+Aula - 04/04
+
+views/Portals/index.js
+views/Courses/index.js
+CoursesView = PortalsView
+
+Aula - 11/04 
+final da aula fala sobre aplicar img nos cards.
+Pêndencias: 
+1 - Hospedar API (heroku problema verificar firebase)
+2 - Corrigir proporção da imagem dos cards (usei object-fit: cover)
+CardsPortals
+const CardImgStyled = styled(Card.Img)`
+    width: 100%;
+    height: 15vw;
+    object-fit: contain;
+` 
+
+
+
+Aula - 18/04 - 01:01
+Para mostrar de forma incremental o as requisições via index pra ficar númeral 1,2,3
+minuto 58, hoje o jogo # é como se fosse a matricula, o ingresso ou etc...
+
+Aula - 20/04 - Falta Notion
+
+Aula - 25/04 - 
+Feature para aplicar o botão de olho para habilitar o input do password
+https://react-bootstrap.github.io/forms/input-group/
+Buttons addons -> botaríamos no button direito algum ícone do fontawesome do olhinho
+quando o usuário clicar no buttom o onClick muda o estado (true/false) alterando o campo
+form.control o type='password' para 'text'
+
+Aula 27/04
+
+Aula - 08/05 - 01:15
+
+Aula - 04/05 - Não tem no portal analisar.
+Aula - 09/05 - Não tem no portal analisar.
+Aula - 11/05 - Tem aula no portal.
+
+
+
+Para analisar 
+1 - highlight não funciona 
+2 - topbar.js tenho que importar todos os dropdown no de Victor só o principal basta.
