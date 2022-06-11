@@ -78,27 +78,6 @@
       "portalId": 1,
       "userId": 2,
       "id": 2
-    },
-    {
-      "name": "Administrador",
-      "email": "admin@gmail.com",
-      "portalId": 3,
-      "userId": 2,
-      "id": 3
-    },
-    {
-      "name": "Administrador",
-      "email": "admin@gmail.com",
-      "portalId": 6,
-      "userId": 2,
-      "id": 4
-    },
-    {
-      "name": "Administrador",
-      "email": "admin@gmail.com",
-      "portalId": 1,
-      "userId": 2,
-      "id": 5
     }
   ],
   "users": [
