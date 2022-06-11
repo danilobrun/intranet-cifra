@@ -1,16 +1,13 @@
-import { selectUser } from "../store/User/User.selectors"
-import { apiUrl } from "./Api.service"
-import { store } from "../store/store"
+import { apiUrl, getAuthorizationHeaders } from "./Api.service"
 
+/*Requisição de inscrição tem que passar o header com a chave accessToken do usuário*/
 export const createInscriptions = async (inscriptionData) => {
-    const state = store.getState()
-    const user = selectUser(state)
     const response = await fetch(`${apiUrl}/inscriptions`, {
                 method: 'POST',
-                body: JSON.stringify(inscriptionData),
+                body: JSON.stringify(inscriptionData), /*convertido em JSON string*/
                 headers: {
                     'content-type': 'application/json',
-                    'authorization': `Bearer ${user.accessToken}`
+                    ...getAuthorizationHeaders() /*função específica para trazer o accessToken do usuário*/
                 }
             })
             if (!response.ok) {

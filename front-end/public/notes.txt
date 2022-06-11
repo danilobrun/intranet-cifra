@@ -1,5 +1,8 @@
-Aula - 04/04
+Para analisar 
+1 - highlight não funciona 
+2 - topbar.js tenho que importar todos os dropdown no de Victor só o principal basta.
 
+Aula - 04/04
 views/Portals/index.js
 views/Courses/index.js
 CoursesView = PortalsView
@@ -15,8 +18,6 @@ const CardImgStyled = styled(Card.Img)`
     height: 15vw;
     object-fit: contain;
 ` 
-
-
 
 Aula - 18/04 - 01:01
 Para mostrar de forma incremental o as requisições via index pra ficar númeral 1,2,3
@@ -38,9 +39,3 @@ Aula - 08/05 - 01:15
 Aula - 04/05 - Não tem no portal analisar.
 Aula - 09/05 - Não tem no portal analisar.
 Aula - 11/05 - Tem aula no portal.
-
-
-
-Para analisar 
-1 - highlight não funciona 
-2 - topbar.js tenho que importar todos os dropdown no de Victor só o principal basta.
