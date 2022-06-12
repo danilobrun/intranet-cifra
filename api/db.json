@@ -69,30 +69,31 @@
     {
       "name": "Danilo",
       "email": "danilo@danilo.com.br",
-      "portalId": 1,
-      "id": 1
+      "portalId": 2,
+      "id": 2
     },
     {
       "name": "Administrador",
       "email": "admin@gmail.com",
       "portalId": 1,
-      "userId": 2,
-      "id": 2
+      "userId": 1,
+      "id": 1
     }
   ],
   "users": [
-    {
-      "email": "danilo@gmail.com",
-      "password": "$2a$10$gP9SXObISonDf62mHhXA6eDXTWQHIgPakNf2opBMzrJajRknAkC.G",
-      "name": "Danilo",
-      "type": 2,
-      "id": 1
-    },
     {
       "email": "admin@gmail.com",
       "password": "$2a$10$x7kwWT93d5N8FWIEBUjztu8ZNrSD3HBAI.9JFj7Ja7Yk.A3zIkc9y",
       "name": "Administrador",
       "type": 1,
+      "id": 1
+    },
+
+    {
+      "email": "danilo@gmail.com",
+      "password": "$2a$10$gP9SXObISonDf62mHhXA6eDXTWQHIgPakNf2opBMzrJajRknAkC.G",
+      "name": "Danilo",
+      "type": 2,
       "id": 2
     }
   ]
