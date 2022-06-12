@@ -6,6 +6,7 @@ import { PortalDetailView } from "./views/PortalDetail";
 import { DashboardView } from "./views/Dashboard";
 import { LoginView } from "./views/Login";
 import { PrivateRoute } from "./components/PrivateRoute";
+import { AdminPortalsView } from "./views/AdminPortals";
 
 function App() {
   return (
@@ -20,6 +21,14 @@ function App() {
             <DashboardView />
           </PrivateRoute>
         } 
+      />
+      <Route 
+        path="portal/portals"
+        element={
+          <PrivateRoute userTypes={[1]}>
+              <AdminPortalsView />
+          </PrivateRoute>
+        }
       />
      <Route path='/portal/login' element={<LoginView />} />
      <Route path='*' element={<NotFoundView />} />

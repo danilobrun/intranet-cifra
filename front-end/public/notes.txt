@@ -34,7 +34,7 @@ form.control o type='password' para 'text'
 
 Aula 27/04
 
-Aula - 08/05 - 01:15
+Aula - 08/05 - 01:30
 
 Aula - 04/05 - Não tem no portal analisar.
 Aula - 09/05 - Não tem no portal analisar.
