@@ -9,16 +9,16 @@ import { TablePortals } from "./TablePortals"
 export function AdminPortalsView() {
     const [portals, setPortals] = useState([])
     const [loading, setLoading] = useState(true)
-    useEffect(() => {
-        const fecthPortals = async () => {
-            try {
-                const data = await getPortals()
-                setPortals(data)
-            } catch {
-                toast.error('Falha ao buscar portais. Recarregue a página.')
-            }
-            setLoading(false)
+    const fecthPortals = async () => {
+        try {
+            const data = await getPortals()
+            setPortals(data)
+        } catch {
+            toast.error('Falha ao buscar portais. Recarregue a página.')
         }
+        setLoading(false)
+    }
+    useEffect(() => {
         fecthPortals()       
     }, [])
     return (
@@ -29,7 +29,7 @@ export function AdminPortalsView() {
                 buttonLink='/portal/portals/cadastro'
             />
             {loading && <Loading /> }
-            <TablePortals portals={portals} />
+            <TablePortals portals={portals} onDeletePortal={fecthPortals}/>
         </LayoutPortal>
     )
 }

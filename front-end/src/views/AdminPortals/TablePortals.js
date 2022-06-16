@@ -1,9 +1,16 @@
 import { Button, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import { toast } from "react-toastify";
+import { deletePortal } from "../../services/Portals.service";
 
-export function TablePortals ({ portals }) {
-    const handleClick = (portal) => {
-        console.log('oi', portal);
+export function TablePortals ({ portals, onDeletePortal }) {
+    const handleClick = async (portal) => {
+        try {
+            await deletePortal(portal.id)
+            await onDeletePortal()
+        } catch {
+            toast.error('Falha ao deleter portal. Tente novamente.')
+        }
     }
     return (
         <Table striped hover responsive>
