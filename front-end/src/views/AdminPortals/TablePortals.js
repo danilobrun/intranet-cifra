@@ -1,8 +1,12 @@
 import { Button, Table } from "react-bootstrap";
+import { Link } from "react-router-dom";
 
 export function TablePortals ({ portals }) {
+    const handleClick = (portal) => {
+        console.log('oi', portal);
+    }
     return (
-        <Table>
+        <Table striped hover responsive>
             <thead>
                 <tr>
                     <th>*</th>
@@ -17,9 +21,18 @@ export function TablePortals ({ portals }) {
                         <td>{portal.id}</td>
                         <td>{portal.name}</td>
                         <td>{portal.responsible}</td>
-                        <td>
-                            <Button>Editar</Button>
-                            <Button>Deletar</Button>
+                        <td className="d-grid gap-1 d-sm-table-cell">
+                            <Button
+                                size="sm"
+                                as={Link}
+                                to={`/portal/portals/${portal.id}`}
+                            >Editar</Button>
+                            <Button
+                                size="sm"
+                                variant="danger"
+                                className="ms-sm-1"
+                                onClick={() => handleClick(portal)}
+                            >Deletar</Button>
                         </td>
                     </tr>
                 ))}
