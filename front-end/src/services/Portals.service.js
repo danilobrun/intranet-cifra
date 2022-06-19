@@ -40,3 +40,18 @@ export const createPortal = async (portalData) => {
         throw new Error('Response not ok.') 
     }
 }
+
+export const updatePortal = async (portalId, portalData) => {
+    const body = JSON.stringify(portalData)
+    const response = await fetch(`${apiUrl}/portals/${portalId}`, {
+        method: 'PUT',
+        body,
+        headers: {
+            'content-type': 'application/json',
+            ...getAuthorizationHeaders()
+        }
+    })
+    if (!response.ok) {
+        throw new Error('Response not ok.')
+    }
+}
