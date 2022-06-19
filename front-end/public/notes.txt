@@ -40,6 +40,7 @@ Aula - 08/05 - 03:13
 1 - CRUD
 2 - Tipo de CRUD com upload de arquivos (clodinary, google cloud store, amazon s3)
 3 - Fazer o isSubmit no AdminEditPortal para impedir do usuário submeter mais de uma vez.
+4 - Final do curso Victor explica como adicionar o Heroku CLI para subir manualmente para o heroku.
 
 
 Aula - 04/05 - Não tem no portal analisar.
