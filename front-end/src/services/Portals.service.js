@@ -25,3 +25,18 @@ export const deletePortal = async portalId => {
         throw new Error('Reponse not ok.')
     }
 }
+
+export const createPortal = async (portalData) => {
+    const body = JSON.stringify(portalData)
+    const response = await fetch(`${apiUrl}/portals`, {
+        method: 'POST',
+        body,
+        headers: {
+            'content-type': 'application/json',
+            ...getAuthorizationHeaders()
+        }
+    })
+    if (!response.ok) {
+        throw new Error('Response not ok.') 
+    }
+}

@@ -7,6 +7,7 @@ import { DashboardView } from "./views/Dashboard";
 import { LoginView } from "./views/Login";
 import { PrivateRoute } from "./components/PrivateRoute";
 import { AdminPortalsView } from "./views/AdminPortals";
+import { AdminAddPortalsView } from "./views/AdminAddPortal";
 
 function App() {
   return (
@@ -27,6 +28,14 @@ function App() {
         element={
           <PrivateRoute userTypes={[1]}>
               <AdminPortalsView />
+          </PrivateRoute>
+        }
+      />
+      <Route 
+        path="portal/portals/cadastro"
+        element={
+          <PrivateRoute userTypes={[1]}>
+              <AdminAddPortalsView />
           </PrivateRoute>
         }
       />
