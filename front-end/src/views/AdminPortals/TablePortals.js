@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { deletePortal } from "../../services/Portals.service";
 
 export function TablePortals ({ portals, onDeletePortal }) {
+    const [isSubmiting, setIsSubmiting] = useState(false)
     const [portalToDelete, setPortalToDelete] = useState() /*guarda o estado valor do portal a ser deletado*/
     const hideModal = () => setPortalToDelete(undefined) /*esconder o modal*/
     const handleClick = (portal) => { /*fun para guardar os dados do portal*/
@@ -12,11 +13,14 @@ export function TablePortals ({ portals, onDeletePortal }) {
     }
     const handleDelete = async () => { /*deleta o portal via API REST*/
         try {
+            setIsSubmiting(true)
             await deletePortal(portalToDelete.id)
             await onDeletePortal()
             toast.success('Portal deletado com sucesso.')
+            setIsSubmiting(false)
         } catch {
             toast.error('Falha ao deleter portal. Tente novamente.')
+            setIsSubmiting(false)
         }
         hideModal()
     }
@@ -63,7 +67,7 @@ export function TablePortals ({ portals, onDeletePortal }) {
                 </Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary" onClick={hideModal}>Cancelar</Button>
-                    <Button variant="danger" onClick={handleDelete}>Deletar portal</Button>
+                    <Button variant="danger" disabled={isSubmiting} onClick={handleDelete}>Deletar portal</Button>
                 </Modal.Footer>
             </Modal>
         </>

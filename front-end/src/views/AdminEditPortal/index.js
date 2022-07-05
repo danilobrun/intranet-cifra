@@ -24,7 +24,7 @@ export function AdminEditPortalView () {
     const handleSubmit = async (formData) => {
         try {
             await updatePortal(id, formData)
-            toast.success('Poratl alterado com sucesso.')
+            toast.success('Portal alterado com sucesso.')
             navigate('/portal/portals')
         } catch {
             toast.error('Falha ao alterar portal. Tente novamente.')

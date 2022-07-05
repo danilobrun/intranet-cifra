@@ -9,6 +9,7 @@ const emptyFormData = {
     image: ''
 }
 export function UpsertPortalForm ({ initialValue = emptyFormData, buttonLabel = 'Cadastrar', onSubmit }) {
+    const [isSubmiting, setIsSubmiting] = useState(false)
     const [formData, setFormData] = useState(initialValue)
     const handleChange = (event) => {
         setFormData({
@@ -18,6 +19,7 @@ export function UpsertPortalForm ({ initialValue = emptyFormData, buttonLabel = 
     }
     const handlesubmit = (event) => {
         event.preventDefault()
+        setIsSubmiting(true)
         onSubmit(formData)
     }
     return (
@@ -75,7 +77,7 @@ export function UpsertPortalForm ({ initialValue = emptyFormData, buttonLabel = 
                 />
                 <Form.Text>Cole aqui o link da imagem hospedada no <a href="https://cloudinary.com/" target='_blank' rel="noreferrer">Cloudinary</a>.</Form.Text>
             </Form.Group>
-            <Button type="submit">{buttonLabel}</Button>
+            <Button type="submit" disabled={isSubmiting}>{buttonLabel}</Button>
         </Form>
     )
 }
