@@ -1,7 +1,7 @@
 import { store } from "../store/store"
 import { selectUser } from "../store/User/User.selectors"
 
-export const apiUrl = 'http://localhost:3001'
+export const apiUrl = process.env.REACT_APP_API_URL
 
 export const getAuthorizationHeaders = () => {
     const state = store.getState() /*pega o estado global da loja do reducer*/
