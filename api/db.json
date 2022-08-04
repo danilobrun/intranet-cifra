@@ -6,6 +6,7 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam diam risus, volutpat id quam id, porta pharetra lacus. Proin aliquam magna vitae sapien ultricies, at blandit risus blandit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam suscipit iaculis gravida. Nulla quis congue metus. Aliquam erat volutpat. Praesent interdum enim nec turpis aliquam congue. Aenean quam velit, tincidunt eget finibus a, efficitur pellentesque tellus. Ut luctus tristique leo, eu pharetra purus elementum sit amet. Donec eget maximus neque, quis suscipit nunc. Sed condimentum magna non sem malesuada, eu ullamcorper lorem eleifend. Duis ex erat, mollis luctus elit eget, efficitur pretium massa. Fusce ac massa quis nibh gravida vehicula. Praesent eget consectetur elit. Ut cursus mauris lectus. Pellentesque ac luctus elit.",
       "shortDescription": "Dashboards atualizadas, e em relatórios e gráficos",
       "image": "/images/logo-metabase.png",
+      "url": "https://geo.compesa.com.br:8080/",
       "id": 1
     },
     {
@@ -14,6 +15,7 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam diam risus, volutpat id quam id, porta pharetra lacus. Proin aliquam magna vitae sapien ultricies, at blandit risus blandit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam suscipit iaculis gravida. Nulla quis congue metus. Aliquam erat volutpat. Praesent interdum enim nec turpis aliquam congue. Aenean quam velit, tincidunt eget finibus a, efficitur pellentesque tellus. Ut luctus tristique leo, eu pharetra purus elementum sit amet. Donec eget maximus neque, quis suscipit nunc. Sed condimentum magna non sem malesuada, eu ullamcorper lorem eleifend. Duis ex erat, mollis luctus elit eget, efficitur pretium massa. Fusce ac massa quis nibh gravida vehicula. Praesent eget consectetur elit. Ut cursus mauris lectus. Pellentesque ac luctus elit.",
       "shortDescription": "Dashboards atualizadas, e em relatórios e gráficos",
       "image": "/images/logo-gsan.jpeg",
+      "url": "https://gsan.compesa.com.br:8443/gsan/",
       "id": 2
     },
     {
@@ -22,6 +24,7 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam diam risus, volutpat id quam id, porta pharetra lacus. Proin aliquam magna vitae sapien ultricies, at blandit risus blandit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam suscipit iaculis gravida. Nulla quis congue metus. Aliquam erat volutpat. Praesent interdum enim nec turpis aliquam congue. Aenean quam velit, tincidunt eget finibus a, efficitur pellentesque tellus. Ut luctus tristique leo, eu pharetra purus elementum sit amet. Donec eget maximus neque, quis suscipit nunc. Sed condimentum magna non sem malesuada, eu ullamcorper lorem eleifend. Duis ex erat, mollis luctus elit eget, efficitur pretium massa. Fusce ac massa quis nibh gravida vehicula. Praesent eget consectetur elit. Ut cursus mauris lectus. Pellentesque ac luctus elit.",
       "shortDescription": "Dashboards atualizadas, e em relatórios e gráficos",
       "image": "/images/logo-giscomp.png",
+      "url": "https://giscomp.compesa.com.br:6080/webappbuilder/apps/11/",
       "id": 3
     },
     {
@@ -30,6 +33,7 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam diam risus, volutpat id quam id, porta pharetra lacus. Proin aliquam magna vitae sapien ultricies, at blandit risus blandit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam suscipit iaculis gravida. Nulla quis congue metus. Aliquam erat volutpat. Praesent interdum enim nec turpis aliquam congue. Aenean quam velit, tincidunt eget finibus a, efficitur pellentesque tellus. Ut luctus tristique leo, eu pharetra purus elementum sit amet. Donec eget maximus neque, quis suscipit nunc. Sed condimentum magna non sem malesuada, eu ullamcorper lorem eleifend. Duis ex erat, mollis luctus elit eget, efficitur pretium massa. Fusce ac massa quis nibh gravida vehicula. Praesent eget consectetur elit. Ut cursus mauris lectus. Pellentesque ac luctus elit.",
       "shortDescription": "Dashboards atualizadas, e em relatórios e gráficos",
       "image": "/images/logo-gisperformance.png",
+      "url": "https://giscomp.compesa.com.br:6080/webappbuilder/apps/57/",
       "id": 4
     },
     {
@@ -38,6 +42,7 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam diam risus, volutpat id quam id, porta pharetra lacus. Proin aliquam magna vitae sapien ultricies, at blandit risus blandit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam suscipit iaculis gravida. Nulla quis congue metus. Aliquam erat volutpat. Praesent interdum enim nec turpis aliquam congue. Aenean quam velit, tincidunt eget finibus a, efficitur pellentesque tellus. Ut luctus tristique leo, eu pharetra purus elementum sit amet. Donec eget maximus neque, quis suscipit nunc. Sed condimentum magna non sem malesuada, eu ullamcorper lorem eleifend. Duis ex erat, mollis luctus elit eget, efficitur pretium massa. Fusce ac massa quis nibh gravida vehicula. Praesent eget consectetur elit. Ut cursus mauris lectus. Pellentesque ac luctus elit.",
       "shortDescription": "Dashboards atualizadas, e em relatórios e gráficos",
       "image": "/images/logo-telein.png",
+      "url": "https://interface.telein.com.br/s_login.php?empresa=",
       "id": 5
     },
     {
@@ -46,6 +51,7 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam diam risus, volutpat id quam id, porta pharetra lacus. Proin aliquam magna vitae sapien ultricies, at blandit risus blandit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam suscipit iaculis gravida. Nulla quis congue metus. Aliquam erat volutpat. Praesent interdum enim nec turpis aliquam congue. Aenean quam velit, tincidunt eget finibus a, efficitur pellentesque tellus. Ut luctus tristique leo, eu pharetra purus elementum sit amet. Donec eget maximus neque, quis suscipit nunc. Sed condimentum magna non sem malesuada, eu ullamcorper lorem eleifend. Duis ex erat, mollis luctus elit eget, efficitur pretium massa. Fusce ac massa quis nibh gravida vehicula. Praesent eget consectetur elit. Ut cursus mauris lectus. Pellentesque ac luctus elit.",
       "shortDescription": "Dashboards atualizadas, e em relatórios e gráficos",
       "image": "/images/logo-chamadosti.png",
+      "url": "https://docs.google.com/forms/d/1vIbPsXD7tP110MDV_t0HgGTs9uUEVf_Ax9vkq4R7okk/viewform?edit_requested=true",
       "id": 6
     },
     {
@@ -54,6 +60,7 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam diam risus, volutpat id quam id, porta pharetra lacus. Proin aliquam magna vitae sapien ultricies, at blandit risus blandit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam suscipit iaculis gravida. Nulla quis congue metus. Aliquam erat volutpat. Praesent interdum enim nec turpis aliquam congue. Aenean quam velit, tincidunt eget finibus a, efficitur pellentesque tellus. Ut luctus tristique leo, eu pharetra purus elementum sit amet. Donec eget maximus neque, quis suscipit nunc. Sed condimentum magna non sem malesuada, eu ullamcorper lorem eleifend. Duis ex erat, mollis luctus elit eget, efficitur pretium massa. Fusce ac massa quis nibh gravida vehicula. Praesent eget consectetur elit. Ut cursus mauris lectus. Pellentesque ac luctus elit.",
       "shortDescription": "Dashboards atualizadas, e em relatórios e gráficos",
       "image": "/images/logo-rh.png",
+      "url": "https://docs.google.com/forms/d/e/1FAIpQLSexYTq0_YM07AiftJwvFAtjMCPZ7IIciXhfqoZ0fTM_Q__p1Q/viewform",
       "id": 7
     },
     {
@@ -62,6 +69,7 @@
       "description": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam diam risus, volutpat id quam id, porta pharetra lacus. Proin aliquam magna vitae sapien ultricies, at blandit risus blandit. Pellentesque habitant morbi tristique senectus et netus et malesuada fames ac turpis egestas. Etiam suscipit iaculis gravida. Nulla quis congue metus. Aliquam erat volutpat. Praesent interdum enim nec turpis aliquam congue. Aenean quam velit, tincidunt eget finibus a, efficitur pellentesque tellus. Ut luctus tristique leo, eu pharetra purus elementum sit amet. Donec eget maximus neque, quis suscipit nunc. Sed condimentum magna non sem malesuada, eu ullamcorper lorem eleifend. Duis ex erat, mollis luctus elit eget, efficitur pretium massa. Fusce ac massa quis nibh gravida vehicula. Praesent eget consectetur elit. Ut cursus mauris lectus. Pellentesque ac luctus elit.",
       "shortDescription": "Dashboards atualizadas, e em relatórios e gráficos",
       "image": "/images/logo-comunicacao.png",
+      "url": "https://gsan.compesa.com.br:8443/gsan/",
       "id": 8
     }
   ],
