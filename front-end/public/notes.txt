@@ -1,5 +1,16 @@
 Lucas acessou 
-
+1727* git status
+ 1728* git pull origin main
+ 1729  pwd
+ 1730  git pull
+ 1731* git config pull.rebase true
+ 1732  git config.pull.rebase true
+ 1733  git status
+ 1734  git branch
+ 1735  git pull
+ 1736  git status
+ 1737  git push
+ 1738  git status
 
 Para analisar 
 1 - highlight não funciona 
