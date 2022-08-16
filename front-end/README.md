@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://cifra-intranet.netlify.app/">
-    <img src="front-end/src/assets/img/logo-cifra.png" alt="Logo-Cifra" />
+    <img src="src/assets/img/logo-cifra.png" alt="Logo-Cifra" />
   </a>
 
   <h3 align="center">Cifra Intranet</h3>
@@ -20,7 +20,12 @@
   <h4 align="center"> 
     🚧  Projeto em desenvolvimento  🚧
     OBS: Para rodar o projeto se faz necessário criar ambiente local
+  </h4>
+  <h4>
     1 - Criar o arquivo .env.local -> front-end/.
+  </h4>
+  <h4>
+    2 - REACT_APP_API_URL='http://localhost:3001'
   </h4>
 </div>
 
