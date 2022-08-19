@@ -3,6 +3,7 @@ import styled from "styled-components";
 import { SidebarItem } from "./SidebarItem";
 import { useSelector } from 'react-redux';
 import { selectUser } from '../../store/User/User.selectors'
+import { Link } from "react-router-dom";
 
 const menuItems = [
     {
@@ -24,7 +25,7 @@ export function Sidebar ({ isOpen, onClose }) {
     return (
         <SidebarStyled className="bg-dark text-white d-flex flex-column p-3" isOpen={isOpen}>
             <CloseButton variant="white" onClick={onClose} className='ms-auto d-lg-none' />
-            <p className="h1">Intranet Cifra</p>
+            <Nav.Link className="h2 text-white" as={Link} to='/'>Intranet Cifra</Nav.Link>
             <hr />
             <Nav variant="pills" className="flex-column">
                 {menuItems.filter(item => item.userTypes.includes(type)).map((item, index) => (
