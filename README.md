@@ -6,7 +6,7 @@
 <br />
 <div align="center">
   <a href="https://cifra-intranet.netlify.app/">
-    <img src="src/assets/img/logo-cifra.png" alt="Logo-Cifra" />
+    <img src="front-end/src/assets/img/logo-cifra.png" alt="Logo-Cifra" />
   </a>
 
   <h3 align="center">Cifra Intranet</h3>
