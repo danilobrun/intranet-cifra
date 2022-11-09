@@ -27,6 +27,11 @@
   <h4>
     2 - REACT_APP_API_URL='http://localhost:3001'
   </h4>
+    <h4>
+    Iniciar projeto!
+    api: npm run start-dev
+    front-end: npm run start
+  </h4>
 </div>
 
 
