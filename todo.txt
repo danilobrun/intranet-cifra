@@ -3,3 +3,11 @@ Objetivo migrar nossa API de db-json-server-auth para API em express + mongoDB A
 1 [] - Hoje nosso site está hospedado no netlify e a API no heroku.
 2 [] - Aonde hospedar minha API com express + mongoDB?
 3 [] - Interligar minha API + meu site.
+
+
+
+
+
+### Local Changes ###
+1 - Criação do env para o mongo conectar ✅️
+2 - Alterar a porta da api-express para 3003 ✅️
