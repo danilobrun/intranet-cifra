@@ -29,8 +29,9 @@
   </h4>
     <h4>
     Iniciar projeto!
-    api: npm run start-dev
-    front-end: npm run start
+    api na porta 3001: npm run start-dev
+    front-end na porta 3000: npm run start
+    api-express na porta 3002: npm start
   </h4>
 </div>
 
