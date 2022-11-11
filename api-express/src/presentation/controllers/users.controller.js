@@ -39,7 +39,7 @@ const createUser = async (req, res) => {
     return res.status(422).json({ msg: "A senha é obrigatória" });
   }
 
-  if (type !== 1 || type !== 2) {
+  if (type !== 1 && type !== 2) {
     return res.status(422).json({ msg: "Favor informar tipo 1 ou 2" });
   }
 

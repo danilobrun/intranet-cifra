@@ -26,6 +26,7 @@ export function RegisterForm({ redirectAfterLogin }) {
     event.preventDefault();
     try {
       setIsSubmiting(true);
+      formData.type = Number(formData.type);
       const userData = await createUser(formData);
       dispatch(userLogin(userData));
       if (redirectAfterLogin) {
