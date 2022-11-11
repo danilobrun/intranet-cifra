@@ -7,11 +7,13 @@ const registersRoutes = require("./src/routes");
 
 const app = express();
 
+// O Cors serve para liberar requisições externas (portas diferente)
 app.use(cors());
 
 // Config JSON response middleware
 app.use(express.json());
 
+// Todas as nossa rotas
 registersRoutes(app);
 
 // Credencials
