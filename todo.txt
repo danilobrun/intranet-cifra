@@ -6,6 +6,7 @@ Objetivo migrar nossa API de db-json-server-auth para API em express + mongoDB A
 4 [x] - Criar função para o token e importa para as rotas que precisam do token.
 5 [] - Subir netlify novo site pela nova branch
 6 [] - subir no heroku nossa nova api com express 
+7 [] - Em criar novo portal não existe no formulário o campo para inserir url.
 
 
 
