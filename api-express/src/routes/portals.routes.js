@@ -1,14 +1,13 @@
-// const { checkToken } = require("../middleware/checktoken");
-// const { getUserById, createUser, loginUser, listUsers, deleteUser, editUser } = require("../presentation/controllers/users.controller");
+const {
+  listPortals,
+  createPortal,
+  listPortalsById,
+} = require("../presentation/controllers/portals.controller");
 
-// const usersRoutes = (app) => {
+const portalsRoutes = (app) => {
+  app.get("/portals", listPortals);
+  app.post("/portals/auth/register", createPortal);
+  app.get("/portals/:id", listPortalsById);
+};
 
-//     app.get('/users', listUsers);
-//     app.get('/user/:id', checkToken, getUserById);
-//     app.post('/auth/register', createUser);
-//     app.post('/auth/login/', loginUser)
-//     app.delete('/user/:id', deleteUser)
-//     app.put('/user/:id', checkToken, editUser)
-// }
-
-// module.exports = usersRoutes
+module.exports = portalsRoutes;
