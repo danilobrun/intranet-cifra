@@ -7,6 +7,8 @@ Objetivo migrar nossa API de db-json-server-auth para API em express + mongoDB A
 5 [] - Subir netlify novo site pela nova branch
 6 [] - subir no heroku nossa nova api com express 
 7 [] - Em criar novo portal não existe no formulário o campo para inserir url.
+8 [] - Remover do formulário de cadastro o campo tipo.
+    8.1 [] - Deixar por padrão o tipo do cadastro sempre como user (verificar se é tipo 1 ou 2)
 
 
 
