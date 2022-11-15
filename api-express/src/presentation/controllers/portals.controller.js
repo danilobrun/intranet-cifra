@@ -22,6 +22,33 @@ const listPortalsById = async (req, res) => {
   return res.status(200).json(portal);
 };
 
+// Delete portals by Id
+const deletePortalsById = async (req, res) => {
+  const { id } = req.params;
+
+  // Check if portal exists
+  const portal = await Portal.findById({ _id: id });
+
+  // Validations
+  if (!portal) {
+    return res.status(422).json({ msg: `Portal de id: ${id} não localizado!` });
+  }
+
+  // delete Portal on database
+  try {
+    const deletePortal = await Portal.findOneAndDelete({ _id: id });
+    return res
+      .status(200)
+      .json({
+        msg: `Portal: ${deletePortal.name} de id: ${id} foi deletado com sucesso!`,
+      });
+  } catch (err) {
+    console.log(`error: ${err}`);
+    return res.status(500).json({ msg: `Portal de id: ${id} não localizado!` });
+  }
+};
+
+// Create portals
 const createPortal = async (req, res) => {
   const { name, responsible, description, shortDescription, image, url } =
     req.body;
@@ -85,4 +112,5 @@ module.exports = {
   listPortals,
   createPortal,
   listPortalsById,
+  deletePortalsById,
 };
