@@ -12,7 +12,7 @@ export function RegisterForm({ redirectAfterLogin }) {
     name: "",
     email: "",
     password: "",
-    type: "",
+    type: 2,
   });
   const handleChange = (event) => {
     setFormData({
@@ -76,7 +76,7 @@ export function RegisterForm({ redirectAfterLogin }) {
           minLength={4}
         />
       </Form.Group>
-      <Form.Group controlId="register-type" className="mb-3">
+      {/* <Form.Group controlId="register-type" className="mb-3">
         <Form.Label className="m-0">Tipo</Form.Label>
         <Form.Control
           type="number"
@@ -87,7 +87,7 @@ export function RegisterForm({ redirectAfterLogin }) {
           required
           minLength={1}
         />
-      </Form.Group>
+      </Form.Group> */}
       <Button type="submit" disabled={isSubmiting}>
         Criar conta
       </Button>
