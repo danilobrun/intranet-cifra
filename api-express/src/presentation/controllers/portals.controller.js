@@ -37,11 +37,9 @@ const deletePortalsById = async (req, res) => {
   // delete Portal on database
   try {
     const deletePortal = await Portal.findOneAndDelete({ _id: id });
-    return res
-      .status(200)
-      .json({
-        msg: `Portal: ${deletePortal.name} de id: ${id} foi deletado com sucesso!`,
-      });
+    return res.status(200).json({
+      msg: `Portal: ${deletePortal.name} de id: ${id} foi deletado com sucesso!`,
+    });
   } catch (err) {
     console.log(`error: ${err}`);
     return res.status(500).json({ msg: `Portal de id: ${id} não localizado!` });
@@ -108,9 +106,68 @@ const createPortal = async (req, res) => {
   // res.status(200).json({ msg: "rota de criar portal" });
 };
 
+// Update portal
+
+const editPortal = async (req, res) => {
+  const { id } = req.params;
+  const { name, responsible, description, shortDescription, image, url } =
+    req.body;
+  console.log(`log do id da req: ${id}`);
+
+  const portalData = {
+    id,
+    name,
+    responsible,
+    description,
+    shortDescription,
+    image,
+    url,
+  };
+
+  // check if portal exists
+  const portalExists = await Portal.findById({ _id: id });
+
+  if (!portalExists) {
+    return res.status(422).json({
+      msg: `portal de id:${id} não existe, favor informar um novo portal!`,
+    });
+  }
+
+  // update portal
+  try {
+    const result = await Portal.findByIdAndUpdate(portalData.id, {
+      name,
+      responsible,
+      description,
+      shortDescription,
+      image,
+      url,
+    });
+
+    const listPortalUpdated = await Portal.findById(portalData.id);
+    console.log(listPortalUpdated);
+    return res.status(200).json({
+      msg: `
+          Portal atualizado com sucesso!
+          Antigo:
+          ${result}
+          
+          Atual:
+          ${listPortalUpdated}
+      `,
+    });
+  } catch (err) {
+    console.log(err);
+    res.status(500).json({
+      msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
+    });
+  }
+};
+
 module.exports = {
   listPortals,
   createPortal,
   listPortalsById,
   deletePortalsById,
+  editPortal,
 };
