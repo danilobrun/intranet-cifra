@@ -4,6 +4,7 @@ var cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
 const registersRoutes = require("./src/routes");
+const port = process.env.PORT || 3002;
 
 const app = express();
 
@@ -26,7 +27,7 @@ mongoose
     `mongodb+srv://${dbUser}:${dbPassword}@cluster0.zti1m9u.mongodb.net/?retryWrites=true&w=majority`
   )
   .then(() => {
-    app.listen(3002);
-    console.log("Conectou ao banco!");
+    app.listen(port);
+    console.log(`Conectou ao banco, na porta: ${port}`);
   })
   .catch((err) => console.log(err));
