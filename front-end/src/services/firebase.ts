@@ -10,8 +10,11 @@ const firebaseConfig = {
   projectId: "intranet-cifra-cf7b5",
   storageBucket: "intranet-cifra-cf7b5.appspot.com",
   messagingSenderId: "903350256682",
-  appId: "1:903350256682:web:d92a819358aab6c9782f53"
+  appId: "1:903350256682:web:d92a819358aab6c9782f53",
 };
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
+
+//
+let teste = "só para dar um novo deploy no netlify";
