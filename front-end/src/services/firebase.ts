@@ -15,6 +15,3 @@ const firebaseConfig = {
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
-
-//
-let teste = "só para dar um novo deploy no netlify";
