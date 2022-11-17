@@ -24,7 +24,7 @@ const dbPassword = process.env.DB_PASS;
 // Connect method Mongo DB
 mongoose
   .connect(
-    `mongodb+srv://${dbUser}:${dbPassword}@cluster0.zti1m9u.mongodb.net/?retryWrites=true&w=majority`
+    `mongodb+srv://${dbUser}:${dbPassword}@intranetcifra.1iksmgz.mongodb.net/?retryWrites=true&w=majority`
   )
   .then(() => {
     app.listen(port);
