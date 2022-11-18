@@ -1,18 +1,21 @@
 Objetivo migrar nossa API de db-json-server-auth para API em express + mongoDB Atlas
 
-1 [] - Hoje nosso site está hospedado no netlify e a API no heroku.
-2 [] - Aonde hospedar minha API com express + mongoDB?
+1 [x] - Hoje nosso site está hospedado no netlify e a API no heroku.
+2 [x] - Aonde hospedar minha API com express + mongoDB? -> heroku
 3 [x] - Interligar minha API + meu site.
 4 [x] - Criar função para o token e importa para as rotas que precisam do token.
-5 [] - Subir netlify novo site pela nova branch
-6 [] - subir no heroku nossa nova api com express 
-7 [] - Em criar novo portal não existe no formulário o campo para inserir url.
-8 [] - Remover do formulário de cadastro o campo tipo.
-    8.1 [] - Deixar por padrão o tipo do cadastro sempre como user (verificar se é tipo 1 ou 2)
-9 [] - Ajustar ao acessar a rota de portais pelo id Inscriptions vem undefined
-10 [] - CRUD de portais ajustar /Users/danilobrun/Workspace/intranet-cifra/front-end/src/services/Portals.service.js
-getPortalById verificar o ?_embed=inscriptions`
-11 [] - Ajustar CRUD de portais updatePortal para atualziar portal.
+5 [x] - Subir netlify novo site pela nova branch
+6 [x] - subir no heroku nossa nova api com express 
+7 [x] - Em criar novo portal não existe no formulário o campo para inserir url.
+8 [x] - Remover do formulário de cadastro o campo tipo.
+    8.1 [x] - Deixar por padrão o tipo do cadastro sempre como user (verificar se é tipo 1 ou 2)
+9 [x] - Ajustar ao acessar a rota de portais pelo id Inscriptions vem undefined
+10 [x] - CRUD de portais ajustar /Users/danilobrun/Workspace/intranet-cifra/front-end/src/services/Portals.service.js
+getPortalById verificar o ?_embed=inscriptions` -> isso é o join do db.json server
+11 [x] - Ajustar CRUD de portais updatePortal para atualziar portal.
+
+# Mudanças 18/11 #
+1 [] - Ajustar rotas primeiro vim login antes de acessar a de portais.
 
 
 
