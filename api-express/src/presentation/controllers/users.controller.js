@@ -83,6 +83,7 @@ const createUser = async (req, res) => {
         name: name,
         email: email,
         type: Number(type),
+        _id: userMongo._id,
       },
       token: token,
     });
@@ -141,6 +142,7 @@ const loginUser = async (req, res) => {
         name: user.name,
         email: user.email,
         type: Number(user.type),
+        _id: user._id,
       },
     });
   } catch (err) {
