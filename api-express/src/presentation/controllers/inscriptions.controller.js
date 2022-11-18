@@ -46,11 +46,11 @@ const createInscription = async (req, res) => {
   }
 
   // check if inscription exists
-  const inscriptionExists = await Inscription.findOne({ name: name });
+  const inscriptionExists = await Inscription.findOne({ portalId, userId });
 
   if (inscriptionExists) {
     return res.status(422).json({
-      msg: `Inscrição: ${name} já existe, por favor cadastre outra inscrição!`,
+      msg: `Inscrição: ${userId} já existe no portal ${portalId}, por favor cadastre outra inscrição!`,
     });
   }
 
@@ -67,11 +67,9 @@ const createInscription = async (req, res) => {
   //Save into database
   try {
     await inscription.save();
-    return res
-      .status(201)
-      .json({
-        msg: `Inscrição: ${name} salvo no portal do usuário: ${userId} com sucesso`,
-      });
+    return res.status(201).json({
+      msg: `Inscrição: ${name} salvo no portal do usuário: ${userId} com sucesso`,
+    });
   } catch (err) {
     console.log("Error", err);
     return res
