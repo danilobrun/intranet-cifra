@@ -51,7 +51,7 @@ export function PortalDetailView() {
               <strong>Responsáveis:</strong> {portal.responsible}
             </p>
             <p>{portal.description}</p>
-            <Inscriptions inscriptions={!portal.inscriptions} />
+            <Inscriptions inscriptions={portal.inscriptions} />
             <InscriptionsForm portalId={id} onRegister={fetchPortal} />
           </>
         )}
