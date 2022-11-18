@@ -2,6 +2,7 @@
 const Portal = require("../../../models/Portal");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const mongoose = require("mongoose");
 
 const listPortals = async (req, res) => {
   const portals = await Portal.find();
@@ -13,13 +14,36 @@ const listPortalsById = async (req, res) => {
   const id = req.params.id;
 
   // Check if portal exists
-  const portal = await Portal.findById(id);
+  // const portal = await Portal.findById(id);
+
+  const portal = await Portal.aggregate([
+    {
+      $addFields: {
+        _idPortalString: {
+          $toString: "$_id",
+        },
+      },
+    },
+    {
+      $lookup: {
+        from: "inscriptions",
+        localField: "_idPortalString",
+        foreignField: "portalId",
+        as: "inscriptions",
+      },
+    },
+    {
+      $match: {
+        _id: new mongoose.Types.ObjectId(id),
+      },
+    },
+  ]);
 
   // Validations
-  if (!portal) {
+  if (!portal[0]) {
     return res.status(422).json({ msg: `Portal de id: ${id} não localizado!` });
   }
-  return res.status(200).json(portal);
+  return res.status(200).json(portal[0]);
 };
 
 // Delete portals by Id
