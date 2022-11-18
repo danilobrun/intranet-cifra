@@ -15,7 +15,7 @@ export function InscriptionsForm({ portalId, onRegister }) {
       await createInscriptions({
         name: user.name,
         email: user.email,
-        portalId: parseInt(portalId),
+        portalId: portalId,
         userId: user._id,
       });
       toast.success("Inscrito com sucesso.");
