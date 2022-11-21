@@ -12,45 +12,52 @@ import { AdminEditPortalView } from "./views/AdminEditPortal";
 
 function App() {
   return (
-   <Routes>
-     <Route path='/' element={<HomeView />} />
-     <Route path='/portals' element={<PortalsView />} />
-     <Route path='/portals/:id' element={<PortalDetailView />} />
-     <Route 
-        path='/portal' 
+    <Routes>
+      <Route path="/" element={<HomeView />} />
+      <Route
+        path="/portals"
+        element={
+          <PrivateRoute>
+            <PortalsView />
+          </PrivateRoute>
+        }
+      />
+      <Route path="/portals/:id" element={<PortalDetailView />} />
+      <Route
+        path="/portal"
         element={
           <PrivateRoute>
             <DashboardView />
           </PrivateRoute>
-        } 
+        }
       />
-      <Route 
+      <Route
         path="portal/portals"
         element={
           <PrivateRoute userTypes={[1]}>
-              <AdminPortalsView />
+            <AdminPortalsView />
           </PrivateRoute>
         }
       />
-      <Route 
+      <Route
         path="portal/portals/cadastro"
         element={
           <PrivateRoute userTypes={[1]}>
-              <AdminAddPortalsView />
+            <AdminAddPortalsView />
           </PrivateRoute>
         }
       />
-      <Route 
+      <Route
         path="portal/portals/:id"
         element={
           <PrivateRoute userTypes={[1]}>
-              <AdminEditPortalView />
+            <AdminEditPortalView />
           </PrivateRoute>
         }
       />
-     <Route path='/portal/login' element={<LoginView />} />
-     <Route path='*' element={<NotFoundView />} />
-   </Routes>
+      <Route path="/portal/login" element={<LoginView />} />
+      <Route path="*" element={<NotFoundView />} />
+    </Routes>
   );
 }
 
