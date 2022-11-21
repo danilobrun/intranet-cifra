@@ -20,7 +20,7 @@ getPortalById verificar o ?_embed=inscriptions` -> isso é o join do db.json ser
 1.2 [x] - Privar a rota /portals só para usuários logado.✅️
 1.3 [x] - http://localhost:3000/portal portal da dashboard.✅️
 1.4 [x] - http://localhost:3000/portal/portals edit portals.✅️
-2 [] - Ajsutar mensagem após login incluir um botão de redirect para a home.
+2 [x] - Ajsutar mensagem após login incluir um botão de redirect para a home.✅️
 3 [] - Melhorar respota do toast trazendo a resposta da API não resposta genérica.
 
 
