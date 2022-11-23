@@ -22,6 +22,7 @@ getPortalById verificar o ?_embed=inscriptions` -> isso é o join do db.json ser
 1.4 [x] - http://localhost:3000/portal/portals edit portals.✅️
 2 [x] - Ajsutar mensagem após login incluir um botão de redirect para a home.✅️
 3 [] - Melhorar respota do toast trazendo a resposta da API não resposta genérica.
+4 [x] - Ajustar cadastro de portais para uma edição de portal trazer o link já da API. ✅️
 
 
 
