@@ -5,7 +5,9 @@ const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 
 const listPortals = async (req, res) => {
-  const portals = await Portal.find();
+  // const portals = await Portal.find();
+  // return res.status(200).json(portals);
+  const portals = await Portal.find().sort({ updatedAt: -1 });
   return res.status(200).json(portals);
 };
 
