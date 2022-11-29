@@ -148,6 +148,7 @@ const editPortal = async (req, res) => {
     shortDescription,
     image,
     url,
+    updatedAt: new Date(),
   };
 
   // check if portal exists
@@ -168,6 +169,7 @@ const editPortal = async (req, res) => {
       shortDescription,
       image,
       url,
+      updatedAt: new Date(),
     });
 
     const listPortalUpdated = await Portal.findById(portalData.id);
