@@ -1,7 +1,9 @@
 import { apiUrl, getAuthorizationHeaders } from "./Api.service";
 
 export const getPortals = async () => {
-  const response = await fetch(`${apiUrl}/portals`);
+  const response = await fetch(`${apiUrl}/portals`, {
+    headers: getAuthorizationHeaders(),
+  });
   if (!response.ok) {
     throw new Error("Reponse not ok.");
   }
@@ -10,7 +12,10 @@ export const getPortals = async () => {
 
 export const getPortalById = async (portalId) => {
   const response = await fetch(
-    `${apiUrl}/portals/${portalId}?_embed=inscriptions`
+    `${apiUrl}/portals/${portalId}?_embed=inscriptions`,
+    {
+      headers: getAuthorizationHeaders(),
+    }
   );
   if (!response.ok) {
     throw new Error("Reponse not ok.");
