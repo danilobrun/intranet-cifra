@@ -31,3 +31,5 @@ mongoose
     console.log(`Conectou ao banco, na porta: ${port}`);
   })
   .catch((err) => console.log(err));
+
+console.log("teste vercel");
