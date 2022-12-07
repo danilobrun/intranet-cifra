@@ -3,7 +3,7 @@ require("dotenv").config();
 var cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
-const registersRoutes = require("./src/routes");
+const registersRoutes = require("../src/routes");
 const port = process.env.PORT || 3002;
 
 const app = express();
@@ -21,6 +21,8 @@ registersRoutes(app);
 const dbUser = process.env.DB_USER;
 const dbPassword = process.env.DB_PASS;
 
+console.log(`user ${dbUser}, pass ${dbPassword}`);
+
 // Connect method Mongo DB
 mongoose
   .connect(
@@ -28,8 +30,6 @@ mongoose
   )
   .then(() => {
     app.listen(port);
-    console.log(`Conectou ao banco, na porta: ${port}`);
+    console.log(`Conectou ao banco, na porta: ${port},`);
   })
   .catch((err) => console.log(err));
-
-console.log("teste vercel");

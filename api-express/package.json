@@ -1,12 +1,12 @@
 {
-  "name": "16_node_auth_jwt",
+  "name": "api-vercel",
   "version": "1.0.0",
   "description": "",
-  "main": "index.js",
+  "main": "api/index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "node index.js",
-    "start-dev": "nodemon index.js"
+    "start": "node .",
+    "start-dev": "nodemon api/index.js"
   },
   "keywords": [],
   "author": "",
@@ -20,6 +20,7 @@
     "mongoose": "^6.5.2"
   },
   "devDependencies": {
+    "@vercel/node": "^2.6.2",
     "nodemon": "^2.0.19"
   }
 }
