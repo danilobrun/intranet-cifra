@@ -1,15 +1,15 @@
 {
-  "name": "intranet-cifra-api",
+  "name": "api-vercel",
   "version": 2,
   "public": true,
   "build": {
-    "src": "app.js",
+    "src": "api/index.js",
     "use": "@vercel/node"
   },
   "routes": [
     {
       "src": "/(.*)",
-      "dest": "app.js"
+      "dest": "api/index.js"
     }
   ]
 }
