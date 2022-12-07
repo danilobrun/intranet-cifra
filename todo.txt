@@ -28,7 +28,7 @@ getPortalById verificar o ?_embed=inscriptions` -> isso é o join do db.json ser
 
 
 # Pendencias #
-[] - Alterar API do Heroku para o vercel para subir
+[] - Alterar API do Heroku para o vercel para subir ajustes.
 [] - Token expira em 2h apos expirar ele devolve erro genérico da API sem carregar os portais ajustar para retornar a mensagem de sessão expirada e levar o usuário para a página de login.
 [] - Melhorar respota do toast trazendo a resposta da API não resposta genérica.
 [] - Ajsutar upsetForm (editar portal) para pode aceitar null ao cadastrar portal.
