@@ -8,7 +8,7 @@ const usersRoutes = require("./users.routes");
 const registersRoutes = (app) => {
   app.get("/", (req, res) => {
     res.status(200).json({
-      msg: "Bem vindo a API da Cifra Engenharia!",
+      msg: "Bem vindo a API da Cifra Engenharia.",
     });
   });
   carsRoutes(app);
