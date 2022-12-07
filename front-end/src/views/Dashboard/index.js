@@ -19,7 +19,7 @@ export function DashboardView() {
       ) : (
         <>
           <Alert variant="info">
-            Você receberá as intruções das solicitações aos portais por e-mail.
+            Você receberá as intruções das solicitações aos portais por e-mail!
           </Alert>
           <Button as={Link} to="/portals" className="text-uppercase">
             Acessar
