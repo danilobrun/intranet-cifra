@@ -7,7 +7,9 @@ const mongoose = require("mongoose");
 const listPortals = async (req, res) => {
   // const portals = await Portal.find();
   // return res.status(200).json(portals);
-  const portals = await Portal.find().sort({ updatedAt: -1 });
+  const portals = await Portal.find({
+    name: { $nin: ["Power BI - Centro de custo", "Omie"] },
+  }).sort({ updatedAt: -1 });
   return res.status(200).json(portals);
 };
 
