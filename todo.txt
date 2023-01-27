@@ -31,14 +31,15 @@ getPortalById verificar o ?_embed=inscriptions` -> isso é o join do db.json ser
 
 
 # Pendencias #
-[] - Token expira em 2h apos expirar ele devolve erro genérico da API sem carregar os portais ajustar para retornar a mensagem de sessão expirada e levar o usuário para a página de login.
+[x] - Token expira em 2h apos expirar ele devolve erro genérico da API sem carregar os portais ajustar para retornar a mensagem de sessão expirada e levar o usuário para a página de login.
 [] - Filtrar portais por tipo de usuário (1,2)
 [] - Melhorar respota do toast trazendo a resposta da API não resposta genérica.
 [] - Inscriptions para solicitacao de acesso aos portais, fazer CRUD para o usuario poder deletar sua inscriptions.
 
 
 
-
+Features
+1 - token -> if response.status === 401 Criar uma página de sessão expirada e dessa página redirect para de login.
 
 
 ### Local Changes ###

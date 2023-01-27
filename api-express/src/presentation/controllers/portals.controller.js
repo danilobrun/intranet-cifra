@@ -7,10 +7,20 @@ const mongoose = require("mongoose");
 const listPortals = async (req, res) => {
   // const portals = await Portal.find();
   // return res.status(200).json(portals);
-  const portals = await Portal.find({
-    name: { $nin: ["Power BI - Centro de custo", "Omie"] },
-  }).sort({ updatedAt: -1 });
-  return res.status(200).json(portals);
+  try {
+    if (req.user_type === 1) {
+      const portal_ = await Portal.find().sort({ updatedAt: -1 });
+      return res.status(200).json(portal_);
+    }
+    const portals = await Portal.find({
+      name: { $nin: ["Power BI - Centro de custo", "Omie"] },
+    }).sort({ updatedAt: -1 });
+    console.log("type do user", req.user_type);
+    return res.status(200).json(portals);
+  } catch (err) {
+    console.log(err);
+    return res.status(500).send("erro no portal");
+  }
 };
 
 // List portals by Id

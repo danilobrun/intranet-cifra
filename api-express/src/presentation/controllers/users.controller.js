@@ -70,10 +70,11 @@ const createUser = async (req, res) => {
     const token = jwt.sign(
       {
         id: userMongo._id,
+        type: userMongo.type,
       },
       secret,
       {
-        expiresIn: "2h", // token expira em 2 horas
+        expiresIn: "2h", // token expira (2h,2m,2s)
       }
     );
 
@@ -128,10 +129,11 @@ const loginUser = async (req, res) => {
     const token = jwt.sign(
       {
         id: user._id,
+        type: user.type,
       },
       secret,
       {
-        expiresIn: "2h", // token expira em 2 horas
+        expiresIn: "2h", // token expira em (2h,2m,2s)
       }
     );
 

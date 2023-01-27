@@ -4,6 +4,11 @@ export const getPortals = async () => {
   const response = await fetch(`${apiUrl}/portals`, {
     headers: getAuthorizationHeaders(),
   });
+  if (response.status === 401) {
+    alert("Acesso expirado, favor efetuar login novamente!");
+    window.location.href = "https://intranet-cifra.netlify.app/portal/login";
+    return;
+  }
   if (!response.ok) {
     throw new Error("Reponse not ok.");
   }
@@ -17,6 +22,11 @@ export const getPortalById = async (portalId) => {
       headers: getAuthorizationHeaders(),
     }
   );
+  if (response.status === 401) {
+    alert("Acesso expirado, favor efetuar login novamente!");
+    window.location.href = "https://intranet-cifra.netlify.app/portal/login";
+    return;
+  }
   if (!response.ok) {
     throw new Error("Reponse not ok.");
   }
