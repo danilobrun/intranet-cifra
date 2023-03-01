@@ -25,7 +25,15 @@
     1 - Criar o arquivo .env.local -> front-end/.
   </h4>
   <h4>
-    2 - REACT_APP_API_URL='http://localhost:3001'
+    2 - REACT_APP_API_URL='http://localhost:3002' back com node + express
+  </h4>
+  <h4>
+    3 - Criar arquivo na raiz api-express .env
+  </h4>
+  <h4>
+    4 - SECRET = suaSecretParaCrip
+    DB_USER = user 
+    DB_PASS = password
   </h4>
     <h4>
     Iniciar projeto!
