@@ -37,6 +37,7 @@ getPortalById verificar o ?_embed=inscriptions` -> isso é o join do db.json ser
 [] - Inscriptions para solicitacao de acesso aos portais, fazer CRUD para o usuario poder deletar sua inscriptions.
 [] - Conectar o adminjs que usa express com nosso servido express que já conecta ao banco
 [] - página do admin js /panel incluir ela nas páginas de rotas.
+[] - Ao clicar na home vai não é ultilizado rota interna do react e sim aberto a págima home renderizando toda ela e voltando para o site externo da intranet.
 
 
 Features
