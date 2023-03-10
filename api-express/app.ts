@@ -1,11 +1,12 @@
 /* Imports */
 import AdminJS from "adminjs";
 // ... other imports
-import mongoose from "mongoose";
+
 import * as AdminJSMongoose from "@adminjs/mongoose";
 import { Category } from "./typeModels/Car";
 import AdminJSExpress from "@adminjs/express";
 import express from "express";
+import { mongoDb } from "./db";
 require("dotenv").config();
 var cors = require("cors");
 const registersRoutes = require("./src/routes");
@@ -13,10 +14,6 @@ const port = process.env.PORT || 3002;
 
 // Test conection
 // const PORT = process.env.PORT_HOST;
-
-// Credencials
-const dbUser = process.env.DB_USER;
-const dbPassword = process.env.DB_PASS;
 
 console.log(port);
 
@@ -28,7 +25,10 @@ AdminJS.registerAdapter({
 
 // Express
 const start = async () => {
+  // Connect method Mongo DB
+  mongoDb;
   const adminOptions = {
+    databases: [mongoDb],
     resources: [Category],
     rootPath: "/admin",
     dashboard: {},
@@ -40,19 +40,6 @@ const start = async () => {
     },
   };
   const app = express();
-
-  // Connect method Mongo DB
-  await mongoose
-    .connect(
-      `mongodb+srv://${dbUser}:${dbPassword}@intranetcifra.1iksmgz.mongodb.net/?retryWrites=true&w=majority`
-    )
-    .then(() => {
-      app.listen(port);
-      console.log(
-        `AdminJS started on http://localhost:${port}${admin.options.rootPath}`
-      );
-    })
-    .catch(() => console.log());
 
   //instaciar o adminJS
   const admin = new AdminJS(adminOptions);
@@ -73,6 +60,11 @@ const start = async () => {
 
   // Todas as nossa rotas
   registersRoutes(app);
+
+  app.listen(port);
+  console.log(
+    `AdminJS started on http://localhost:${port}${admin.options.rootPath}`
+  );
 
   let err: any;
 };
