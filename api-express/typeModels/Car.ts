@@ -1,6 +1,6 @@
-import { model, Schema, Types } from "mongoose";
+import { model, Schema } from "mongoose";
 
-export interface ICategory {
+export interface ICar {
   name: string;
   brand: string;
   model: string;
@@ -14,7 +14,7 @@ export interface ICategory {
   updatedAt: Date;
 }
 
-export const CategorySchema = new Schema<ICategory>({
+export const CarSchema = new Schema<ICar>({
   name: { type: "String", required: true },
   brand: { type: "String", required: true },
   model: { type: "String", required: true },
@@ -28,7 +28,7 @@ export const CategorySchema = new Schema<ICategory>({
   updatedAt: { type: "Date", required: true },
 });
 
-export const Category = model<ICategory>("Category", CategorySchema);
+export const Car = model<ICar>("Carro", CarSchema);
 
 // // IMPORTS
 // const mongoose = require('mongoose')

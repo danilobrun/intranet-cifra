@@ -3,10 +3,12 @@ import AdminJS from "adminjs";
 // ... other imports
 
 import * as AdminJSMongoose from "@adminjs/mongoose";
-import { Category } from "./typeModels/Car";
+import { Car } from "./typeModels/Car";
 import AdminJSExpress from "@adminjs/express";
 import express from "express";
 import { mongoDb } from "./db";
+import { User } from "./typeModels/User";
+import { Rent } from "./typeModels/Rent";
 require("dotenv").config();
 var cors = require("cors");
 const registersRoutes = require("./src/routes");
@@ -28,8 +30,12 @@ const start = async () => {
   // Connect method Mongo DB
   mongoDb;
   const adminOptions = {
-    databases: [mongoDb],
-    resources: [Category],
+    // databases: [mongoDb],
+    resources: [Car, {
+      resource: User
+    },
+    {resource: Rent}
+  ],
     rootPath: "/admin",
     dashboard: {},
     branding: {
