@@ -13,7 +13,15 @@ const listPortals = async (req, res) => {
       return res.status(200).json(portal_);
     }
     const portals = await Portal.find({
-      name: { $nin: ["Power BI - Centro de custo", "Omie"] },
+      name: {
+        $nin: [
+          "Power BI - Centro de custo",
+          "Omie",
+          "Power BI - CAERN - GERENTES 👨‍💼️",
+          "Power BI - Arrecadação 💰",
+          "Power BI - Infraestrutura TI 🖥️",
+        ],
+      },
     }).sort({ updatedAt: -1 });
     console.log("type do user", req.user_type);
     return res.status(200).json(portals);
