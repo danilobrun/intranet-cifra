@@ -57,7 +57,7 @@ export function RegisterForm({ redirectAfterLogin }) {
         <Form.Label className="m-0">E-mail</Form.Label>
         <Form.Control
           type="email"
-          placeholder="exemplo@exemplo.com"
+          placeholder="seunome@cifraengenharia.com.br"
           value={formData.email}
           onChange={handleChange}
           name="email"
