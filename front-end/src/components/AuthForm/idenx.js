@@ -1,7 +1,6 @@
 import { Col, Row } from "react-bootstrap";
 import styled from "styled-components";
 import { LoginForm } from "./LoginForm";
-import { RegisterForm } from "./RegisterForm";
 import { Layout } from "../Layout";
 
 export function AuthForm({ redirectAfterLogin = true }) {
@@ -14,9 +13,6 @@ export function AuthForm({ redirectAfterLogin = true }) {
         <Divider xs={12} lg="auto">
           ou
         </Divider>
-        <Col xs={12} lg="auto" className="flex-fill">
-          <RegisterForm redirectAfterLogin={redirectAfterLogin} />
-        </Col>
       </Row>
     </Layout>
   );
