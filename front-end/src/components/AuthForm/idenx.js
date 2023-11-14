@@ -10,9 +10,7 @@ export function AuthForm({ redirectAfterLogin = true }) {
         <Col xs={12} lg="auto" className="flex-fill">
           <LoginForm redirectAfterLogin={redirectAfterLogin} />
         </Col>
-        <Divider xs={12} lg="auto">
-          ou
-        </Divider>
+        <Divider xs={12} lg="auto"></Divider>
       </Row>
     </Layout>
   );
