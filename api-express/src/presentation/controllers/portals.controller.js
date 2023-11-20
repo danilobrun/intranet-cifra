@@ -18,7 +18,6 @@ const listPortals = async (req, res) => {
           "Power BI - Centro de custo",
           "Omie",
           "Power BI - CAERN - GERENTES 👨‍💼️",
-          "Power BI - Arrecadação 💰",
           "Power BI - Infraestrutura TI 🖥️",
         ],
       },
