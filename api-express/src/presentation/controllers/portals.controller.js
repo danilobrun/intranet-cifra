@@ -15,10 +15,11 @@ const listPortals = async (req, res) => {
     const portals = await Portal.find({
       name: {
         $nin: [
-          "Power BI - Centro de custo",
+          "BI - Centro de custo (CIFRA)",
           "Omie",
-          "Power BI - CAERN - GERENTES 👨‍💼️",
-          "Power BI - Infraestrutura TI 🖥️",
+          "BI - GERENTES (CAERN) 👨‍💼️",
+          "BI - Infraestrutura TI 🖥️",
+          "BI - RH (CIFRA) 👥",
         ],
       },
     }).sort({ updatedAt: -1 });
