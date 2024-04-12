@@ -19,11 +19,11 @@ export default function Footer() {
             Login
           </Nav.Link>
           <Nav.Link
-            href="/termos-de-uso.pdf"
+            href="/codigo-conduta-cifra.pdf"
             target="_blank"
             className="text-white"
           >
-            Termos de Uso
+            Código de Conduta
           </Nav.Link>
         </Nav>
         <Nav className="justify-content-center">
