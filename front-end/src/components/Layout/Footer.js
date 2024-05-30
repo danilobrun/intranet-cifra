@@ -19,7 +19,7 @@ export default function Footer() {
             Login
           </Nav.Link>
           <Nav.Link
-            href="/codigo-conduta-cifra.pdf"
+            href="codigo-conduta-cifra.pdf"
             target="_blank"
             className="text-white"
           >
