@@ -1,7 +1,5 @@
-[![MIT License](https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge
-)](https://github.com/danilobrun/intranet-cifra/tree/main/front-end/LICENSE)
+[![MIT License](https://img.shields.io/github/license/othneildrew/Best-README-Template.svg?style=for-the-badge)](https://github.com/danilobrun/intranet-cifra/tree/main/front-end/LICENSE)
 [![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?style=for-the-badge&logo=linkedin&colorB=555)](https://www.linkedin.com/in/danilobrun/)
-
 
 <br />
 <div align="center">
@@ -35,12 +33,11 @@
   </h4>
 </div>
 
-
 # Autor
-Danilo Souza Brun - danilobruncifra@gmail.com
+
+Danilo Brun - danilobruncifra@gmail.com
 
 https://www.linkedin.com/in/danilobrun/
-
 
 # Licença
 
