@@ -4,7 +4,7 @@ export function BiTable({ url, baseLink, updateSchedule }) {
   return (
     <>
       <h2>Links / Horários</h2>
-      {url && baseLink && updateSchedule ? (
+      {url || baseLink || updateSchedule ? (
         <Table striped responsive>
           <thead>
             <tr>
