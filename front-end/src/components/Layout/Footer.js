@@ -30,13 +30,15 @@ export default function Footer() {
           <Nav.Link
             href="https://www.linkedin.com/company/cifra-engenharia"
             target="_blank"
+            rel="noopener noreferrer"
             className="text-white"
           >
             <IconStyled icon={faLinkedin} />
           </Nav.Link>
           <Nav.Link
-            href="https://www.instagram.com"
+            href="https://www.instagram.com/cifraengenharia"
             target="_blank"
+            rel="noopener noreferrer"
             className="text-white"
           >
             <IconStyled icon={faInstagram} />
