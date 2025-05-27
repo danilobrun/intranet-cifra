@@ -9,6 +9,8 @@ const Portal = mongoose.model("Portal", {
   shortDescription: String,
   image: String,
   url: String,
+  baseLink: String,
+  updateSchedule: String,
   createdAt: Date,
   updatedAt: Date,
 });

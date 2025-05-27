@@ -94,8 +94,16 @@ const deletePortalsById = async (req, res) => {
 
 // Create portals
 const createPortal = async (req, res) => {
-  const { name, responsible, description, shortDescription, image, url } =
-    req.body;
+  const {
+    name,
+    responsible,
+    description,
+    shortDescription,
+    image,
+    url,
+    baseLink,
+    updateSchedule,
+  } = req.body;
 
   // Validations
   if (!name) {
@@ -135,6 +143,8 @@ const createPortal = async (req, res) => {
     shortDescription,
     image,
     url,
+    baseLink,
+    updateSchedule,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
@@ -156,8 +166,16 @@ const createPortal = async (req, res) => {
 
 const editPortal = async (req, res) => {
   const { id } = req.params;
-  const { name, responsible, description, shortDescription, image, url } =
-    req.body;
+  const {
+    name,
+    responsible,
+    description,
+    shortDescription,
+    image,
+    url,
+    baseLink,
+    updateSchedule,
+  } = req.body;
   console.log(`log do id da req: ${id}`);
 
   const portalData = {
@@ -168,6 +186,8 @@ const editPortal = async (req, res) => {
     shortDescription,
     image,
     url,
+    baseLink,
+    updateSchedule,
     updatedAt: new Date(),
   };
 
@@ -189,6 +209,8 @@ const editPortal = async (req, res) => {
       shortDescription,
       image,
       url,
+      baseLink,
+      updateSchedule,
       updatedAt: new Date(),
     });
 
