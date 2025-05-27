@@ -65,7 +65,7 @@ export function LoginForm({ redirectAfterLogin }) {
           required
         />
       </Form.Group>
-      <Button type="submit" disabled={isSubmiting}>
+      <Button type="submit" disabled={isSubmiting} className="w-100">
         Entrar
       </Button>
     </Form>
