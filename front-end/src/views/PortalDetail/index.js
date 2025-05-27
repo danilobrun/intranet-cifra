@@ -8,6 +8,7 @@ import { NotFoundView } from "../NotFound";
 import { Inscriptions } from "./inscriptions";
 import { InscriptionsForm } from "./inscriptionsForm";
 import styled from "styled-components";
+import { BiTable } from "./biTable";
 
 export function PortalDetailView() {
   const { id } = useParams();
@@ -37,6 +38,8 @@ export function PortalDetailView() {
   if (errorMsg === "404") {
     return <NotFoundView />;
   }
+
+  const isBi = /^BI/i.test(portal.name.trim());
   return (
     <Layout>
       <ContainerStyled>
@@ -51,8 +54,18 @@ export function PortalDetailView() {
               <strong>Responsáveis:</strong> {portal.responsible}
             </p>
             <p>{portal.description}</p>
-            <Inscriptions inscriptions={portal.inscriptions} />
-            <InscriptionsForm portalId={id} onRegister={fetchPortal} />
+            {isBi ? (
+              <BiTable
+                url={portal.url}
+                baseLink={portal.baseLink}
+                updateSchedule={portal.updateSchedule}
+              />
+            ) : (
+              <>
+                <Inscriptions inscriptions={portal.inscriptions} />
+                <InscriptionsForm portalId={id} onRegister={fetchPortal} />
+              </>
+            )}
           </>
         )}
       </ContainerStyled>

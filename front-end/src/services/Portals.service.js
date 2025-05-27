@@ -6,7 +6,8 @@ export const getPortals = async () => {
   });
   if (response.status === 401) {
     alert("Acesso expirado, favor efetuar login novamente!");
-    window.location.href = "https://intranet-cifra.netlify.app/portal/login";
+    window.location.href = "https://intranet-cifra.netlify.app/";
+    // window.location.href = "http://localhost:3000/";
     return;
   }
   if (!response.ok) {

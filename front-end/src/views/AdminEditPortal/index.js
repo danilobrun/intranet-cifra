@@ -42,6 +42,8 @@ export function AdminEditPortalView() {
             description: portal.description,
             image: portal.image,
             url: portal.url,
+            baseLink: portal.baseLink,
+            updateSchedule: portal.updateSchedule,
           }}
           buttonLabel="Alterar"
           onSubmit={handleSubmit}

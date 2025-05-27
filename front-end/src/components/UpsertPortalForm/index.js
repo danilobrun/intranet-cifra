@@ -8,6 +8,8 @@ const emptyFormData = {
   description: "",
   image: "",
   url: "",
+  baseLink: "",
+  updateSchedule: "",
 };
 export function UpsertPortalForm({
   initialValue = emptyFormData,
@@ -94,6 +96,26 @@ export function UpsertPortalForm({
           placeholder="Insira o link do portal"
           name="url"
           value={formData.url}
+          onChange={handleChange}
+          required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="portal-baseLink">
+        <Form.Label className="mb-0">Link da Base</Form.Label>
+        <Form.Control
+          placeholder="Insira o link da base"
+          name="baseLink"
+          value={formData.baseLink}
+          onChange={handleChange}
+          required
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="portal-updateSchedule">
+        <Form.Label className="mb-0">Horários de Atualização</Form.Label>
+        <Form.Control
+          placeholder="Insira os horários de atualização"
+          name="updateSchedule"
+          value={formData.updateSchedule}
           onChange={handleChange}
           required
         />

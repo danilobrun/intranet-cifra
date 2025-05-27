@@ -26,7 +26,7 @@ export function PortalsView() {
   return (
     <Layout>
       <Container>
-        <h1 className="text-center mt-4">Portais</h1>
+        <h1 className="text-center my-4">Portais</h1>
         {loading && <Loading />}
         {errorMsg && <Alert variant="danger">{errorMsg}</Alert>}
         <Row>
