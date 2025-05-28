@@ -107,7 +107,6 @@ export function UpsertPortalForm({
           name="baseLink"
           value={formData.baseLink}
           onChange={handleChange}
-          required
         />
       </Form.Group>
       <Form.Group className="mb-3" controlId="portal-updateSchedule">
@@ -117,7 +116,6 @@ export function UpsertPortalForm({
           name="updateSchedule"
           value={formData.updateSchedule}
           onChange={handleChange}
-          required
         />
       </Form.Group>
       <Button type="submit" disabled={isSubmiting}>
