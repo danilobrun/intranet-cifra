@@ -202,6 +202,8 @@ const StyledCarousel = styled(Carousel)`
 
 const DivLogged = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
   text-align: center;
 
   & .carousel-indicators {
