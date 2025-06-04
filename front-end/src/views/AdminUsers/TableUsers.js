@@ -32,7 +32,6 @@ export function TableUsers({ users, onDeleteUser }) {
       <Table striped hover responsive>
         <thead>
           <tr>
-            <th>#</th>
             <th>Nome</th>
             <th>E-mail</th>
             <th>Telefone</th>
@@ -42,7 +41,6 @@ export function TableUsers({ users, onDeleteUser }) {
           {users ? (
             users.map((user) => (
               <tr key={user._id}>
-                <td>{user._id}</td>
                 <td>{user.name}</td>
                 <td>{user.email}</td>
                 <td>{user.number}</td>

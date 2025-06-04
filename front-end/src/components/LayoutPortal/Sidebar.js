@@ -24,12 +24,6 @@ const menuItems = [
     checkAllPath: false,
     userTypes: [1],
   },
-  {
-    to: "/portal/admin-login",
-    text: "Cadastro usuário",
-    checkAllPath: false,
-    userTypes: [1],
-  },
 ];
 
 export function Sidebar({ isOpen, onClose }) {

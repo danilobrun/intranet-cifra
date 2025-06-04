@@ -50,8 +50,8 @@ export function EletronicDiary() {
                 <thead>
                   <tr>
                     <th>Nome</th>
-                    <th>Telefone</th>
                     <th>Email</th>
+                    <th>Telefone</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -76,8 +76,8 @@ export function EletronicDiary() {
                       .map((user) => (
                         <tr key={user._id}>
                           <td>{user.name}</td>
-                          <td>{user.number}</td>
                           <td>{user.email}</td>
+                          <td>{user.number}</td>
                         </tr>
                       ))
                   )}

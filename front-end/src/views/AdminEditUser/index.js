@@ -16,7 +16,6 @@ export function AdminEditUserView() {
       try {
         const userData = await getUserById(id);
         setUser(userData);
-        console.log(userData);
       } catch (error) {
         toast.error("Falha ao buscar dados do usuário. Recarregue a página.");
       }
@@ -25,6 +24,7 @@ export function AdminEditUserView() {
   }, [id]);
   const navigate = useNavigate();
   const handleSubmit = async (formData) => {
+    console.log("formData", formData);
     try {
       await updateUser(id, formData);
       toast.success("Usuário alterado com sucesso.");
@@ -38,15 +38,17 @@ export function AdminEditUserView() {
     <LayoutPortal>
       <h1 className="mt-4">Editar usuário</h1>
       {user ? (
-        <UpdateUserForm
-          initialValue={{
-            name: user.name,
-            email: user.email,
-            number: user.number,
-          }}
-          buttonLabel="Alterar"
-          onSubmit={handleSubmit}
-        />
+        <>
+          <UpdateUserForm
+            initialValue={{
+              name: user.user.name,
+              email: user.user.email,
+              number: user.user.number,
+            }}
+            buttonLabel="Alterar"
+            onSubmit={handleSubmit}
+          />
+        </>
       ) : (
         <Loading />
       )}

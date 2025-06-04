@@ -28,7 +28,7 @@ export function AdminUsersView() {
       <UsersHeader
         title="Usuários Cadastrados"
         buttonText="Novo usuário"
-        buttonLink="/portal/users/cadastro"
+        buttonLink="/portal/admin-login"
       />
       {loading && <Loading />}
       <TableUsers users={users} onDeleteUser={fecthUsers} />
