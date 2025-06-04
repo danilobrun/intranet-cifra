@@ -187,12 +187,13 @@ const deleteUser = async (req, res) => {
 
 const editUser = async (req, res) => {
   const { id } = req.params;
-  const { name, email } = req.body;
+  const { name, email, number } = req.body;
 
   const userData = {
     id,
     name,
     email,
+    number,
   };
 
   console.log(userData);
@@ -219,6 +220,7 @@ const editUser = async (req, res) => {
       {
         name,
         email,
+        number,
       }
       // function (err, docs) {
       //     if (err) {
