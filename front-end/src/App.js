@@ -9,6 +9,9 @@ import { AdminPortalsView } from "./views/AdminPortals";
 import { AdminAddPortalsView } from "./views/AdminAddPortal";
 import { AdminEditPortalView } from "./views/AdminEditPortal";
 import { AdminLoginView } from "./views/AdminLogin";
+import { EletronicDiary } from "./views/EletronicDiary";
+import { AdminUsersView } from "./views/AdminUsers";
+import { AdminEditUserView } from "./views/AdminEditUser";
 
 function App() {
   return (
@@ -40,6 +43,22 @@ function App() {
         }
       />
       <Route
+        path="portal/users"
+        element={
+          <PrivateRoute userTypes={[1]}>
+            <AdminUsersView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="portal/users/:id"
+        element={
+          <PrivateRoute userTypes={[1]}>
+            <AdminEditUserView />
+          </PrivateRoute>
+        }
+      />
+      <Route
         path="portal/portals/cadastro"
         element={
           <PrivateRoute userTypes={[1]}>
@@ -60,6 +79,14 @@ function App() {
         element={
           <PrivateRoute userTypes={[1]}>
             <AdminLoginView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/diary"
+        element={
+          <PrivateRoute userTypes={[1, 2]}>
+            <EletronicDiary />
           </PrivateRoute>
         }
       />

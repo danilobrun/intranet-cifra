@@ -19,6 +19,12 @@ const menuItems = [
     userTypes: [1],
   },
   {
+    to: "/portal/users",
+    text: "Usuários",
+    checkAllPath: false,
+    userTypes: [1],
+  },
+  {
     to: "/portal/admin-login",
     text: "Cadastro usuário",
     checkAllPath: false,
