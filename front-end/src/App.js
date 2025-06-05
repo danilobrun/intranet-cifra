@@ -8,10 +8,10 @@ import { PrivateRoute } from "./components/PrivateRoute";
 import { AdminPortalsView } from "./views/AdminPortals";
 import { AdminAddPortalsView } from "./views/AdminAddPortal";
 import { AdminEditPortalView } from "./views/AdminEditPortal";
-import { AdminLoginView } from "./views/AdminLogin";
 import { EletronicDiary } from "./views/EletronicDiary";
 import { AdminUsersView } from "./views/AdminUsers";
 import { AdminEditUserView } from "./views/AdminEditUser";
+import { AdminAddUserView } from "./views/AdminAddUser";
 
 function App() {
   return (
@@ -78,7 +78,7 @@ function App() {
         path="/portal/admin-login"
         element={
           <PrivateRoute userTypes={[1]}>
-            <AdminLoginView />
+            <AdminAddUserView />
           </PrivateRoute>
         }
       />
