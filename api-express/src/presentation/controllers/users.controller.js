@@ -24,7 +24,7 @@ const getUserById = async (req, res) => {
 
 // Register User
 const createUser = async (req, res) => {
-  const { name, email, password, type } = req.body;
+  const { name, email, password, type, number } = req.body;
 
   // Validations
   if (!name) {
@@ -41,6 +41,10 @@ const createUser = async (req, res) => {
 
   if (type !== 1 && type !== 2) {
     return res.status(422).json({ msg: "Favor informar tipo 1 ou 2" });
+  }
+
+  if (!number) {
+    return res.status(422).json({ msg: "O telefone é obrigatório" });
   }
 
   // check if user exists
@@ -60,6 +64,7 @@ const createUser = async (req, res) => {
     email,
     password: passwordHash,
     type,
+    number,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
@@ -85,6 +90,7 @@ const createUser = async (req, res) => {
         email: email,
         type: Number(type),
         _id: userMongo._id,
+        number: number,
       },
       token: token,
     });
