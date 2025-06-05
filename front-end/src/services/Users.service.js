@@ -63,7 +63,7 @@ export const getUsers = async () => {
 };
 
 export const deleteUser = async (userId) => {
-  const response = await fetch(`${apiUrl}/users/${userId}`, {
+  const response = await fetch(`${apiUrl}/user/${userId}`, {
     method: "DELETE",
     headers: getAuthorizationHeaders(),
   });
