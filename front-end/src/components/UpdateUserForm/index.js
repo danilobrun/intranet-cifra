@@ -1,10 +1,13 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useLocation } from "react-router-dom";
 
 const emptyFormData = {
   name: "",
   email: "",
   number: "",
+  password: "",
+  type: 2,
 };
 
 export function UpdateUserForm({
@@ -14,6 +17,7 @@ export function UpdateUserForm({
 }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [formData, setFormData] = useState(initialValue);
+  const { pathname } = useLocation();
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -59,6 +63,7 @@ export function UpdateUserForm({
           name="name"
           value={formData.name}
           onChange={handleChange}
+          required
         />
       </Form.Group>
       <Form.Group className="mb-3" controlId="user-email">
@@ -69,6 +74,7 @@ export function UpdateUserForm({
           name="email"
           value={formData.email}
           onChange={handleChange}
+          required
         />
       </Form.Group>
       <Form.Group className="mb-3" controlId="user-number">
@@ -81,6 +87,32 @@ export function UpdateUserForm({
           onChange={handleChange}
         />
       </Form.Group>
+      {pathname === "/portal/admin-login" && (
+        <>
+          <Form.Group className="mb-3" controlId="user-type">
+            <Form.Label className="mb-0">Tipo</Form.Label>
+            <Form.Control
+              type="number"
+              placeholder="Insira o tipo"
+              name="type"
+              value={formData.type}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="user-password">
+            <Form.Label className="mb-0">Senha</Form.Label>
+            <Form.Control
+              type="password"
+              placeholder="Insira a senha"
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required
+            />
+          </Form.Group>
+        </>
+      )}
       <Button type="submit" disabled={isSubmiting}>
         {buttonLabel}
       </Button>

@@ -9,13 +9,13 @@ import { UpdateUserForm } from "../../components/UpdateUserForm";
 
 export function AdminEditUserView() {
   const { id } = useParams();
-  const [user, setUser] = useState();
+  const [userInfo, setUserInfo] = useState();
 
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const userData = await getUserById(id);
-        setUser(userData);
+        const { user } = await getUserById(id);
+        setUserInfo(user);
       } catch (error) {
         toast.error("Falha ao buscar dados do usuário. Recarregue a página.");
       }
@@ -37,13 +37,13 @@ export function AdminEditUserView() {
   return (
     <LayoutPortal>
       <h1 className="mt-4">Editar usuário</h1>
-      {user ? (
+      {userInfo ? (
         <>
           <UpdateUserForm
             initialValue={{
-              name: user.user.name,
-              email: user.user.email,
-              number: user.user.number,
+              name: userInfo.name,
+              email: userInfo.email,
+              number: userInfo.number,
             }}
             buttonLabel="Alterar"
             onSubmit={handleSubmit}
