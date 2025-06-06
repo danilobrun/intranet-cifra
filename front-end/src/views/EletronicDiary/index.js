@@ -38,7 +38,7 @@ export function EletronicDiary() {
           <>
             <DivContainer>
               <DivHeader>
-                <h2>Agenda Eletrônica</h2>
+                <h2>☎️ Agenda Eletrônica</h2>
                 <Input
                   type="text"
                   placeholder="Pesquisar"

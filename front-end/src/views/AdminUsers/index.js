@@ -29,7 +29,7 @@ export function AdminUsersView() {
     <LayoutPortal>
       <div className="d-flex align-items-center justify-content-between">
         <UsersHeader
-          title="Usuários Cadastrados"
+          title="👤 Usuários Cadastrados"
           buttonText="Novo usuário"
           buttonLink="/portal/admin-login"
         />
