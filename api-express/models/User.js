@@ -8,6 +8,9 @@ const User = mongoose.model("User", {
   password: String,
   type: Number,
   number: String,
+  function: String,
+  state: String,
+  lotation: String,
   createdAt: Date,
   updatedAt: Date,
 });

@@ -24,7 +24,16 @@ const getUserById = async (req, res) => {
 
 // Register User
 const createUser = async (req, res) => {
-  const { name, email, password, type, number } = req.body;
+  const {
+    name,
+    email,
+    password,
+    type,
+    number,
+    function: jobFunction,
+    state,
+    lotation,
+  } = req.body;
 
   // Validations
   if (!name) {
@@ -65,6 +74,9 @@ const createUser = async (req, res) => {
     password: passwordHash,
     type,
     number,
+    function: jobFunction,
+    state,
+    lotation,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
@@ -193,13 +205,23 @@ const deleteUser = async (req, res) => {
 
 const editUser = async (req, res) => {
   const { id } = req.params;
-  const { name, email, number } = req.body;
+  const {
+    name,
+    email,
+    number,
+    function: jobFunction,
+    state,
+    lotation,
+  } = req.body;
 
   const userData = {
     id,
     name,
     email,
     number,
+    function: jobFunction,
+    state,
+    lotation,
   };
 
   console.log(userData);
@@ -227,6 +249,9 @@ const editUser = async (req, res) => {
         name,
         email,
         number,
+        function: jobFunction,
+        state,
+        lotation,
       }
       // function (err, docs) {
       //     if (err) {

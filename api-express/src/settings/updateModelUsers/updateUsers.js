@@ -11,8 +11,12 @@ const main = async () => {
   );
 
   await User.updateMany(
-    { number: { $exists: false } },
-    { $set: { number: "" } }
+    {
+      function: { $exists: false },
+      state: { $exists: false },
+      lotation: { $exists: false },
+    },
+    { $set: { function: "", state: "", lotation: "" } }
   );
 
   console.log("Usuarios atualizados.");
