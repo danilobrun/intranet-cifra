@@ -24,7 +24,6 @@ export function AdminEditUserView() {
   }, [id]);
   const navigate = useNavigate();
   const handleSubmit = async (formData) => {
-    console.log("formData", formData);
     try {
       await updateUser(id, formData);
       toast.success("Usuário alterado com sucesso.");
@@ -44,6 +43,9 @@ export function AdminEditUserView() {
               name: userInfo.name,
               email: userInfo.email,
               number: userInfo.number,
+              function: userInfo.function,
+              state: userInfo.state,
+              lotation: userInfo.lotation,
             }}
             buttonLabel="Alterar"
             onSubmit={handleSubmit}

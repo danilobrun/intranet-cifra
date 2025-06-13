@@ -6,6 +6,9 @@ const emptyFormData = {
   name: "",
   email: "",
   number: "",
+  function: "",
+  state: "",
+  lotation: "",
   password: "",
   type: 2,
 };
@@ -84,6 +87,36 @@ export function UpdateUserForm({
           placeholder="Telefone do usuário"
           name="number"
           value={formData.number}
+          onChange={handleChange}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="user-function">
+        <Form.Label className="mb-0">Função</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Função do usuário"
+          name="function"
+          value={formData.function}
+          onChange={handleChange}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="user-state">
+        <Form.Label className="mb-0">Estado</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Estado do usuário"
+          name="state"
+          value={formData.state}
+          onChange={handleChange}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="user-lotation">
+        <Form.Label className="mb-0">Lotação</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Lotação do usuário"
+          name="lotation"
+          value={formData.lotation}
           onChange={handleChange}
         />
       </Form.Group>

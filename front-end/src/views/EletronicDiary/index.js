@@ -14,6 +14,7 @@ export function EletronicDiary() {
     const fetchUsers = async () => {
       try {
         const data = await getUsers();
+        console.log(data);
         const filteredUsers = data.filter(
           (user) => user.name?.toLowerCase() !== "admin"
         );
@@ -52,6 +53,9 @@ export function EletronicDiary() {
                     <th>Nome</th>
                     <th>Email</th>
                     <th>Telefone</th>
+                    <th>Função</th>
+                    <th>Estado</th>
+                    <th>Lotação</th>
                   </tr>
                 </thead>
                 <tbody>
@@ -71,13 +75,25 @@ export function EletronicDiary() {
                           user.email
                             ?.toLowerCase()
                             .includes(search.toLowerCase()) ||
-                          user.number?.includes(search.toLowerCase())
+                          user.number?.includes(search.toLowerCase()) ||
+                          user.function
+                            ?.toLowerCase()
+                            .includes(search.toLowerCase()) ||
+                          user.state
+                            ?.toLowerCase()
+                            .includes(search.toLowerCase()) ||
+                          user.location
+                            ?.toLowerCase()
+                            .includes(search.toLowerCase())
                       )
                       .map((user) => (
                         <tr key={user._id}>
                           <td>{user.name}</td>
                           <td>{user.email}</td>
                           <td>{user.number}</td>
+                          <td>{user.function}</td>
+                          <td>{user.state}</td>
+                          <td>{user.lotation}</td>
                         </tr>
                       ))
                   )}

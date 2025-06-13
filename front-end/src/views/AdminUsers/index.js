@@ -44,9 +44,12 @@ export function AdminUsersView() {
       <TableUsers
         users={users.filter(
           (user) =>
-            user.name?.toLowerCase().includes(input) ||
-            user.email?.toLowerCase().includes(input) ||
-            user.number?.includes(input)
+            user.name?.toLowerCase().includes(input.toLowerCase()) ||
+            user.email?.toLowerCase().includes(input.toLowerCase()) ||
+            user.number?.includes(input.toLowerCase()) ||
+            user.function?.toLowerCase().includes(input.toLowerCase()) ||
+            user.state?.toLowerCase().includes(input.toLowerCase()) ||
+            user.lotation?.toLowerCase().includes(input.toLowerCase())
         )}
         onDeleteUser={fecthUsers}
       />
