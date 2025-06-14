@@ -4,12 +4,15 @@ import { getUsers } from "../../services/Users.service";
 import { useState } from "react";
 import { Alert, Container, Spinner, Table } from "react-bootstrap";
 import styled from "styled-components";
+import { selectUser } from "../../store/User/User.selectors";
+import { useSelector } from "react-redux";
 
 export function EletronicDiary() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState();
+  const user = useSelector(selectUser);
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -52,7 +55,8 @@ export function EletronicDiary() {
                   <tr>
                     <th>Nome</th>
                     <th>Email</th>
-                    <th>Telefone</th>
+                    <th>Telefone Funcional</th>
+                    {user.type === 1 && <th>Telefone Pessoal</th>}
                     <th>Função</th>
                     <th>Estado</th>
                     <th>Lotação</th>
@@ -76,13 +80,14 @@ export function EletronicDiary() {
                             ?.toLowerCase()
                             .includes(search.toLowerCase()) ||
                           user.number?.includes(search.toLowerCase()) ||
+                          user.personalNumber?.includes(search.toLowerCase()) ||
                           user.function
                             ?.toLowerCase()
                             .includes(search.toLowerCase()) ||
                           user.state
                             ?.toLowerCase()
                             .includes(search.toLowerCase()) ||
-                          user.location
+                          user.lotation
                             ?.toLowerCase()
                             .includes(search.toLowerCase())
                       )
@@ -91,6 +96,7 @@ export function EletronicDiary() {
                           <td>{user.name}</td>
                           <td>{user.email}</td>
                           <td>{user.number}</td>
+                          {user.type === 1 && <td>{user.personalNumber}</td>}
                           <td>{user.function}</td>
                           <td>{user.state}</td>
                           <td>{user.lotation}</td>

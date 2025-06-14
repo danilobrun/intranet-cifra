@@ -25,7 +25,7 @@ export function UpdateUserForm({
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    if (name === "number") {
+    if (name === "number" || name === "personalNumber") {
       let cleanedValue = value.replace(/\D/g, "");
       if (cleanedValue.length > 11) {
         cleanedValue = cleanedValue.slice(0, 11);
@@ -81,12 +81,22 @@ export function UpdateUserForm({
         />
       </Form.Group>
       <Form.Group className="mb-3" controlId="user-number">
-        <Form.Label className="mb-0">Telefone</Form.Label>
+        <Form.Label className="mb-0">Telefone Funcional</Form.Label>
         <Form.Control
           type="text"
-          placeholder="Telefone do usuário"
+          placeholder="Telefone funcional do usuário"
           name="number"
           value={formData.number}
+          onChange={handleChange}
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="user-personal-number">
+        <Form.Label className="mb-0">Telefone Pessoal</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Telefone pessoal do usuário"
+          name="personalNumber"
+          value={formData.personalNumber}
           onChange={handleChange}
         />
       </Form.Group>
