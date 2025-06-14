@@ -8,6 +8,7 @@ const User = mongoose.model("User", {
   password: String,
   type: Number,
   number: String,
+  personalNumber: String,
   function: String,
   state: String,
   lotation: String,
