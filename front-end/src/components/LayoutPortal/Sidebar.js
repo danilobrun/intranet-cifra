@@ -10,24 +10,24 @@ const menuItems = [
     to: "/portal",
     text: "Dashboard",
     checkAllPath: true,
-    userTypes: [1, 2],
+    userTypes: ["1", "2-1", "2-2", "2-2-1", "2-2-2", "3"],
   },
   {
     to: "/portal/portals",
     text: "Portais",
     checkAllPath: false,
-    userTypes: [1],
+    userTypes: ["1"],
   },
   {
     to: "/portal/users",
     text: "Usuários",
     checkAllPath: false,
-    userTypes: [1],
+    userTypes: ["1"],
   },
 ];
 
 export function Sidebar({ isOpen, onClose }) {
-  const { type } = useSelector(selectUser);
+  const { roles } = useSelector(selectUser);
   return (
     <SidebarStyled
       className="bg-dark text-white d-flex flex-column p-3"
@@ -44,7 +44,7 @@ export function Sidebar({ isOpen, onClose }) {
       <hr />
       <Nav variant="pills" className="flex-column">
         {menuItems
-          .filter((item) => item.userTypes.includes(type))
+          .filter((item) => item.userTypes.includes(roles[0].code))
           .map((item, index) => (
             <SidebarItem key={index} item={item} />
           ))}

@@ -9,7 +9,7 @@ export function DashboardView() {
   return (
     <LayoutPortal>
       <h1 className="mt-4">Bem vindo(a) {user.name}!</h1>
-      {user.type === 1 ? (
+      {user.roles[0].code === "1" ? (
         <>
           <p>Utilize o menu para gerenciar os dados do site.</p>
           <Button as={Link} to="/portals" className="text-uppercase">

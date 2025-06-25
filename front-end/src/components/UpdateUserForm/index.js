@@ -10,7 +10,7 @@ const emptyFormData = {
   state: "",
   lotation: "",
   password: "",
-  type: 2,
+  roleCodes: 3,
 };
 
 export function UpdateUserForm({
@@ -132,16 +132,29 @@ export function UpdateUserForm({
       </Form.Group>
       {pathname === "/portal/admin-login" && (
         <>
-          <Form.Group className="mb-3" controlId="user-type">
-            <Form.Label className="mb-0">Tipo</Form.Label>
-            <Form.Control
+          <Form.Group className="mb-3" controlId="user-roles">
+            <Form.Label className="mb-0">Roles</Form.Label>
+            <Form.Select
               type="number"
-              placeholder="Insira o tipo"
-              name="type"
-              value={formData.type}
-              onChange={handleChange}
+              name="role"
+              value={formData.roleCodes}
+              onChange={(e) => {
+                const selected = Array.from(e.target.selectedOptions).map(
+                  (opt) => opt.value
+                );
+                setFormData({
+                  ...formData,
+                  roleCodes: selected,
+                });
+              }}
               required
-            />
+            >
+              <option value="2-1">Gerente / Compesa</option>
+              <option value="2-2">Gerente / BRK</option>
+              <option value="2-2-1">Gerente / BRK / Pavimentação</option>
+              <option value="2-2-2">Gerente / BRK / Fiscalização</option>
+              <option value="3">Funcionário</option>
+            </Form.Select>
           </Form.Group>
           <Form.Group className="mb-3" controlId="user-password">
             <Form.Label className="mb-0">Senha</Form.Label>

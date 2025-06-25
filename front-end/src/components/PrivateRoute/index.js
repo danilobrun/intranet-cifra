@@ -10,7 +10,7 @@ export function PrivateRoute({ children, userTypes }) {
   if (!user) {
     return <Navigate to="/portal/login" />;
   }
-  if (userTypes && !userTypes.includes(user.type)) {
+  if (userTypes && !userTypes.includes(user.roles[0].code)) {
     return <Navigate to="/portal" />;
   }
   return children;

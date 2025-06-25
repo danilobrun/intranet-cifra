@@ -37,7 +37,7 @@ function App() {
       <Route
         path="portal/portals"
         element={
-          <PrivateRoute userTypes={[1]}>
+          <PrivateRoute userTypes={["1"]}>
             <AdminPortalsView />
           </PrivateRoute>
         }
@@ -45,7 +45,7 @@ function App() {
       <Route
         path="portal/users"
         element={
-          <PrivateRoute userTypes={[1]}>
+          <PrivateRoute userTypes={["1"]}>
             <AdminUsersView />
           </PrivateRoute>
         }
@@ -53,7 +53,7 @@ function App() {
       <Route
         path="portal/users/:id"
         element={
-          <PrivateRoute userTypes={[1]}>
+          <PrivateRoute userTypes={["1"]}>
             <AdminEditUserView />
           </PrivateRoute>
         }
@@ -61,7 +61,7 @@ function App() {
       <Route
         path="portal/portals/cadastro"
         element={
-          <PrivateRoute userTypes={[1]}>
+          <PrivateRoute userTypes={["1"]}>
             <AdminAddPortalsView />
           </PrivateRoute>
         }
@@ -69,7 +69,7 @@ function App() {
       <Route
         path="portal/portals/:id"
         element={
-          <PrivateRoute userTypes={[1]}>
+          <PrivateRoute userTypes={["1"]}>
             <AdminEditPortalView />
           </PrivateRoute>
         }
@@ -77,7 +77,7 @@ function App() {
       <Route
         path="/portal/admin-login"
         element={
-          <PrivateRoute userTypes={[1]}>
+          <PrivateRoute userTypes={["1"]}>
             <AdminAddUserView />
           </PrivateRoute>
         }
@@ -85,7 +85,7 @@ function App() {
       <Route
         path="/diary"
         element={
-          <PrivateRoute userTypes={[1, 2]}>
+          <PrivateRoute userTypes={["1", "2-1", "2-2", "2-2-1", "2-2-2", "3"]}>
             <EletronicDiary />
           </PrivateRoute>
         }
