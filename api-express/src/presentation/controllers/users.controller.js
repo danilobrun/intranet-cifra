@@ -2,6 +2,7 @@
 const User = require("../../../models/User");
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
+const Role = require("../../../models/Role");
 
 const listUsers = async (req, res) => {
   const users = await User.find();
@@ -28,41 +29,31 @@ const createUser = async (req, res) => {
     name,
     email,
     password,
-    type,
     number,
     personalNumber,
     function: jobFunction,
     state,
     lotation,
+    roleCodes,
   } = req.body;
 
   // Validations
-  if (!name) {
-    return res.status(422).json({ msg: "O nome é obrigatório" });
-  }
-
-  if (!email) {
-    return res.status(422).json({ msg: "O email é obrigatório" });
-  }
-
-  if (!password) {
-    return res.status(422).json({ msg: "A senha é obrigatória" });
-  }
-
-  if (type !== 1 && type !== 2) {
-    return res.status(422).json({ msg: "Favor informar tipo 1 ou 2" });
-  }
-
-  if (!number) {
-    return res.status(422).json({ msg: "O telefone é obrigatório" });
+  if (!name) return res.status(422).json({ msg: "O nome é obrigatório" });
+  if (!email) return res.status(422).json({ msg: "O email é obrigatório" });
+  if (!password) return res.status(422).json({ msg: "A senha é obrigatória" });
+  if (!number) return res.status(422).json({ msg: "O telefone é obrigatório" });
+  if (!roleCodes || !Array.isArray(roleCodes) || roleCodes.length === 0) {
+    return res.status(422).json({ msg: "As roles são obrigatórias" });
   }
 
   // check if user exists
   const userExists = await User.findOne({ email: email });
-
   if (userExists) {
     return res.status(422).json({ msg: "Por favor, utilize outro e-mail." });
   }
+
+  const roles = await Role.find({ code: { $in: roleCodes } });
+  if (!roles.length) return res.status(400).send("Roles inválidos");
 
   // create password
   const salt = await bcrypt.genSalt(12);
@@ -73,12 +64,12 @@ const createUser = async (req, res) => {
     name,
     email,
     password: passwordHash,
-    type,
     number,
     personalNumber,
     function: jobFunction,
     state,
     lotation,
+    roles: roles.map((r) => r._id),
     createdAt: new Date(),
     updatedAt: new Date(),
   });
@@ -89,7 +80,7 @@ const createUser = async (req, res) => {
     const token = jwt.sign(
       {
         id: userMongo._id,
-        type: userMongo.type,
+        role: userMongo.roles,
       },
       secret,
       {
@@ -102,7 +93,12 @@ const createUser = async (req, res) => {
       user: {
         name: name,
         email: email,
-        type: Number(type),
+        roles: roles.map((r) => ({
+          code: r.code,
+          cargo: r.cargo,
+          empresa: r.empresa,
+          contrato: r.contrato,
+        })),
         _id: userMongo._id,
         number: number,
       },
@@ -131,7 +127,7 @@ const loginUser = async (req, res) => {
   }
 
   // Check if user exists
-  const user = await User.findOne({ email: email });
+  const user = await User.findOne({ email: email }).populate("roles");
 
   if (!user) {
     return res.status(404).json({ msg: "Usuário não encontrado." });
@@ -149,7 +145,6 @@ const loginUser = async (req, res) => {
     const token = jwt.sign(
       {
         id: user._id,
-        type: user.type,
       },
       secret,
       {
@@ -163,8 +158,10 @@ const loginUser = async (req, res) => {
       user: {
         name: user.name,
         email: user.email,
-        type: Number(user.type),
         _id: user._id,
+        roles: user.roles.map((r) => ({
+          code: r.code,
+        })),
       },
     });
   } catch (err) {
@@ -215,20 +212,8 @@ const editUser = async (req, res) => {
     function: jobFunction,
     state,
     lotation,
+    roleCodes,
   } = req.body;
-
-  const userData = {
-    id,
-    name,
-    email,
-    number,
-    personalNumber,
-    function: jobFunction,
-    state,
-    lotation,
-  };
-
-  console.log(userData);
 
   // Validations
   if (!name) {
@@ -247,42 +232,52 @@ const editUser = async (req, res) => {
   }
 
   try {
-    const result = await User.findByIdAndUpdate(
-      userData.id,
-      {
-        name,
-        email,
-        number,
-        personalNumber,
-        function: jobFunction,
-        state,
-        lotation,
+    const updateData = {
+      name,
+      email,
+      number,
+      personalNumber,
+      function: jobFunction,
+      state,
+      lotation,
+    };
+
+    if (roleCodes && Array.isArray(roleCodes)) {
+      const roles = await Role.find({ code: { $in: roleCodes } });
+      if (!roles.length) {
+        return res.status(400).json({ msg: "Roles inválidas." });
       }
-      // function (err, docs) {
-      //     if (err) {
-      //         console.log(err);
-      //     }
-      //     else {
-      //         console.log("Updated User : ", docs);
-      //     }
-      // }
-    );
-    const userListUpdated = await User.findById(userData.id);
-    console.log(userListUpdated);
-    return res.status(200).send(`Usuário atualizado!
-        Antigo:
-        ${result}
-        Atual:
-        ${userListUpdated}`);
+      updateData.roles = roles.map((r) => r._id);
+    }
+
+    await User.findByIdAndUpdate(id, updateData);
+
+    const userListUpdated = await User.findById(id);
+    return res.status(200).json({
+      msg: "Usuário atualizado!",
+      user: {
+        name: userListUpdated.name,
+        email: userListUpdated.email,
+        number: userListUpdated.number,
+        personalNumber: userListUpdated.personalNumber,
+        function: userListUpdated.function,
+        state: userListUpdated.state,
+        lotation: userListUpdated.lotation,
+        _id: userListUpdated._id,
+        roles: userListUpdated.role.map((r) => ({
+          code: r.code,
+          cargo: r.cargo,
+          empresa: r.empresa,
+          contrato: r.contrato,
+        })),
+      },
+    });
   } catch (err) {
     console.log(err);
     res.status(500).json({
       msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
     });
   }
-
-  // const result = await User.find()
-  // return res.status(200).json(result)
 };
 
 module.exports = {

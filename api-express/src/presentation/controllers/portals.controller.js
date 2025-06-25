@@ -5,10 +5,9 @@ const bcrypt = require("bcrypt");
 const mongoose = require("mongoose");
 
 const listPortals = async (req, res) => {
-  // const portals = await Portal.find();
-  // return res.status(200).json(portals);
   try {
-    if (req.user_type === 1) {
+    const { roles } = req.user;
+    if (roles[0] === "1") {
       const portal_ = await Portal.find().sort({ updatedAt: -1 });
       return res.status(200).json(portal_);
     }
@@ -16,14 +15,14 @@ const listPortals = async (req, res) => {
       name: {
         $nin: [
           "BI - Centro de custo (CIFRA)",
-          "Omie",
+          "Omie 💲",
           "BI - GERENTES (CAERN) 👨‍💼️",
           "BI - Infraestrutura TI 🖥️",
           "BI - RH (CIFRA) 👥",
         ],
       },
     }).sort({ updatedAt: -1 });
-    console.log("type do user", req.user_type);
+    console.log(roles);
     return res.status(200).json(portals);
   } catch (err) {
     console.log(err);
