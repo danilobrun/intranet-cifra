@@ -11,18 +11,144 @@ const listPortals = async (req, res) => {
       const portal_ = await Portal.find().sort({ updatedAt: -1 });
       return res.status(200).json(portal_);
     }
+
+    if (roles[0] === "2-1") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "BI - Produção Corte e Relig (COMPESA) 📊",
+            "BI - Arrecadação (COMPESA)",
+            "TeleIN ☎️",
+            "Giscomp 🗾",
+            "GSAN 💧",
+            "Metabase 🌐",
+            "Chamados TI 👨🏻‍💻",
+            "RH 👥",
+            "Comunicação Interna 📢",
+            "AHGORA - Ponto Digital 🚏",
+            "Formulário de KM 🚙",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
+    if (roles[0] === "2-1-1") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "BI - Arrecadação (COMPESA)",
+            "TeleIN ☎️",
+            "Giscomp 🗾",
+            "GSAN 💧",
+            "Metabase 🌐",
+            "Chamados TI 👨🏻‍💻",
+            "RH 👥",
+            "Comunicação Interna 📢",
+            "AHGORA - Ponto Digital 🚏",
+            "Formulário de KM 🚙",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
+    if (roles[0] === "2-1-2") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "BI - Produção Corte e Relig (COMPESA) 📊",
+            "BI - Arrecadação (COMPESA)",
+            "Giscomp 🗾",
+            "GSAN 💧",
+            "Metabase 🌐",
+            "Chamados TI 👨🏻‍💻",
+            "RH 👥",
+            "Comunicação Interna 📢",
+            "AHGORA - Ponto Digital 🚏",
+            "Formulário de KM 🚙",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
+    if (roles[0] === "2-2") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "BI - Pavimentação   ( BRK )",
+            "BI - Fiscalização de Clientes Cortados BRK",
+            "Comunicação Interna 📢",
+            "AHGORA - Ponto Digital 🚏",
+            "Chamados TI 👨🏻‍💻",
+            "RH 👥",
+            "Formulário de KM 🚙",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
+    if (roles[0] === "2-2-1") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "BI - Pavimentação   ( BRK )",
+            "Chamados TI 👨🏻‍💻",
+            "RH 👥",
+            "Comunicação Interna 📢",
+            "AHGORA - Ponto Digital 🚏",
+            "Formulário de KM 🚙",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
+    if (roles[0] === "2-2-2") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "BI - Fiscalização de Clientes Cortados BRK",
+            "Chamados TI 👨🏻‍💻",
+            "RH 👥",
+            "Comunicação Interna 📢",
+            "AHGORA - Ponto Digital 🚏",
+            "Formulário de KM 🚙",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
+    if (roles[0] === "2-4" || roles[0] === "2-4-1" || roles[0] === "2-4-2") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "GSAN CASAL 💧",
+            "Chamados TI 👨🏻‍💻",
+            "RH 👥",
+            "Comunicação Interna 📢",
+            "AHGORA - Ponto Digital 🚏",
+            "Formulário de KM 🚙",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
     const portals = await Portal.find({
       name: {
-        $nin: [
-          "BI - Centro de custo (CIFRA)",
-          "Omie 💲",
-          "BI - GERENTES (CAERN) 👨‍💼️",
-          "BI - Infraestrutura TI 🖥️",
-          "BI - RH (CIFRA) 👥",
+        $in: [
+          "Chamados TI 👨🏻‍💻",
+          "RH 👥",
+          "Comunicação Interna 📢",
+          "AHGORA - Ponto Digital 🚏",
+          "Formulário de KM 🚙",
         ],
       },
     }).sort({ updatedAt: -1 });
-    console.log(roles);
     return res.status(200).json(portals);
   } catch (err) {
     console.log(err);

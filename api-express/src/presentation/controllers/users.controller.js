@@ -14,7 +14,7 @@ const getUserById = async (req, res) => {
   const id = req.params.id;
 
   // Check if user exists
-  const user = await User.findById(id, "-password");
+  const user = await User.findById(id, "-password").populate("roles");
 
   if (!user) {
     res.status(404).json({ msg: "Usuário não encontrado!" });
@@ -264,7 +264,7 @@ const editUser = async (req, res) => {
         state: userListUpdated.state,
         lotation: userListUpdated.lotation,
         _id: userListUpdated._id,
-        roles: userListUpdated.role.map((r) => ({
+        roles: userListUpdated.roles.map((r) => ({
           code: r.code,
           cargo: r.cargo,
           empresa: r.empresa,
