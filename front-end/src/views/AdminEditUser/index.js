@@ -15,6 +15,7 @@ export function AdminEditUserView() {
     const fetchUser = async () => {
       try {
         const { user } = await getUserById(id);
+        console.log(user);
         setUserInfo(user);
       } catch (error) {
         toast.error("Falha ao buscar dados do usuário. Recarregue a página.");
@@ -46,6 +47,8 @@ export function AdminEditUserView() {
               function: userInfo.function,
               state: userInfo.state,
               lotation: userInfo.lotation,
+              personalNumber: userInfo.personalNumber,
+              roleCodes: userInfo.roles?.map((r) => r.code) || [],
             }}
             buttonLabel="Alterar"
             onSubmit={handleSubmit}

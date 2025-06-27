@@ -12,7 +12,7 @@ export function EletronicDiary() {
   const [search, setSearch] = useState("");
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState();
-  const user = useSelector(selectUser);
+  const userToken = useSelector(selectUser);
   useEffect(() => {
     const fetchUsers = async () => {
       try {
@@ -56,7 +56,9 @@ export function EletronicDiary() {
                     <th>Nome</th>
                     <th>Email</th>
                     <th>Telefone Funcional</th>
-                    {user.type === 1 && <th>Telefone Pessoal</th>}
+                    {userToken.roles[0].code === "1" && (
+                      <th>Telefone Pessoal</th>
+                    )}
                     <th>Função</th>
                     <th>Estado</th>
                     <th>Lotação</th>
@@ -96,7 +98,9 @@ export function EletronicDiary() {
                           <td>{user.name}</td>
                           <td>{user.email}</td>
                           <td>{user.number}</td>
-                          {user.type === 1 && <td>{user.personalNumber}</td>}
+                          {userToken.roles[0].code === "1" && (
+                            <td>{user.personalNumber}</td>
+                          )}
                           <td>{user.function}</td>
                           <td>{user.state}</td>
                           <td>{user.lotation}</td>
