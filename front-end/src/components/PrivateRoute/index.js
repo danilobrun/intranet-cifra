@@ -8,7 +8,7 @@ import { selectUser } from "../../store/User/User.selectors";
 export function PrivateRoute({ children, userTypes }) {
   const user = useSelector(selectUser);
   if (!user) {
-    return <Navigate to="/portal/login" />;
+    return <Navigate to="/" />;
   }
   if (userTypes && !userTypes.includes(user.roles[0].code)) {
     return <Navigate to="/portal" />;

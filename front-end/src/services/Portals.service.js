@@ -1,4 +1,5 @@
 import { apiUrl, getAuthorizationHeaders } from "./Api.service";
+import { removeStorageItem } from "./Storage.service";
 
 export const getPortals = async () => {
   const response = await fetch(`${apiUrl}/portals`, {
@@ -6,8 +7,8 @@ export const getPortals = async () => {
   });
   if (response.status === 401) {
     alert("Acesso expirado, favor efetuar login novamente!");
+    removeStorageItem("user");
     window.location.href = "https://intranet-cifra.netlify.app/";
-    // window.location.href = "http://localhost:3000/";
     return;
   }
   if (!response.ok) {
@@ -25,7 +26,8 @@ export const getPortalById = async (portalId) => {
   );
   if (response.status === 401) {
     alert("Acesso expirado, favor efetuar login novamente!");
-    window.location.href = "https://intranet-cifra.netlify.app/portal/login";
+    removeStorageItem("user");
+    window.location.href = "https://intranet-cifra.netlify.app/";
     return;
   }
   if (!response.ok) {

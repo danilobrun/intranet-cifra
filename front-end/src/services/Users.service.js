@@ -53,6 +53,7 @@ export const getUsers = async () => {
 
   if (response.status === 401) {
     alert("Acesso expirado, favor efetuar login novamente!");
+    removeStorageItem("user");
     window.location.href = "https://intranet-cifra.netlify.app/";
     return;
   }
@@ -78,6 +79,7 @@ export const getUserById = async (userId) => {
   });
   if (response.status === 401) {
     alert("Acesso expirado, favor efetuar login novamente!");
+    removeStorageItem("user");
     window.location.href = "https://intranet-cifra.netlify.app/";
     return;
   }
