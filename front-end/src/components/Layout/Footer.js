@@ -15,9 +15,6 @@ export default function Footer() {
           <Nav.Link as={Link} to="/portal/login" className="text-white">
             Cadastro
           </Nav.Link>
-          <Nav.Link as={Link} to="/portal/login" className="text-white">
-            Login
-          </Nav.Link>
           <Nav.Link
             href="codigo-conduta-cifra.pdf"
             target="_blank"
