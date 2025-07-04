@@ -5,10 +5,9 @@ import { Layout } from "../../components/Layout";
 import { Loading } from "../../components/Loading";
 import { getPortalById } from "../../services/Portals.service";
 import { NotFoundView } from "../NotFound";
-import { Inscriptions } from "./inscriptions";
-import { InscriptionsForm } from "./inscriptionsForm";
 import styled from "styled-components";
 import { BiTable } from "./biTable";
+import { GeneralTable } from "./generalTable";
 
 export function PortalDetailView() {
   const { id } = useParams();
@@ -54,17 +53,20 @@ export function PortalDetailView() {
             {isBi ? (
               <BiTable
                 url={portal.url}
-                nameBi={portal.nameBi}
+                nameForm={portal.nameForm}
                 baseLink={portal.baseLink}
                 updateSchedule={portal.updateSchedule}
                 responsible={portal.responsible}
                 emailResponsible={portal.emailResponsible}
+                isBi={isBi}
               />
             ) : (
-              <>
-                <Inscriptions inscriptions={portal.inscriptions} />
-                <InscriptionsForm portalId={id} onRegister={fetchPortal} />
-              </>
+              <GeneralTable
+                name={portal.nameForm}
+                acessUrl={portal.url}
+                responsible={portal.responsible}
+                emailResponsible={portal.emailResponsible}
+              />
             )}
           </>
         )}
