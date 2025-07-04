@@ -50,15 +50,15 @@ export function PortalDetailView() {
         ) : (
           <>
             <h1 className="text-center mt-4">{portal.name}</h1>
-            <p>
-              <strong>Responsáveis:</strong> {portal.responsible}
-            </p>
             <p>{portal.description}</p>
             {isBi ? (
               <BiTable
                 url={portal.url}
+                nameBi={portal.nameBi}
                 baseLink={portal.baseLink}
                 updateSchedule={portal.updateSchedule}
+                responsible={portal.responsible}
+                emailResponsible={portal.emailResponsible}
               />
             ) : (
               <>
