@@ -10,6 +10,8 @@ const emptyFormData = {
   url: "",
   baseLink: "",
   updateSchedule: "",
+  nameBi: "",
+  emailResponsible: "",
 };
 export function UpsertPortalForm({
   initialValue = emptyFormData,
@@ -18,6 +20,7 @@ export function UpsertPortalForm({
 }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [formData, setFormData] = useState(initialValue);
+  const [isBi, setIsBi] = useState(false);
 
   const handleChange = (event) => {
     setFormData({
@@ -101,24 +104,55 @@ export function UpsertPortalForm({
           required
         />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="portal-baseLink">
-        <Form.Label className="mb-0">Link da Base</Form.Label>
-        <Form.Control
-          placeholder="Insira o link da base"
-          name="baseLink"
-          value={formData.baseLink}
-          onChange={handleChange}
+      <Form.Group className="mb-3">
+        <Form.Check
+          type="checkbox"
+          label="Marque se o portal for um BI"
+          name="isBi"
+          checked={isBi}
+          onChange={(e) => setIsBi(e.target.checked)}
         />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="portal-updateSchedule">
-        <Form.Label className="mb-0">Horários de Atualização</Form.Label>
-        <Form.Control
-          placeholder="Insira os horários de atualização"
-          name="updateSchedule"
-          value={formData.updateSchedule}
-          onChange={handleChange}
-        />
-      </Form.Group>
+      {isBi && (
+        <>
+          <Form.Group className="mb-3" controlId="portal-nameBi">
+            <Form.Label className="mb-0">Nome do BI</Form.Label>
+            <Form.Control
+              placeholder="Insira o nome do BI"
+              name="nameBi"
+              value={formData.nameBi}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="portal-emailResponsible">
+            <Form.Label className="mb-0">Email Responsável</Form.Label>
+            <Form.Control
+              placeholder="Insira o email responsável pelo BI"
+              name="emailResponsible"
+              value={formData.emailResponsible}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="portal-baseLink">
+            <Form.Label className="mb-0">Link da Base</Form.Label>
+            <Form.Control
+              placeholder="Insira o link da base"
+              name="baseLink"
+              value={formData.baseLink}
+              onChange={handleChange}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="portal-updateSchedule">
+            <Form.Label className="mb-0">Horários de Atualização</Form.Label>
+            <Form.Control
+              placeholder="Insira os horários de atualização"
+              name="updateSchedule"
+              value={formData.updateSchedule}
+              onChange={handleChange}
+            />
+          </Form.Group>
+        </>
+      )}
       <Button type="submit" disabled={isSubmiting}>
         {buttonLabel}
       </Button>
