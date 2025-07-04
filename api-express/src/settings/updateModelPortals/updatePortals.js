@@ -1,20 +1,22 @@
 const mongoose = require("mongoose");
-const Portal = require("../models/Portal");
+const Portal = require("../../../models/Portal");
+require("dotenv").config();
+
+const dbUser = process.env.DB_USER;
+const dbPassword = process.env.DB_PASS;
 
 const main = async () => {
-  await mongoose.connect("mongodb://localhost:27017/seubanco"); // substitua com sua string de conexão
+  await mongoose.connect(
+    `mongodb+srv://${dbUser}:${dbPassword}@intranetcifra.1iksmgz.mongodb.net/?retryWrites=true&w=majority`
+  );
 
   await Portal.updateMany(
     {
-      $or: [
-        { baseLink: { $exists: false } },
-        { updateSchedule: { $exists: false } },
-      ],
+      emailResponsible: { $exists: false },
     },
     {
       $set: {
-        baseLink: "",
-        updateSchedule: "",
+        emailResponsible: "",
       },
     }
   );
