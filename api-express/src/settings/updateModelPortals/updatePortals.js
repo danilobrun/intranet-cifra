@@ -10,13 +10,13 @@ const main = async () => {
     `mongodb+srv://${dbUser}:${dbPassword}@intranetcifra.1iksmgz.mongodb.net/?retryWrites=true&w=majority`
   );
 
-  await Portal.updateMany(
+  await Portal.collection.updateMany(
     {
-      emailResponsible: { $exists: false },
+      nameBi: { $exists: true },
     },
     {
-      $set: {
-        emailResponsible: "",
+      $rename: {
+        nameBi: "nameForm",
       },
     }
   );

@@ -228,7 +228,7 @@ const createPortal = async (req, res) => {
     url,
     baseLink,
     updateSchedule,
-    nameBi,
+    nameForm,
     emailResponsible,
   } = req.body;
 
@@ -272,7 +272,7 @@ const createPortal = async (req, res) => {
     url,
     baseLink,
     updateSchedule,
-    nameBi,
+    nameForm,
     emailResponsible,
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -304,7 +304,7 @@ const editPortal = async (req, res) => {
     url,
     baseLink,
     updateSchedule,
-    nameBi,
+    nameForm,
     emailResponsible,
   } = req.body;
   console.log(`log do id da req: ${id}`);
@@ -319,7 +319,7 @@ const editPortal = async (req, res) => {
     url,
     baseLink,
     updateSchedule,
-    nameBi,
+    nameForm,
     emailResponsible,
     updatedAt: new Date(),
   };
@@ -344,7 +344,7 @@ const editPortal = async (req, res) => {
       url,
       baseLink,
       updateSchedule,
-      nameBi,
+      nameForm,
       emailResponsible,
       updatedAt: new Date(),
     });
