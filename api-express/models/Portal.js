@@ -11,6 +11,8 @@ const Portal = mongoose.model("Portal", {
   url: String,
   baseLink: String,
   updateSchedule: String,
+  nameBi: String,
+  emailResponsible: String,
   createdAt: Date,
   updatedAt: Date,
 });
