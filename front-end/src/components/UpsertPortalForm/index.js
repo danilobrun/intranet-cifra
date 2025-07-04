@@ -10,7 +10,7 @@ const emptyFormData = {
   url: "",
   baseLink: "",
   updateSchedule: "",
-  nameBi: "",
+  nameForm: "",
   emailResponsible: "",
 };
 export function UpsertPortalForm({
@@ -45,6 +45,17 @@ export function UpsertPortalForm({
           required
         />
       </Form.Group>
+      {!isBi && (
+        <Form.Group className="mb-3" controlId="portal-nameForm">
+          <Form.Label className="mb-0">Nome do Formulário</Form.Label>
+          <Form.Control
+            placeholder="Insira o nome do formulário"
+            name="nameForm"
+            value={formData.nameForm}
+            onChange={handleChange}
+          />
+        </Form.Group>
+      )}
       <Form.Group className="mb-3" controlId="portal-responsible">
         <Form.Label className="mb-0">Responsável</Form.Label>
         <Form.Control
@@ -75,6 +86,15 @@ export function UpsertPortalForm({
           onChange={handleChange}
           required
           as="textarea"
+        />
+      </Form.Group>
+      <Form.Group className="mb-3" controlId="portal-emailResponsible">
+        <Form.Label className="mb-0">Email Responsável</Form.Label>
+        <Form.Control
+          placeholder="Insira o email responsável"
+          name="emailResponsible"
+          value={formData.emailResponsible}
+          onChange={handleChange}
         />
       </Form.Group>
       <Form.Group className="mb-3" controlId="portal-image">
@@ -115,21 +135,12 @@ export function UpsertPortalForm({
       </Form.Group>
       {isBi && (
         <>
-          <Form.Group className="mb-3" controlId="portal-nameBi">
+          <Form.Group className="mb-3" controlId="portal-nameForm">
             <Form.Label className="mb-0">Nome do BI</Form.Label>
             <Form.Control
               placeholder="Insira o nome do BI"
-              name="nameBi"
-              value={formData.nameBi}
-              onChange={handleChange}
-            />
-          </Form.Group>
-          <Form.Group className="mb-3" controlId="portal-emailResponsible">
-            <Form.Label className="mb-0">Email Responsável</Form.Label>
-            <Form.Control
-              placeholder="Insira o email responsável pelo BI"
-              name="emailResponsible"
-              value={formData.emailResponsible}
+              name="nameForm"
+              value={formData.nameForm}
               onChange={handleChange}
             />
           </Form.Group>

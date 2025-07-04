@@ -2,7 +2,7 @@ import { Alert, Table } from "react-bootstrap";
 
 export function BiTable({
   url,
-  nameBi,
+  nameForm,
   baseLink,
   updateSchedule,
   responsible,
@@ -12,7 +12,7 @@ export function BiTable({
     <>
       <h2>Links / Horários</h2>
       {url ||
-      nameBi ||
+      nameForm ||
       baseLink ||
       responsible ||
       emailResponsible ||
@@ -30,7 +30,7 @@ export function BiTable({
           </thead>
           <tbody>
             <tr>
-              <td>{nameBi}</td>
+              <td>{nameForm}</td>
               <td>
                 <a href={url} target="_blank" rel="noopener noreferrer">
                   Acessar BI
