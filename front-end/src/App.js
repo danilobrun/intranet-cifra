@@ -12,16 +12,27 @@ import { EletronicDiary } from "./views/EletronicDiary";
 import { AdminUsersView } from "./views/AdminUsers";
 import { AdminEditUserView } from "./views/AdminEditUser";
 import { AdminAddUserView } from "./views/AdminAddUser";
+import { RegisterView } from "./views/Register";
+import { EditProfile } from "./views/EditProfile";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomeView />} />
+      <Route path="/register" element={<RegisterView />} />
       <Route
         path="/portals"
         element={
           <PrivateRoute>
             <PortalsView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/editProfile/:id"
+        element={
+          <PrivateRoute>
+            <EditProfile />
           </PrivateRoute>
         }
       />
