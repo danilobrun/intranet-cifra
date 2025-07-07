@@ -44,7 +44,13 @@ export function HomeView() {
                   </Button>
                 </DivLogged>
               ) : (
-                <LoginForm redirectAfterLogin={true} />
+                <>
+                  <LoginForm redirectAfterLogin={true} />
+                  <p className="text-center mt-3">
+                    Ainda não possui uma conta?{" "}
+                    <Link to="/register">Cadastre-se</Link>
+                  </p>
+                </>
               )}
             </div>
             <div className="DivCarousel">
@@ -146,7 +152,7 @@ const DivAuth = styled.div`
     align-items: center;
 
     & .DivAuthContent {
-      padding: 1rem;
+      padding: 1rem 1rem 0 1rem;
       width: 100%;
     }
 
@@ -158,7 +164,7 @@ const DivAuth = styled.div`
     }
 
     & .DivCarousel {
-      padding: 1rem;
+      padding: 0 1rem 1rem 1rem;
       width: 100%;
       display: flex;
       flex-direction: column;
