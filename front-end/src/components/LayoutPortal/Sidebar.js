@@ -5,29 +5,57 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../store/User/User.selectors";
 import { Link } from "react-router-dom";
 
-const menuItems = [
-  {
-    to: "/portal",
-    text: "Dashboard",
-    checkAllPath: true,
-    userTypes: ["1", "2-1", "2-2", "2-2-1", "2-2-2", "3"],
-  },
-  {
-    to: "/portal/portals",
-    text: "Portais",
-    checkAllPath: false,
-    userTypes: ["1"],
-  },
-  {
-    to: "/portal/users",
-    text: "Usuários",
-    checkAllPath: false,
-    userTypes: ["1"],
-  },
-];
-
 export function Sidebar({ isOpen, onClose }) {
-  const { roles } = useSelector(selectUser);
+  const user = useSelector(selectUser);
+  if (!user?._id) return null;
+
+  const menuItems = [
+    {
+      to: "/portal",
+      text: "Dashboard",
+      checkAllPath: true,
+      userTypes: ["1", "2-1", "2-2", "2-2-1", "2-2-2", "3"],
+    },
+    {
+      to: "/portal/portals",
+      text: "Portais",
+      checkAllPath: false,
+      userTypes: ["1"],
+    },
+    {
+      to: "/portal/users",
+      text: "Usuários",
+      checkAllPath: false,
+      userTypes: ["1"],
+    },
+    {
+      to: `/portal/editProfile/${user._id}`,
+      text: "Editar dados",
+      checkAllPath: false,
+      userTypes: [
+        "2-1",
+        "2-1-1",
+        "2-1-2",
+        "2-2",
+        "2-2-1",
+        "2-2-2",
+        "2-2-3",
+        "2-3",
+        "2-3-1",
+        "2-3-2",
+        "2-3-3",
+        "2-3-4",
+        "2-4",
+        "2-4-1",
+        "2-4-2",
+        "2-5",
+        "2-5-1",
+        "2-6",
+        "3",
+      ],
+    },
+  ];
+
   return (
     <SidebarStyled
       className="bg-dark text-white d-flex flex-column p-3"
@@ -44,7 +72,7 @@ export function Sidebar({ isOpen, onClose }) {
       <hr />
       <Nav variant="pills" className="flex-column">
         {menuItems
-          .filter((item) => item.userTypes.includes(roles[0].code))
+          .filter((item) => item.userTypes.includes(user.roles[0].code))
           .map((item, index) => (
             <SidebarItem key={index} item={item} />
           ))}
