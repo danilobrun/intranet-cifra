@@ -12,21 +12,49 @@ export function RegisterForm({ redirectAfterLogin }) {
     name: "",
     email: "",
     password: "",
-    type: 2,
+    number: "",
+    roleCodes: ["3"],
   });
   const handleChange = (event) => {
-    setFormData({
-      ...formData,
-      [event.target.name]: event.target.value,
-    });
+    const { name, value } = event.target;
+
+    if (name === "number") {
+      let cleanedValue = value.replace(/\D/g, "");
+      if (cleanedValue.length > 11) {
+        cleanedValue = cleanedValue.slice(0, 11);
+      }
+
+      let numberFormatted = cleanedValue;
+
+      if (cleanedValue.length > 2) {
+        numberFormatted = `(${cleanedValue.slice(0, 2)}) ${cleanedValue.slice(
+          2,
+          7
+        )}-${cleanedValue.slice(7)}`;
+      }
+
+      setFormData({
+        ...formData,
+        [name]: numberFormatted,
+      });
+    } else {
+      setFormData({
+        ...formData,
+        [name]: value,
+      });
+    }
   };
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const handleSubmit = async (event) => {
     event.preventDefault();
+    if (!formData.email.endsWith("@cifraengenharia.com.br")) {
+      toast.error("Use um e-mail @cifraengenharia.com.br para se cadastrar.");
+      return;
+    }
     try {
       setIsSubmiting(true);
-      formData.type = Number(formData.type);
+      console.log(formData);
       const userData = await createUser(formData);
       dispatch(userLogin(userData));
       if (redirectAfterLogin) {
@@ -53,6 +81,17 @@ export function RegisterForm({ redirectAfterLogin }) {
           required
         />
       </Form.Group>
+      <Form.Group controlId="register-number" className="mb-3">
+        <Form.Label className="m-0">Telefone Funcional</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Informe seu telefone funcional"
+          value={formData.number}
+          onChange={handleChange}
+          name="number"
+          required
+        />
+      </Form.Group>
       <Form.Group controlId="register-email" className="mb-3">
         <Form.Label className="m-0">E-mail</Form.Label>
         <Form.Control
@@ -76,19 +115,7 @@ export function RegisterForm({ redirectAfterLogin }) {
           minLength={4}
         />
       </Form.Group>
-      {/* <Form.Group controlId="register-type" className="mb-3">
-        <Form.Label className="m-0">Tipo</Form.Label>
-        <Form.Control
-          type="number"
-          placeholder="Informe o tipo 1 ou 2"
-          value={formData.type}
-          onChange={handleChange}
-          name="type"
-          required
-          minLength={1}
-        />
-      </Form.Group> */}
-      <Button type="submit" disabled={isSubmiting}>
+      <Button type="submit" disabled={isSubmiting} className="w-100">
         Criar conta
       </Button>
     </Form>
