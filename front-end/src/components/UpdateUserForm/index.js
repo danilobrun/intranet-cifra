@@ -1,5 +1,7 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
+import { useSelector } from "react-redux";
+import { selectUser } from "../../store/User/User.selectors";
 
 const emptyFormData = {
   name: "",
@@ -20,6 +22,7 @@ export function UpdateUserForm({
 }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [formData, setFormData] = useState(initialValue);
+  const user = useSelector(selectUser);
 
   const handleChange = (event) => {
     const { name, value } = event.target;
@@ -129,46 +132,48 @@ export function UpdateUserForm({
           onChange={handleChange}
         />
       </Form.Group>
-      <Form.Group className="mb-3" controlId="user-roles">
-        <Form.Label className="mb-0">Roles</Form.Label>
-        <Form.Select
-          name="roleCodes"
-          value={formData.roleCodes || []}
-          onChange={(e) => {
-            const selected = Array.from(e.target.selectedOptions).map(
-              (opt) => opt.value
-            );
-            setFormData({
-              ...formData,
-              roleCodes: selected,
-            });
-          }}
-          required
-        >
-          <option value="2-1">Gerente / Compesa</option>
-          <option value="2-1-1">
-            Gerente / Compesa / Recuperação de Clientes Cortados
-          </option>
-          <option value="2-1-2">Gerente / Compesa / Corte e Religação</option>
-          <option value="2-2">Gerente / BRK</option>
-          <option value="2-2-1">Gerente / BRK / Pavimentação</option>
-          <option value="2-2-2">Gerente / BRK / Fiscalização</option>
-          <option value="2-2-3">Gerente / BRK / Hidrometração</option>
-          <option value="2-3">Gerente / DESO</option>
-          <option value="2-3-1">Gerente / DESO / Corte e Religação</option>
-          <option value="2-3-2">Gerente / DESO / Cadastro Técnico</option>
-          <option value="2-3-3">Gerente / DESO / Hidrometração</option>
-          <option value="2-3-4">Gerente / DESO / Macromedidores</option>
-          <option value="2-4">Gerente / CASAL</option>
-          <option value="2-4-1">Gerente / CASAL / Corte e Religação</option>
-          <option value="2-4-2">Gerente / CASAL / Hidrometração</option>
-          <option value="2-4-2">Gerente / CASAL / Hidrometração</option>
-          <option value="2-5">Gerente / CAERN</option>
-          <option value="2-5-1">Gerente / CAERN / Hidrometração</option>
-          <option value="2-6">Gerente / OBRAS</option>
-          <option value="3">Funcionário</option>
-        </Form.Select>
-      </Form.Group>
+      {user.roles[0].code === "1" && (
+        <Form.Group className="mb-3" controlId="user-roles">
+          <Form.Label className="mb-0">Roles</Form.Label>
+          <Form.Select
+            name="roleCodes"
+            value={formData.roleCodes || []}
+            onChange={(e) => {
+              const selected = Array.from(e.target.selectedOptions).map(
+                (opt) => opt.value
+              );
+              setFormData({
+                ...formData,
+                roleCodes: selected,
+              });
+            }}
+            required
+          >
+            <option value="2-1">Gerente / Compesa</option>
+            <option value="2-1-1">
+              Gerente / Compesa / Recuperação de Clientes Cortados
+            </option>
+            <option value="2-1-2">Gerente / Compesa / Corte e Religação</option>
+            <option value="2-2">Gerente / BRK</option>
+            <option value="2-2-1">Gerente / BRK / Pavimentação</option>
+            <option value="2-2-2">Gerente / BRK / Fiscalização</option>
+            <option value="2-2-3">Gerente / BRK / Hidrometração</option>
+            <option value="2-3">Gerente / DESO</option>
+            <option value="2-3-1">Gerente / DESO / Corte e Religação</option>
+            <option value="2-3-2">Gerente / DESO / Cadastro Técnico</option>
+            <option value="2-3-3">Gerente / DESO / Hidrometração</option>
+            <option value="2-3-4">Gerente / DESO / Macromedidores</option>
+            <option value="2-4">Gerente / CASAL</option>
+            <option value="2-4-1">Gerente / CASAL / Corte e Religação</option>
+            <option value="2-4-2">Gerente / CASAL / Hidrometração</option>
+            <option value="2-4-2">Gerente / CASAL / Hidrometração</option>
+            <option value="2-5">Gerente / CAERN</option>
+            <option value="2-5-1">Gerente / CAERN / Hidrometração</option>
+            <option value="2-6">Gerente / OBRAS</option>
+            <option value="3">Funcionário</option>
+          </Form.Select>
+        </Form.Group>
+      )}
       <Form.Group className="mb-3" controlId="user-password">
         <Form.Label className="mb-0">Senha</Form.Label>
         <Form.Control
