@@ -107,11 +107,11 @@ export function UpsertPortalForm({
           required
         />
         <Form.Text>
-          Cole aqui o link da imagem hospedada no{" "}
-          <a href="https://cloudinary.com/" target="_blank" rel="noreferrer">
-            Cloudinary
-          </a>
-          .
+          Hospede a foto no{" "}
+          <a href="https://postimages.org/" target="_blank" rel="noreferrer">
+            postimages
+          </a>{" "}
+          e cole o <strong>link direto</strong> aqui .
         </Form.Text>
       </Form.Group>
       <Form.Group className="mb-3" controlId="portal-url">
