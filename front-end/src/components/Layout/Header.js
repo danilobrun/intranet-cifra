@@ -20,11 +20,11 @@ export function Header() {
               <NavLinkStyled forwardedAs={Link} to="/portals">
                 Portais
               </NavLinkStyled>
-              <NavLinkStyled forwardedAs={Link} to="/portal">
-                Acessar Portal
-              </NavLinkStyled>
               <NavLinkStyled forwardedAs={Link} to="/diary">
                 Agenda Eletrônica
+              </NavLinkStyled>
+              <NavLinkStyled forwardedAs={Link} to="/portal">
+                Configurações
               </NavLinkStyled>
             </Nav>
           </Navbar.Collapse>
