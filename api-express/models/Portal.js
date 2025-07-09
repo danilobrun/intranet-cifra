@@ -15,6 +15,16 @@ const Portal = mongoose.model("Portal", {
   emailResponsible: String,
   createdAt: Date,
   updatedAt: Date,
+
+  details: [
+    {
+      url: String,
+      baseLink: String,
+      updateSchedule: String,
+      nameForm: String,
+      emailResponsible: String,
+    },
+  ],
 });
 
 // EXPORTS
