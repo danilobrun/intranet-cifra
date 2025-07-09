@@ -1,11 +1,6 @@
 import { Table } from "react-bootstrap";
 
-export function GeneralTable({
-  name,
-  acessUrl,
-  responsible,
-  emailResponsible,
-}) {
+export function GeneralTable({ portal }) {
   return (
     <>
       <h2>Links</h2>
@@ -18,16 +13,18 @@ export function GeneralTable({
             <th>E-mail</th>
           </tr>
         </thead>
-        {name || acessUrl || responsible || emailResponsible ? (
+        {portal ? (
           <tbody>
-            <tr>
-              <td>{name}</td>
-              <td>
-                <a href={acessUrl}>Acessar formulário</a>
-              </td>
-              <td>{responsible}</td>
-              <td>{emailResponsible}</td>
-            </tr>
+            {portal.details.map((item, index) => (
+              <tr key={index}>
+                <td>{item.nameForm}</td>
+                <td>
+                  <a href={item.url}>Acessar formulário</a>
+                </td>
+                <td>{portal.responsible}</td>
+                <td>{item.emailResponsible}</td>
+              </tr>
+            ))}
           </tbody>
         ) : (
           <tbody>
