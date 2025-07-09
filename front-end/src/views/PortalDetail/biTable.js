@@ -1,22 +1,10 @@
 import { Alert, Table } from "react-bootstrap";
 
-export function BiTable({
-  url,
-  nameForm,
-  baseLink,
-  updateSchedule,
-  responsible,
-  emailResponsible,
-}) {
+export function BiTable({ responsible, portal }) {
   return (
     <>
       <h2>Links / Horários</h2>
-      {url ||
-      nameForm ||
-      baseLink ||
-      responsible ||
-      emailResponsible ||
-      updateSchedule ? (
+      {responsible || portal ? (
         <Table striped responsive>
           <thead>
             <tr>
@@ -29,22 +17,32 @@ export function BiTable({
             </tr>
           </thead>
           <tbody>
-            <tr>
-              <td>{nameForm}</td>
-              <td>
-                <a href={url} target="_blank" rel="noopener noreferrer">
-                  Acessar BI
-                </a>
-              </td>
-              <td>
-                <a href={baseLink} target="_blank" rel="noopener noreferrer">
-                  Acessar Base
-                </a>
-              </td>
-              <td>{updateSchedule}</td>
-              <td>{responsible}</td>
-              <td>{emailResponsible}</td>
-            </tr>
+            {portal.map((item, index) => (
+              <tr key={index}>
+                <td>{item.nameForm || ""}</td>
+                <td>
+                  <a
+                    href={item.url || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Acessar BI
+                  </a>
+                </td>
+                <td>
+                  <a
+                    href={item.baseLink || "#"}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Acessar Base
+                  </a>
+                </td>
+                <td>{item.updateSchedule || ""}</td>
+                <td>{responsible || ""}</td>
+                <td>{item.emailResponsible || ""}</td>
+              </tr>
+            ))}
           </tbody>
         </Table>
       ) : (
