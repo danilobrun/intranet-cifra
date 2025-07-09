@@ -13,12 +13,16 @@ export function RegisterForm({ redirectAfterLogin }) {
     email: "",
     password: "",
     number: "",
+    personalNumber: "",
+    function: "",
+    state: "",
+    lotation: "",
     roleCodes: ["3"],
   });
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    if (name === "number") {
+    if (name === "number" || name === "personalNumber") {
       let cleanedValue = value.replace(/\D/g, "");
       if (cleanedValue.length > 11) {
         cleanedValue = cleanedValue.slice(0, 11);
@@ -81,6 +85,17 @@ export function RegisterForm({ redirectAfterLogin }) {
           required
         />
       </Form.Group>
+      <Form.Group controlId="register-email" className="mb-3">
+        <Form.Label className="m-0">E-mail</Form.Label>
+        <Form.Control
+          type="email"
+          placeholder="seunome@cifraengenharia.com.br"
+          value={formData.email}
+          onChange={handleChange}
+          name="email"
+          required
+        />
+      </Form.Group>
       <Form.Group controlId="register-number" className="mb-3">
         <Form.Label className="m-0">Telefone Funcional</Form.Label>
         <Form.Control
@@ -92,15 +107,44 @@ export function RegisterForm({ redirectAfterLogin }) {
           required
         />
       </Form.Group>
-      <Form.Group controlId="register-email" className="mb-3">
-        <Form.Label className="m-0">E-mail</Form.Label>
+      <Form.Group controlId="register-personalNumber" className="mb-3">
+        <Form.Label className="m-0">Telefone Pessoal</Form.Label>
         <Form.Control
-          type="email"
-          placeholder="seunome@cifraengenharia.com.br"
-          value={formData.email}
+          type="text"
+          placeholder="Informe seu telefone pessoal"
+          value={formData.personalNumber}
           onChange={handleChange}
-          name="email"
-          required
+          name="personalNumber"
+        />
+      </Form.Group>
+      <Form.Group controlId="register-state" className="mb-3">
+        <Form.Label className="m-0">Estado</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Informe o estado onde trabalha"
+          value={formData.state}
+          onChange={handleChange}
+          name="state"
+        />
+      </Form.Group>
+      <Form.Group controlId="register-lotation" className="mb-3">
+        <Form.Label className="m-0">Lotação</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="Informe a lotação"
+          value={formData.lotation}
+          onChange={handleChange}
+          name="lotation"
+        />
+      </Form.Group>
+      <Form.Group controlId="register-function" className="mb-3">
+        <Form.Label className="m-0">Função</Form.Label>
+        <Form.Control
+          type="text"
+          placeholder="sua função"
+          value={formData.function}
+          onChange={handleChange}
+          name="function"
         />
       </Form.Group>
       <Form.Group controlId="register-password" className="mb-3">
