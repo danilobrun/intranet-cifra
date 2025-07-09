@@ -10,18 +10,39 @@ const main = async () => {
     `mongodb+srv://${dbUser}:${dbPassword}@intranetcifra.1iksmgz.mongodb.net/?retryWrites=true&w=majority`
   );
 
-  await Portal.collection.updateMany(
-    {
-      nameBi: { $exists: true },
-    },
-    {
-      $rename: {
-        nameBi: "nameForm",
-      },
-    }
-  );
+  // Buscar todos os portais antigos que têm os campos avulsos
+  const portals = await Portal.find({});
 
-  console.log("Documentos de Portal atualizados.");
+  for (const portal of portals) {
+    const detail = {
+      url: portal.url || "",
+      baseLink: portal.baseLink || "",
+      updateSchedule: portal.updateSchedule || "",
+      nameForm: portal.nameForm || "",
+      emailResponsible: portal.emailResponsible || "",
+    };
+
+    console.log("Migrando portal:", portal.name);
+    console.log("Novo details:", detail);
+
+    // Atualizar documento
+    await Portal.updateOne(
+      { _id: portal._id },
+      {
+        $set: {
+          details: [detail],
+        },
+        $unset: {
+          baseLink: "",
+          updateSchedule: "",
+          nameForm: "",
+          emailResponsible: "",
+        },
+      }
+    );
+  }
+
+  console.log("Migração de campos para 'details' finalizada com sucesso.");
   await mongoose.disconnect();
 };
 
