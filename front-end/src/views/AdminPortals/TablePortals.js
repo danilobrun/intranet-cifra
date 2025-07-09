@@ -32,7 +32,6 @@ export function TablePortals({ portals, onDeletePortal }) {
       <Table striped hover responsive>
         <thead>
           <tr>
-            <th>*</th>
             <th>Nome</th>
             <th>Responável</th>
             <th />
@@ -41,7 +40,6 @@ export function TablePortals({ portals, onDeletePortal }) {
         <tbody>
           {portals.map((portal) => (
             <tr key={portal._id}>
-              <td>{portal._id}</td>
               <td>{portal.name}</td>
               <td>{portal.responsible}</td>
               <td className="d-grid gap-1 d-sm-table-cell">
