@@ -8,10 +8,15 @@ const emptyFormData = {
   description: "",
   image: "",
   url: "",
-  baseLink: "",
-  updateSchedule: "",
-  nameForm: "",
-  emailResponsible: "",
+  details: [
+    {
+      url: "",
+      baseLink: "",
+      updateSchedule: "",
+      nameForm: "",
+      emailResponsible: "",
+    },
+  ],
 };
 export function UpsertPortalForm({
   initialValue = emptyFormData,
@@ -20,7 +25,6 @@ export function UpsertPortalForm({
 }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [formData, setFormData] = useState(initialValue);
-  const [isBi, setIsBi] = useState(false);
 
   const handleChange = (event) => {
     setFormData({
@@ -32,6 +36,34 @@ export function UpsertPortalForm({
     event.preventDefault();
     setIsSubmiting(true);
     onSubmit(formData);
+  };
+
+  const handleDetailChange = (index, e) => {
+    const newDetails = [...formData.details];
+    newDetails[index][e.target.name] = e.target.value;
+    setFormData({ ...formData, details: newDetails });
+  };
+
+  const handleAddDetails = () => {
+    setFormData({
+      ...formData,
+      details: [
+        ...formData.details,
+        {
+          url: "",
+          baseLink: "",
+          updateSchedule: "",
+          nameForm: "",
+          emailResponsible: "",
+        },
+      ],
+    });
+  };
+
+  const handleRemoveDetails = (index) => {
+    const newDetails = [...formData.details];
+    newDetails.splice(index, 1);
+    setFormData({ ...formData, details: newDetails });
   };
   return (
     <Form onSubmit={handlesubmit}>
@@ -45,17 +77,6 @@ export function UpsertPortalForm({
           required
         />
       </Form.Group>
-      {!isBi && (
-        <Form.Group className="mb-3" controlId="portal-nameForm">
-          <Form.Label className="mb-0">Nome do Formulário</Form.Label>
-          <Form.Control
-            placeholder="Insira o nome do formulário"
-            name="nameForm"
-            value={formData.nameForm}
-            onChange={handleChange}
-          />
-        </Form.Group>
-      )}
       <Form.Group className="mb-3" controlId="portal-responsible">
         <Form.Label className="mb-0">Responsável</Form.Label>
         <Form.Control
@@ -124,47 +145,74 @@ export function UpsertPortalForm({
           required
         />
       </Form.Group>
-      <Form.Group className="mb-3">
-        <Form.Check
-          type="checkbox"
-          label="Marque se o portal for um BI"
-          name="isBi"
-          checked={isBi}
-          onChange={(e) => setIsBi(e.target.checked)}
-        />
-      </Form.Group>
-      {isBi && (
-        <>
-          <Form.Group className="mb-3" controlId="portal-nameForm">
-            <Form.Label className="mb-0">Nome do BI</Form.Label>
+      <Form.Label className="mb-3">Adicionar dados</Form.Label>
+
+      {formData.details.map((detail, index) => (
+        <div key={index} className="px-4">
+          <h6 className="mb-3">Dados {index + 1}</h6>
+
+          <Form.Group className="mb-3" controlId="portal-details-nameForm">
+            <Form.Label className="mb-0">Nome</Form.Label>
             <Form.Control
-              placeholder="Insira o nome do BI"
+              placeholder="Insira o nome"
               name="nameForm"
-              value={formData.nameForm}
-              onChange={handleChange}
+              value={detail.nameForm}
+              onChange={(e) => handleDetailChange(index, e)}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="portal-baseLink">
-            <Form.Label className="mb-0">Link da Base</Form.Label>
+          <Form.Group className="mb-3" controlId="portal-details-url">
+            <Form.Label className="mb-0">Link do portal</Form.Label>
+            <Form.Control
+              placeholder="Insira o link do portal"
+              name="url"
+              value={detail.url}
+              onChange={(e) => handleDetailChange(index, e)}
+            />
+          </Form.Group>
+          <Form.Group className="mb-3" controlId="portal-details-baseLink">
+            <Form.Label className="mb-0">Link da base</Form.Label>
             <Form.Control
               placeholder="Insira o link da base"
               name="baseLink"
-              value={formData.baseLink}
-              onChange={handleChange}
+              value={detail.baseLink}
+              onChange={(e) => handleDetailChange(index, e)}
             />
           </Form.Group>
-          <Form.Group className="mb-3" controlId="portal-updateSchedule">
-            <Form.Label className="mb-0">Horários de Atualização</Form.Label>
+          <Form.Group
+            className="mb-3"
+            controlId="portal-details-updateSchedule"
+          >
+            <Form.Label className="mb-0">Horário de atualização</Form.Label>
             <Form.Control
-              placeholder="Insira os horários de atualização"
+              placeholder="Insira o horário de atualização"
               name="updateSchedule"
-              value={formData.updateSchedule}
-              onChange={handleChange}
+              value={detail.updateSchedule}
+              onChange={(e) => handleDetailChange(index, e)}
             />
           </Form.Group>
-        </>
-      )}
-      <Button type="submit" disabled={isSubmiting}>
+          <Form.Group
+            className="mb-3"
+            controlId="portal-details-emailResponsible"
+          >
+            <Form.Label className="mb-0">Email do responsável</Form.Label>
+            <Form.Control
+              placeholder="Insira o email do responsável"
+              name="emailResponsible"
+              value={detail.emailResponsible}
+              onChange={(e) => handleDetailChange(index, e)}
+            />
+          </Form.Group>
+
+          {formData.details.length > 1 && (
+            <Button onClick={() => handleRemoveDetails(index)} className="my-2">
+              Remover dados
+            </Button>
+          )}
+        </div>
+      ))}
+      <Button onClick={handleAddDetails}>Adicionar mais dados</Button>
+      <br />
+      <Button type="submit" disabled={isSubmiting} className="mt-4">
         {buttonLabel}
       </Button>
     </Form>
