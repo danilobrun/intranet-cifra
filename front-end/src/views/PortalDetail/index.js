@@ -52,21 +52,11 @@ export function PortalDetailView() {
             <p>{portal.description}</p>
             {isBi ? (
               <BiTable
-                url={portal.url}
-                nameForm={portal.nameForm}
-                baseLink={portal.baseLink}
-                updateSchedule={portal.updateSchedule}
                 responsible={portal.responsible}
-                emailResponsible={portal.emailResponsible}
-                isBi={isBi}
+                portal={portal.details}
               />
             ) : (
-              <GeneralTable
-                name={portal.nameForm}
-                acessUrl={portal.url}
-                responsible={portal.responsible}
-                emailResponsible={portal.emailResponsible}
-              />
+              <GeneralTable portal={portal} />
             )}
           </>
         )}
