@@ -226,10 +226,7 @@ const createPortal = async (req, res) => {
     shortDescription,
     image,
     url,
-    baseLink,
-    updateSchedule,
-    nameForm,
-    emailResponsible,
+    details,
   } = req.body;
 
   // Validations
@@ -270,10 +267,7 @@ const createPortal = async (req, res) => {
     shortDescription,
     image,
     url,
-    baseLink,
-    updateSchedule,
-    nameForm,
-    emailResponsible,
+    details,
     createdAt: new Date(),
     updatedAt: new Date(),
   });
@@ -302,10 +296,7 @@ const editPortal = async (req, res) => {
     shortDescription,
     image,
     url,
-    baseLink,
-    updateSchedule,
-    nameForm,
-    emailResponsible,
+    details,
   } = req.body;
   console.log(`log do id da req: ${id}`);
 
@@ -317,10 +308,7 @@ const editPortal = async (req, res) => {
     shortDescription,
     image,
     url,
-    baseLink,
-    updateSchedule,
-    nameForm,
-    emailResponsible,
+    details,
     updatedAt: new Date(),
   };
 
@@ -342,10 +330,7 @@ const editPortal = async (req, res) => {
       shortDescription,
       image,
       url,
-      baseLink,
-      updateSchedule,
-      nameForm,
-      emailResponsible,
+      details,
       updatedAt: new Date(),
     });
 
