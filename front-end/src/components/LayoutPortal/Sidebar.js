@@ -30,7 +30,7 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: `/portal/editProfile/${user._id}`,
-      text: "Editar dados",
+      text: "Editar Perfil",
       checkAllPath: false,
       userTypes: [
         "2-1",
