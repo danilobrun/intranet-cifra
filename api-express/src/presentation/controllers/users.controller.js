@@ -5,7 +5,7 @@ const bcrypt = require("bcrypt");
 const Role = require("../../../models/Role");
 
 const listUsers = async (req, res) => {
-  const users = await User.find();
+  const users = await User.find().populate("roles");
 
   res.status(200).json(users);
 };
