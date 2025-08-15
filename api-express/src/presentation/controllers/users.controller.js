@@ -216,6 +216,7 @@ const editUser = async (req, res) => {
     lotation,
     image,
     roleCodes,
+    password,
   } = req.body;
 
   // Validations
@@ -244,7 +245,13 @@ const editUser = async (req, res) => {
       state,
       lotation,
       image,
+      password,
     };
+
+    if (typeof password === "string" && password.trim() !== "") {
+      const salt = await bcrypt.genSalt(12);
+      updateData.password = await bcrypt.hash(password.trim(), salt);
+    }
 
     if (roleCodes && Array.isArray(roleCodes)) {
       const roles = await Role.find({ code: { $in: roleCodes } });
