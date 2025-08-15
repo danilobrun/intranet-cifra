@@ -11,6 +11,7 @@ const User = mongoose.model("User", {
   function: String,
   state: String,
   lotation: String,
+  image: String,
   roles: [
     {
       type: mongoose.Schema.Types.ObjectId,

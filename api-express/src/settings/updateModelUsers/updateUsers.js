@@ -12,44 +12,21 @@ async function main() {
   );
   console.log("🔌 Conectado ao MongoDB");
 
-  const roles = await Role.find({});
-  const roleMap = {};
-  roles.forEach((r, i) => {
-    console.log(
-      `${i + 1}. ${r.code} - ${r.cargo} | ${r.empresa} | ${r.contrato}`
-    );
-    roleMap[i + 1] = r;
-  });
-
-  const users = await User.find({ roles: { $exists: false }, type: 2 });
-
-  for (const user of users) {
-    console.log(`\n👤 Usuário: ${user.name} (${user.email})`);
-    const resposta = await prompt(
-      `Digite o número da role que deseja atribuir (ou ENTER para pular): `
-    );
-
-    const numero = parseInt(resposta);
-    if (!numero || !roleMap[numero]) {
-      console.log("⏭️ Usuário pulado.");
-      continue;
+  const result = await User.updateMany(
+    {
+      $or: [{ image: { $exists: false } }, { imagem: null }],
+    },
+    {
+      $set: {
+        image: "",
+        updatedAt: new Date(),
+      },
     }
+  );
 
-    user.roles = [roleMap[numero]._id];
-    user.type = undefined;
-    await user.save();
-    console.log(`✅ Role atribuída: ${roleMap[numero].code}`);
-  }
-
+  console.log(`✅ Usuários atualizados: ${result.modifiedCount}`);
   await mongoose.disconnect();
   console.log("\n🎉 Finalizado.");
-}
-
-function prompt(msg) {
-  return new Promise((resolve) => {
-    process.stdout.write(msg);
-    process.stdin.once("data", (data) => resolve(data.toString().trim()));
-  });
 }
 
 main();
