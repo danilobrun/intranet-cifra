@@ -34,6 +34,7 @@ const createUser = async (req, res) => {
     function: jobFunction,
     state,
     lotation,
+    image,
     roleCodes,
   } = req.body;
 
@@ -69,6 +70,7 @@ const createUser = async (req, res) => {
     function: jobFunction,
     state,
     lotation,
+    image,
     roles: roles.map((r) => r._id),
     createdAt: new Date(),
     updatedAt: new Date(),
@@ -212,6 +214,7 @@ const editUser = async (req, res) => {
     function: jobFunction,
     state,
     lotation,
+    image,
     roleCodes,
   } = req.body;
 
@@ -240,6 +243,7 @@ const editUser = async (req, res) => {
       function: jobFunction,
       state,
       lotation,
+      image,
     };
 
     if (roleCodes && Array.isArray(roleCodes)) {
@@ -263,6 +267,7 @@ const editUser = async (req, res) => {
         function: userListUpdated.function,
         state: userListUpdated.state,
         lotation: userListUpdated.lotation,
+        image: userListUpdated.image,
         _id: userListUpdated._id,
         roles: userListUpdated.roles.map((r) => ({
           code: r.code,
