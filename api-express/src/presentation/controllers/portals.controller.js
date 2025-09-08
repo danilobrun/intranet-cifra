@@ -27,6 +27,8 @@ const listPortals = async (req, res) => {
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
             "Formulário de KM 🚙",
+            "Guia prático dos ativos da Cifra",
+            "Universidade Cifra",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -47,6 +49,8 @@ const listPortals = async (req, res) => {
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
             "Formulário de KM 🚙",
+            "Guia prático dos ativos da Cifra",
+            "Universidade Cifra",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -67,6 +71,8 @@ const listPortals = async (req, res) => {
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
             "Formulário de KM 🚙",
+            "Guia prático dos ativos da Cifra",
+            "Universidade Cifra",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -84,6 +90,8 @@ const listPortals = async (req, res) => {
             "Chamados TI 👨🏻‍💻",
             "RH 👥",
             "Formulário de KM 🚙",
+            "Guia prático dos ativos da Cifra",
+            "Universidade Cifra",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -100,6 +108,8 @@ const listPortals = async (req, res) => {
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
             "Formulário de KM 🚙",
+            "Guia prático dos ativos da Cifra",
+            "Universidade Cifra",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -116,6 +126,8 @@ const listPortals = async (req, res) => {
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
             "Formulário de KM 🚙",
+            "Guia prático dos ativos da Cifra",
+            "Universidade Cifra",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -132,6 +144,8 @@ const listPortals = async (req, res) => {
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
             "Formulário de KM 🚙",
+            "Guia prático dos ativos da Cifra",
+            "Universidade Cifra",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -146,6 +160,8 @@ const listPortals = async (req, res) => {
           "Comunicação Interna 📢",
           "AHGORA - Ponto Digital 🚏",
           "Formulário de KM 🚙",
+          "Guia prático dos ativos da Cifra",
+          "Universidade Cifra",
         ],
       },
     }).sort({ updatedAt: -1 });
