@@ -29,6 +29,7 @@ const listPortals = async (req, res) => {
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
+            "Apresentação Urmobo",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -51,6 +52,7 @@ const listPortals = async (req, res) => {
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
+            "Apresentação Urmobo",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -73,6 +75,7 @@ const listPortals = async (req, res) => {
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
+            "Apresentação Urmobo",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -92,6 +95,7 @@ const listPortals = async (req, res) => {
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
+            "Apresentação Urmobo",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -110,6 +114,7 @@ const listPortals = async (req, res) => {
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
+            "Apresentação Urmobo",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -128,6 +133,7 @@ const listPortals = async (req, res) => {
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
+            "Apresentação Urmobo",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -146,6 +152,7 @@ const listPortals = async (req, res) => {
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
+            "Apresentação Urmobo",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -162,6 +169,7 @@ const listPortals = async (req, res) => {
           "Formulário de KM 🚙",
           "Guia prático dos ativos da Cifra",
           "Universidade Cifra",
+          "Apresentação Urmobo",
         ],
       },
     }).sort({ updatedAt: -1 });
