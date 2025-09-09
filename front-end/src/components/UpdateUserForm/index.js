@@ -149,27 +149,17 @@ export function UpdateUserForm({
             }}
             required
           >
-            <option value="2-1">Gerente / Compesa</option>
-            <option value="2-1-1">
-              Gerente / Compesa / Recuperação de Clientes Cortados
-            </option>
-            <option value="2-1-2">Gerente / Compesa / Corte e Religação</option>
-            <option value="2-2">Gerente / BRK</option>
-            <option value="2-2-1">Gerente / BRK / Pavimentação</option>
-            <option value="2-2-2">Gerente / BRK / Fiscalização</option>
-            <option value="2-2-3">Gerente / BRK / Hidrometração</option>
-            <option value="2-3">Gerente / DESO</option>
-            <option value="2-3-1">Gerente / DESO / Corte e Religação</option>
-            <option value="2-3-2">Gerente / DESO / Cadastro Técnico</option>
-            <option value="2-3-3">Gerente / DESO / Hidrometração</option>
-            <option value="2-3-4">Gerente / DESO / Macromedidores</option>
-            <option value="2-4">Gerente / CASAL</option>
-            <option value="2-4-1">Gerente / CASAL / Corte e Religação</option>
-            <option value="2-4-2">Gerente / CASAL / Hidrometração</option>
-            <option value="2-4-2">Gerente / CASAL / Hidrometração</option>
-            <option value="2-5">Gerente / CAERN</option>
-            <option value="2-5-1">Gerente / CAERN / Hidrometração</option>
-            <option value="2-6">Gerente / OBRAS</option>
+            <option value="compesa">Compesa</option>
+            <option value="brk">BRK</option>
+            <option value="verdeAlagoas">Verde Alagoas</option>
+            <option value="alagoasGerente">Gerente Alagoas</option>
+            <option value="sergipe">Sergipe</option>
+            <option value="iguá">Iguá</option>
+            <option value="obras">Obras</option>
+            <option value="almoxarifado">Almoxarifado</option>
+            <option value="rh">RH</option>
+            <option value="financeiro">Financeiro</option>
+            <option value="frota">Frota</option>
             <option value="3">Funcionário</option>
           </Form.Select>
         </Form.Group>

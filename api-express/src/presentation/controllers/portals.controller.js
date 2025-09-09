@@ -12,12 +12,12 @@ const listPortals = async (req, res) => {
       return res.status(200).json(portal_);
     }
 
-    if (roles[0] === "2-1") {
+    if (roles[0] === "compesa") {
       const portals = await Portal.find({
         name: {
           $in: [
             "BI - Produção Corte e Relig (COMPESA) 📊",
-            "BI - Arrecadação (COMPESA)",
+            "BI - Arrecadação (COMPESA)💰",
             "TeleIN ☎️",
             "Giscomp 🗾",
             "GSAN 💧",
@@ -36,58 +36,11 @@ const listPortals = async (req, res) => {
       return res.status(200).json(portals);
     }
 
-    if (roles[0] === "2-1-1") {
+    if (roles[0] === "brk") {
       const portals = await Portal.find({
         name: {
           $in: [
-            "BI - Arrecadação (COMPESA)",
-            "TeleIN ☎️",
-            "Giscomp 🗾",
-            "GSAN 💧",
-            "Metabase 🌐",
-            "Chamados TI 👨🏻‍💻",
-            "RH 👥",
-            "Comunicação Interna 📢",
-            "AHGORA - Ponto Digital 🚏",
-            "Formulário de KM 🚙",
-            "Guia prático dos ativos da Cifra",
-            "Universidade Cifra",
-            "Apresentação Urmobo",
-          ],
-        },
-      }).sort({ updatedAt: -1 });
-      return res.status(200).json(portals);
-    }
-
-    if (roles[0] === "2-1-2") {
-      const portals = await Portal.find({
-        name: {
-          $in: [
-            "BI - Produção Corte e Relig (COMPESA) 📊",
-            "BI - Arrecadação (COMPESA)",
-            "Giscomp 🗾",
-            "GSAN 💧",
-            "Metabase 🌐",
-            "Chamados TI 👨🏻‍💻",
-            "RH 👥",
-            "Comunicação Interna 📢",
-            "AHGORA - Ponto Digital 🚏",
-            "Formulário de KM 🚙",
-            "Guia prático dos ativos da Cifra",
-            "Universidade Cifra",
-            "Apresentação Urmobo",
-          ],
-        },
-      }).sort({ updatedAt: -1 });
-      return res.status(200).json(portals);
-    }
-
-    if (roles[0] === "2-2") {
-      const portals = await Portal.find({
-        name: {
-          $in: [
-            "BI - Pavimentação   ( BRK )",
-            "BI - Fiscalização de Clientes Cortados BRK",
+            "BI - BRK",
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
             "Chamados TI 👨🏻‍💻",
@@ -96,55 +49,97 @@ const listPortals = async (req, res) => {
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
             "Apresentação Urmobo",
-          ],
-        },
-      }).sort({ updatedAt: -1 });
-      return res.status(200).json(portals);
-    }
-
-    if (roles[0] === "2-2-1") {
-      const portals = await Portal.find({
-        name: {
-          $in: [
-            "BI - Pavimentação   ( BRK )",
-            "Chamados TI 👨🏻‍💻",
-            "RH 👥",
-            "Comunicação Interna 📢",
-            "AHGORA - Ponto Digital 🚏",
-            "Formulário de KM 🚙",
-            "Guia prático dos ativos da Cifra",
-            "Universidade Cifra",
-            "Apresentação Urmobo",
-          ],
-        },
-      }).sort({ updatedAt: -1 });
-      return res.status(200).json(portals);
-    }
-
-    if (roles[0] === "2-2-2") {
-      const portals = await Portal.find({
-        name: {
-          $in: [
-            "BI - Fiscalização de Clientes Cortados BRK",
-            "Chamados TI 👨🏻‍💻",
-            "RH 👥",
-            "Comunicação Interna 📢",
-            "AHGORA - Ponto Digital 🚏",
-            "Formulário de KM 🚙",
-            "Guia prático dos ativos da Cifra",
-            "Universidade Cifra",
-            "Apresentação Urmobo",
-          ],
-        },
-      }).sort({ updatedAt: -1 });
-      return res.status(200).json(portals);
-    }
-
-    if (roles[0] === "2-4" || roles[0] === "2-4-1" || roles[0] === "2-4-2") {
-      const portals = await Portal.find({
-        name: {
-          $in: [
             "GSAN CASAL 💧",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
+    if (roles[0] === "verdeAlagoas") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "BI - VERDE ALAGOAS",
+            "Comunicação Interna 📢",
+            "AHGORA - Ponto Digital 🚏",
+            "Chamados TI 👨🏻‍💻",
+            "RH 👥",
+            "Formulário de KM 🚙",
+            "Guia prático dos ativos da Cifra",
+            "Universidade Cifra",
+            "Apresentação Urmobo",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
+    if (roles[0] === "alagoasGerente") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "BI - BRK",
+            "BI - VERDE ALAGOAS",
+            "Comunicação Interna 📢",
+            "AHGORA - Ponto Digital 🚏",
+            "Chamados TI 👨🏻‍💻",
+            "RH 👥",
+            "Formulário de KM 🚙",
+            "Guia prático dos ativos da Cifra",
+            "Universidade Cifra",
+            "Apresentação Urmobo",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
+    if (roles[0] === "frota") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "Controle de Frota",
+            "Comunicação Interna 📢",
+            "AHGORA - Ponto Digital 🚏",
+            "Chamados TI 👨🏻‍💻",
+            "RH 👥",
+            "Formulário de KM 🚙",
+            "Guia prático dos ativos da Cifra",
+            "Universidade Cifra",
+            "Apresentação Urmobo",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
+    if (roles[0] === "financeiro" || roles[0] === "compras") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "Omie 💲",
+            "Comunicação Interna 📢",
+            "AHGORA - Ponto Digital 🚏",
+            "Chamados TI 👨🏻‍💻",
+            "RH 👥",
+            "Formulário de KM 🚙",
+            "Guia prático dos ativos da Cifra",
+            "Universidade Cifra",
+            "Apresentação Urmobo",
+          ],
+        },
+      }).sort({ updatedAt: -1 });
+      return res.status(200).json(portals);
+    }
+
+    if (roles[0] === "rh") {
+      const portals = await Portal.find({
+        name: {
+          $in: [
+            "Omie 💲",
+            "BI - RH (CIFRA) 👥",
+            "BI - Centro de custo (CIFRA)",
             "Chamados TI 👨🏻‍💻",
             "RH 👥",
             "Comunicação Interna 📢",

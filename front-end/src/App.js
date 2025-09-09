@@ -96,7 +96,24 @@ function App() {
       <Route
         path="/diary"
         element={
-          <PrivateRoute userTypes={["1", "2-1", "2-2", "2-2-1", "2-2-2", "3"]}>
+          <PrivateRoute
+            userTypes={[
+              "1",
+              "compesa",
+              "brk",
+              "verdeAlagoas",
+              "alagoasGerente",
+              "sergipe",
+              "igua",
+              "obras",
+              "compras",
+              "almoxarifado",
+              "rh",
+              "financeiro",
+              "frota",
+              "3",
+            ]}
+          >
             <EletronicDiary />
           </PrivateRoute>
         }

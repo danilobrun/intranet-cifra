@@ -13,33 +13,47 @@ async function atualizarRoleUsuarios() {
     );
     console.log("🔌 Conectado ao MongoDB");
 
-    const roleAntiga = await Role.findOne({ code: "2-2" });
-    const roleNova = await Role.findOne({ code: "3" });
+    const roles = await Role.find({});
+    const roleMap = {};
+    roles.forEach((r, i) => {
+      console.log(`${i + 1} - ${r.cargo}`);
+      roleMap[i + 1] = r;
+    });
 
-    if (!roleAntiga || !roleNova) {
-      console.error("❌ Role antiga ou nova não encontrada");
-      return;
-    }
+    console.log("0 - Pular");
 
-    const usuarios = await User.find({ roles: roleAntiga._id });
+    const users = await User.find();
+    for (const user of users) {
+      console.log(`Atualizando usuário: ${user.name}`);
+      const resposta = await prompt(
+        `Qual role deseja atribuir ao usuário ${user.name}?`
+      );
 
-    console.log(`📌 Usuários encontrados com role 2-2: ${usuarios.length}`);
+      const numero = parseInt(resposta);
+      if (numero === 0) {
+        console.log("Usuário Pulado");
+        continue;
+      }
 
-    for (const user of usuarios) {
-      // Remove a antiga e adiciona a nova se necessário
-      user.roles = user.roles
-        .filter((r) => !r.equals(roleAntiga._id)) // remove a antiga
-        .concat([roleNova._id]); // adiciona a nova
-
+      user.roles = [roleMap[numero]._id];
       await user.save();
-      console.log(`✅ Atualizado: ${user.email}`);
+      console.log(
+        `Role ${roleMap[numero].cargo} atribuída ao usuário ${user.name}`
+      );
     }
 
-    console.log("🎉 Atualização concluída!");
     await mongoose.disconnect();
+    console.log("\n🎉 Finalizado.");
   } catch (err) {
     console.error("❌ Erro ao atualizar usuários:", err);
     process.exit(1);
+  }
+
+  function prompt(msg) {
+    return new Promise((resolve) => {
+      process.stdout.write(msg);
+      process.stdin.once("data", (data) => resolve(data.toString().trim()));
+    });
   }
 }
 

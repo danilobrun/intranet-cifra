@@ -2,10 +2,7 @@ const mongoose = require("mongoose");
 
 const RoleSchema = new mongoose.Schema({
   cargo: { type: String, required: true },
-  empresa: { type: String, required: true },
-  contrato: { type: String, required: true },
   code: { type: String, unique: true, required: true },
-  cod_contrato: { type: String, required: true },
 });
 
 const Role = mongoose.model("Role", RoleSchema);
