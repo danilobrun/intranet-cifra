@@ -30,6 +30,7 @@ const listPortals = async (req, res) => {
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
             "Apresentação Urmobo",
+            "📃 Modelos de Documentos",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -50,6 +51,7 @@ const listPortals = async (req, res) => {
             "Universidade Cifra",
             "Apresentação Urmobo",
             "GSAN CASAL 💧",
+            "📃 Modelos de Documentos",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -69,6 +71,7 @@ const listPortals = async (req, res) => {
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
             "Apresentação Urmobo",
+            "📃 Modelos de Documentos",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -89,6 +92,7 @@ const listPortals = async (req, res) => {
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
             "Apresentação Urmobo",
+            "📃 Modelos de Documentos",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -108,6 +112,7 @@ const listPortals = async (req, res) => {
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
             "Apresentação Urmobo",
+            "📃 Modelos de Documentos",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -127,6 +132,7 @@ const listPortals = async (req, res) => {
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
             "Apresentação Urmobo",
+            "📃 Modelos de Documentos",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -148,6 +154,7 @@ const listPortals = async (req, res) => {
             "Guia prático dos ativos da Cifra",
             "Universidade Cifra",
             "Apresentação Urmobo",
+            "📃 Modelos de Documentos",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -165,6 +172,7 @@ const listPortals = async (req, res) => {
           "Guia prático dos ativos da Cifra",
           "Universidade Cifra",
           "Apresentação Urmobo",
+          "📃 Modelos de Documentos",
         ],
       },
     }).sort({ updatedAt: -1 });
