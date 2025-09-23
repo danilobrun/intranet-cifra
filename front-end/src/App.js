@@ -14,6 +14,7 @@ import { AdminEditUserView } from "./views/AdminEditUser";
 import { AdminAddUserView } from "./views/AdminAddUser";
 import { RegisterView } from "./views/Register";
 import { EditProfile } from "./views/EditProfile";
+import { Addresses } from "./views/Addresses";
 
 function App() {
   return (
@@ -115,6 +116,31 @@ function App() {
             ]}
           >
             <EletronicDiary />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/addresses"
+        element={
+          <PrivateRoute
+            userTypes={[
+              "1",
+              "compesa",
+              "brk",
+              "verdeAlagoas",
+              "alagoasGerente",
+              "sergipe",
+              "igua",
+              "obras",
+              "compras",
+              "almoxarifado",
+              "rh",
+              "financeiro",
+              "frota",
+              "3",
+            ]}
+          >
+            <Addresses />
           </PrivateRoute>
         }
       />

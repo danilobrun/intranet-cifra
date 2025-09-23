@@ -63,6 +63,27 @@ export function Sidebar({ isOpen, onClose }) {
         "3",
       ],
     },
+    {
+      to: "/portal/addresses",
+      text: "Endereços",
+      checkAllPath: false,
+      userTypes: [
+        "1",
+        "compesa",
+        "brk",
+        "verdeAlagoas",
+        "alagoasGerente",
+        "sergipe",
+        "igua",
+        "obras",
+        "compras",
+        "almoxarifado",
+        "rh",
+        "financeiro",
+        "frota",
+        "3",
+      ],
+    },
   ];
 
   return (
@@ -92,6 +113,8 @@ export function Sidebar({ isOpen, onClose }) {
 
 const SidebarStyled = styled.header`
   width: 280px;
+  flex: 0 0 280px;
+  flex-shrink: 0;
   @media (max-width: 991px) {
     position: fixed;
     top: 0;
