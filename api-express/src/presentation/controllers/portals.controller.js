@@ -31,6 +31,8 @@ const listPortals = async (req, res) => {
             "Universidade Cifra",
             "Apresentação Urmobo",
             "📃 Modelos de Documentos",
+            "Modelo Power Point CIFRA",
+            "Tutorial ClickUp - Cifra Engenharia",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -52,6 +54,8 @@ const listPortals = async (req, res) => {
             "Apresentação Urmobo",
             "GSAN CASAL 💧",
             "📃 Modelos de Documentos",
+            "Modelo Power Point CIFRA",
+            "Tutorial ClickUp - Cifra Engenharia",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -72,6 +76,8 @@ const listPortals = async (req, res) => {
             "Universidade Cifra",
             "Apresentação Urmobo",
             "📃 Modelos de Documentos",
+            "Modelo Power Point CIFRA",
+            "Tutorial ClickUp - Cifra Engenharia",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -93,6 +99,8 @@ const listPortals = async (req, res) => {
             "Universidade Cifra",
             "Apresentação Urmobo",
             "📃 Modelos de Documentos",
+            "Modelo Power Point CIFRA",
+            "Tutorial ClickUp - Cifra Engenharia",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -113,6 +121,8 @@ const listPortals = async (req, res) => {
             "Universidade Cifra",
             "Apresentação Urmobo",
             "📃 Modelos de Documentos",
+            "Modelo Power Point CIFRA",
+            "Tutorial ClickUp - Cifra Engenharia",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -133,6 +143,8 @@ const listPortals = async (req, res) => {
             "Universidade Cifra",
             "Apresentação Urmobo",
             "📃 Modelos de Documentos",
+            "Modelo Power Point CIFRA",
+            "Tutorial ClickUp - Cifra Engenharia",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -155,6 +167,8 @@ const listPortals = async (req, res) => {
             "Universidade Cifra",
             "Apresentação Urmobo",
             "📃 Modelos de Documentos",
+            "Modelo Power Point CIFRA",
+            "Tutorial ClickUp - Cifra Engenharia",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -173,6 +187,8 @@ const listPortals = async (req, res) => {
           "Universidade Cifra",
           "Apresentação Urmobo",
           "📃 Modelos de Documentos",
+          "Modelo Power Point CIFRA",
+          "Tutorial ClickUp - Cifra Engenharia",
         ],
       },
     }).sort({ updatedAt: -1 });
