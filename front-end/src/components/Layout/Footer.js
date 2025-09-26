@@ -19,6 +19,13 @@ export default function Footer() {
           >
             Código de Conduta
           </Nav.Link>
+          <Nav.Link
+            href="relatorio-igualdade-salario.pdf"
+            target="_blank"
+            className="text-white"
+          >
+            Relatório de Igualdade Salarial
+          </Nav.Link>
         </Nav>
         <Nav className="justify-content-center">
           <Nav.Link
@@ -51,5 +58,5 @@ const FooterStyled = styled.footer`
 `;
 
 const IconStyled = styled(FontAwesomeIcon)`
-  font-size: 40px;
+  font-size: 30px;
 `;
