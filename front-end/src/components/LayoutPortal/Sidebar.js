@@ -29,6 +29,7 @@ export function Sidebar({ isOpen, onClose }) {
         "financeiro",
         "frota",
         "3",
+        "gca",
       ],
     },
     {
@@ -61,6 +62,7 @@ export function Sidebar({ isOpen, onClose }) {
         "financeiro",
         "frota",
         "3",
+        "gca",
       ],
     },
     {
