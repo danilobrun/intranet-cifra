@@ -175,6 +175,15 @@ const listPortals = async (req, res) => {
       return res.status(200).json(portals);
     }
 
+    if (roles[0] === "recruitment") {
+      const portals = await Portal.find({
+        name: {
+          $in: ["Chamados TI 👨🏻‍💻", "Drive - Recruitment"],
+        },
+      });
+      return res.status(200).json(portals);
+    }
+
     if (roles[0] === "gca") {
       const portals = await Portal.find({
         name: {
