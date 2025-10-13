@@ -150,6 +150,7 @@ export function UpdateUserForm({
             required
           >
             <option value="compesa">Compesa</option>
+            <option value="recruitment">Recruitment</option>
             <option value="gca">GCA</option>
             <option value="brk">BRK</option>
             <option value="verdeAlagoas">Verde Alagoas</option>

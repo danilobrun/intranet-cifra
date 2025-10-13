@@ -30,6 +30,7 @@ export function Sidebar({ isOpen, onClose }) {
         "frota",
         "3",
         "gca",
+        "recruitment",
       ],
     },
     {
@@ -63,6 +64,7 @@ export function Sidebar({ isOpen, onClose }) {
         "frota",
         "3",
         "gca",
+        "recruitment",
       ],
     },
     {
