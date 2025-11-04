@@ -33,6 +33,7 @@ const listPortals = async (req, res) => {
             "📃 Modelos de Documentos",
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
+            "Servidor de Arquivos 📂",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -56,6 +57,7 @@ const listPortals = async (req, res) => {
             "📃 Modelos de Documentos",
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
+            "Servidor de Arquivos 📂",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -78,6 +80,7 @@ const listPortals = async (req, res) => {
             "📃 Modelos de Documentos",
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
+            "Servidor de Arquivos 📂",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -101,6 +104,7 @@ const listPortals = async (req, res) => {
             "📃 Modelos de Documentos",
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
+            "Servidor de Arquivos 📂",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -123,6 +127,7 @@ const listPortals = async (req, res) => {
             "📃 Modelos de Documentos",
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
+            "Servidor de Arquivos 📂",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -145,6 +150,7 @@ const listPortals = async (req, res) => {
             "📃 Modelos de Documentos",
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
+            "Servidor de Arquivos 📂",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -169,6 +175,7 @@ const listPortals = async (req, res) => {
             "📃 Modelos de Documentos",
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
+            "Servidor de Arquivos 📂",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -207,6 +214,7 @@ const listPortals = async (req, res) => {
           "📃 Modelos de Documentos",
           "Modelo Power Point CIFRA",
           "Tutorial ClickUp - Cifra Engenharia",
+          "Servidor de Arquivos 📂",
         ],
       },
     }).sort({ updatedAt: -1 });
