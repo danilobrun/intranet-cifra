@@ -15,6 +15,7 @@ import { AdminAddUserView } from "./views/AdminAddUser";
 import { RegisterView } from "./views/Register";
 import { EditProfile } from "./views/EditProfile";
 import { Addresses } from "./views/Addresses";
+import { Contracts } from "./views/Contracts";
 
 function App() {
   return (
@@ -141,6 +142,31 @@ function App() {
             ]}
           >
             <Addresses />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/contracts"
+        element={
+          <PrivateRoute
+            userTypes={[
+              "1",
+              "compesa",
+              "brk",
+              "verdeAlagoas",
+              "alagoasGerente",
+              "sergipe",
+              "igua",
+              "obras",
+              "compras",
+              "almoxarifado",
+              "rh",
+              "financeiro",
+              "frota",
+              "3",
+            ]}
+          >
+            <Contracts />
           </PrivateRoute>
         }
       />

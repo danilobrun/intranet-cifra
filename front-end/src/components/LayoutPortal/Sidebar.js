@@ -88,6 +88,27 @@ export function Sidebar({ isOpen, onClose }) {
         "3",
       ],
     },
+    {
+      to: "/portal/contracts",
+      text: "Contratos",
+      checkAllPath: false,
+      userTypes: [
+        "1",
+        "compesa",
+        "brk",
+        "verdeAlagoas",
+        "alagoasGerente",
+        "sergipe",
+        "igua",
+        "obras",
+        "compras",
+        "almoxarifado",
+        "rh",
+        "financeiro",
+        "frota",
+        "3",
+      ],
+    },
   ];
 
   return (
