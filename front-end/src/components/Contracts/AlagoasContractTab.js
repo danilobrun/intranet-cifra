@@ -13,7 +13,6 @@ export function AlagoasContractTab() {
             <th>Projeto</th>
             <th>Gerente</th>
             <th>Vigência</th>
-            <th>Diretor</th>
             <th>Cliente</th>
           </tr>
         </thead>
@@ -24,7 +23,6 @@ export function AlagoasContractTab() {
                 <td>{project.name}</td>
                 <td>{project.manager}</td>
                 <td>{project.validity}</td>
-                <td>{project.director}</td>
                 <td>{project.client}</td>
               </tr>
             ))
