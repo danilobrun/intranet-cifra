@@ -22,7 +22,7 @@ const listPortals = async (req, res) => {
             "Giscomp 🗾",
             "GSAN 💧",
             "Metabase 🌐",
-            "Chamados GTI 👨🏻‍💻",
+            "REQUISIÇÕES INTERNAS - ClickUp",
             "RH 👥",
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
@@ -47,7 +47,7 @@ const listPortals = async (req, res) => {
             "BI - BRK",
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
-            "Chamados GTI 👨🏻‍💻",
+            "REQUISIÇÕES INTERNAS - ClickUp",
             "RH 👥",
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
@@ -71,7 +71,7 @@ const listPortals = async (req, res) => {
             "BI - VERDE ALAGOAS",
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
-            "Chamados GTI 👨🏻‍💻",
+            "REQUISIÇÕES INTERNAS - ClickUp",
             "RH 👥",
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
@@ -95,7 +95,7 @@ const listPortals = async (req, res) => {
             "BI - VERDE ALAGOAS",
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
-            "Chamados GTI 👨🏻‍💻",
+            "REQUISIÇÕES INTERNAS - ClickUp",
             "RH 👥",
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
@@ -118,7 +118,7 @@ const listPortals = async (req, res) => {
             "Controle de Frota",
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
-            "Chamados GTI 👨🏻‍💻",
+            "REQUISIÇÕES INTERNAS - ClickUp",
             "RH 👥",
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
@@ -141,7 +141,7 @@ const listPortals = async (req, res) => {
             "Omie 💲",
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
-            "Chamados GTI 👨🏻‍💻",
+            "REQUISIÇÕES INTERNAS - ClickUp",
             "RH 👥",
             "Formulário de KM 🚙",
             "Guia prático dos ativos da Cifra",
@@ -164,7 +164,7 @@ const listPortals = async (req, res) => {
             "Omie 💲",
             "BI - RH (CIFRA) 👥",
             "BI - Centro de custo (CIFRA)",
-            "Chamados GTI 👨🏻‍💻",
+            "REQUISIÇÕES INTERNAS - ClickUp",
             "RH 👥",
             "Comunicação Interna 📢",
             "AHGORA - Ponto Digital 🚏",
@@ -185,7 +185,7 @@ const listPortals = async (req, res) => {
     if (roles[0] === "recruitment") {
       const portals = await Portal.find({
         name: {
-          $in: ["Chamados GTI 👨🏻‍💻", "Drive - Recruitment"],
+          $in: ["REQUISIÇÕES INTERNAS - ClickUp", "Drive - Recruitment"],
         },
       });
       return res.status(200).json(portals);
@@ -203,7 +203,7 @@ const listPortals = async (req, res) => {
     const portals = await Portal.find({
       name: {
         $in: [
-          "Chamados GTI 👨🏻‍💻",
+          "REQUISIÇÕES INTERNAS - ClickUp",
           "RH 👥",
           "Comunicação Interna 📢",
           "AHGORA - Ponto Digital 🚏",
