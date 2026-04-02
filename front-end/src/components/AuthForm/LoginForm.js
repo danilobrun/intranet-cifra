@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { Button, Form } from "react-bootstrap";
-import { login } from "../../services/Users.service";
 import { toast } from "react-toastify";
 import { useDispatch } from "react-redux";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import styled from "styled-components";
+import { login } from "../../services/Users.service";
 import { userLogin } from "../../store/User/User.actions";
 
 export function LoginForm({ redirectAfterLogin }) {
@@ -12,34 +13,39 @@ export function LoginForm({ redirectAfterLogin }) {
     email: "",
     password: "",
   });
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
   const handleChange = (event) => {
     setFormData({
       ...formData,
       [event.target.name]: event.target.value,
     });
   };
-  const dispatch = useDispatch();
-  const navigate = useNavigate();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
     try {
       setIsSubmiting(true);
       const userData = await login(formData);
-      // Enviar para o redux
       dispatch(userLogin(userData));
+
       if (redirectAfterLogin) {
         navigate("/portal");
       }
     } catch (error) {
       const message =
         error.message === "Credentials invalid."
-          ? "E-mail ou senha inválidos."
+          ? "E-mail ou senha invalidos."
           : "Falha ao fazer login. Tente novamente.";
+
       console.error(error.message);
       toast.error(message);
       setIsSubmiting(false);
     }
   };
+
   return (
     <Form onSubmit={handleSubmit}>
       <p className="h4">Login</p>
@@ -65,9 +71,20 @@ export function LoginForm({ redirectAfterLogin }) {
           required
         />
       </Form.Group>
+      <HelperText className="mb-3">
+        Não lembra a sua senha?{" "}
+        <Link to="/recover-password">Recuperar senha</Link>
+      </HelperText>
       <Button type="submit" disabled={isSubmiting} className="w-100">
         Entrar
       </Button>
     </Form>
   );
 }
+
+const HelperText = styled.p`
+  margin: 0;
+  font-size: 0.95rem;
+  color: #6c757d;
+  text-align: end;
+`;

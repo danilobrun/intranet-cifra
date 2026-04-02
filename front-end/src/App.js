@@ -16,12 +16,24 @@ import { RegisterView } from "./views/Register";
 import { EditProfile } from "./views/EditProfile";
 import { Addresses } from "./views/Addresses";
 import { Contracts } from "./views/Contracts";
+import { ForgotPasswordView } from "./views/ForgotPassword";
+import { ForgotPasswordCodeView } from "./views/ForgotPasswordCode";
+import { ResetPasswordView } from "./views/ResetPassword";
 
 function App() {
   return (
     <Routes>
       <Route path="/" element={<HomeView />} />
       <Route path="/register" element={<RegisterView />} />
+      <Route path="/recover-password" element={<ForgotPasswordView />} />
+      <Route
+        path="/recover-password/code"
+        element={<ForgotPasswordCodeView />}
+      />
+      <Route
+        path="/recover-password/reset"
+        element={<ResetPasswordView />}
+      />
       <Route
         path="/portals"
         element={

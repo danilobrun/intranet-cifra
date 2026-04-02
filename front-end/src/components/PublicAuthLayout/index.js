@@ -1,0 +1,181 @@
+import styled from "styled-components";
+import { Carousel, CarouselItem } from "react-bootstrap";
+import background from "../../assets/img/background.png";
+import Logo from "../../assets/img/logo-cifra.png";
+import Brk from "../../assets/img/brk.jpg";
+import Cadastro from "../../assets/img/cadastro.png";
+import CortRelig from "../../assets/img/cort-relig.png";
+import Obra from "../../assets/img/obra-5.png";
+import Tele from "../../assets/img/tele.png";
+import MataSul from "../../assets/img/mata-sul.jpeg";
+import MataNorte from "../../assets/img/mata-norte5.jpeg";
+import Obras1 from "../../assets/img/obras-1.png";
+import Obras2 from "../../assets/img/obras-2.png";
+import Russas from "../../assets/img/russas5.jpeg";
+import Footer from "../Layout/Footer";
+
+export function PublicAuthLayout({ children }) {
+  return (
+    <Container>
+      <DivImagem>
+        <img src={background} alt="varias imagens da cifra" />
+      </DivImagem>
+      <DivContent>
+        <DivAuth>
+          <div className="DivLogo">
+            <img src={Logo} alt="logo da cifra" />
+          </div>
+          <div className="DivAuthContainer">
+            <div className="DivAuthContent">{children}</div>
+            <div className="DivCarousel">
+              <StyledCarousel>
+                <CarouselItem>
+                  <img src={Brk} alt="slide de obras da cifra" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={Cadastro} alt="slide de equipe da cifra" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={CortRelig} alt="slide de atividade de campo" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={Obra} alt="slide de obra" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={Tele} alt="slide de reuniao remota" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={MataNorte} alt="slide de campo mata norte" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={MataSul} alt="slide de campo mata sul" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={Obras1} alt="slide de acompanhamento de obra" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={Obras2} alt="slide de vistoria" />
+                </CarouselItem>
+                <CarouselItem>
+                  <img src={Russas} alt="slide de frente de servico" />
+                </CarouselItem>
+              </StyledCarousel>
+            </div>
+          </div>
+          <Footer />
+        </DivAuth>
+      </DivContent>
+    </Container>
+  );
+}
+
+const Container = styled.div`
+  width: 100dvw;
+  min-height: 100vh;
+  overflow-x: hidden;
+  padding: 2rem 0;
+`;
+
+const DivImagem = styled.div`
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  z-index: -1;
+  overflow: hidden;
+
+  & img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(60%);
+    object-position: center;
+  }
+`;
+
+const DivContent = styled.div`
+  z-index: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 0 1.5rem;
+`;
+
+const DivAuth = styled.div`
+  width: 100%;
+  background-color: #fff;
+  border-radius: 0.5rem;
+  overflow: hidden;
+
+  & .DivLogo {
+    text-align: center;
+    padding: 1rem 0;
+  }
+
+  & div:nth-child(1) img {
+    width: 200px;
+  }
+
+  & .DivAuthContainer {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    padding: 0 1rem;
+    align-items: center;
+
+    & .DivAuthContent {
+      padding: 1rem 1rem 0 1rem;
+      width: 100%;
+    }
+
+    & .DivAuthContent > div:nth-child(1) {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 1rem;
+    }
+
+    & .DivCarousel {
+      padding: 0 1rem 1rem 1rem;
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+    }
+  }
+
+  @media (width > 992px) {
+    width: 80%;
+  }
+
+  @media (width > 1450px) {
+    width: 50%;
+  }
+`;
+
+const StyledCarousel = styled(Carousel)`
+  width: 100%;
+  height: 350px;
+
+  @media (width < 992px) {
+    height: 300px;
+  }
+
+  & .carousel-inner,
+  .carousel-item {
+    width: 100%;
+    height: 100%;
+    overflow: hidden;
+    border-radius: 0.5rem;
+  }
+
+  & .carousel-inner .carousel-item img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    filter: brightness(70%);
+  }
+`;

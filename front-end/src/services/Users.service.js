@@ -1,19 +1,25 @@
 import { apiUrl, getAuthorizationHeaders } from "./Api.service";
 import { removeStorageItem, setStorageItem } from "./Storage.service";
 
-export const login = async (credentialsData) => {
-  const body = JSON.stringify(credentialsData);
-  const response = await fetch(`${apiUrl}/auth/login/`, {
+const postJson = async (url, payload) => {
+  const response = await fetch(url, {
     method: "POST",
-    body,
+    body: JSON.stringify(payload),
     headers: {
       "content-type": "application/json",
     },
   });
   const data = await response.json();
+
   if (!response.ok) {
-    throw new Error(data.msg);
+    throw new Error(data.msg || "Falha ao processar a solicitacao.");
   }
+
+  return data;
+};
+
+export const login = async (credentialsData) => {
+  const data = await postJson(`${apiUrl}/auth/login/`, credentialsData);
   return processAuthResponse(data);
 };
 
@@ -22,19 +28,23 @@ export const logout = () => {
 };
 
 export const createUser = async (userData) => {
-  const body = JSON.stringify(userData);
-  const response = await fetch(`${apiUrl}/auth/register`, {
-    method: "POST",
-    body,
-    headers: {
-      "content-type": "application/json",
-    },
-  });
-  const data = await response.json();
-  if (!response.ok) {
-    throw new Error(data.msg);
-  }
+  const data = await postJson(`${apiUrl}/auth/register`, userData);
   return processAuthResponse(data);
+};
+
+export const requestPasswordResetCode = async (email) => {
+  return postJson(`${apiUrl}/auth/forgot-password/request`, { email });
+};
+
+export const verifyPasswordResetCode = async (email, code) => {
+  return postJson(`${apiUrl}/auth/forgot-password/verify`, {
+    email,
+    code,
+  });
+};
+
+export const resetPassword = async (resetData) => {
+  return postJson(`${apiUrl}/auth/forgot-password/reset`, resetData);
 };
 
 const processAuthResponse = (data) => {
