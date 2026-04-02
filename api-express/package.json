@@ -23,6 +23,7 @@
     "express-session": "^1.17.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.5.2",
+    "nodemailer": "^8.0.4",
     "tslib": "^2.5.0"
   },
   "devDependencies": {
