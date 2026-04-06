@@ -8,7 +8,7 @@ const port = process.env.PORT || 3002;
 
 const app = express();
 
-// O Cors serve para liberar requisições externas (portas diferente)
+// O Cors serve para liberar requisições externas (portas diferente).
 app.use(cors());
 
 // Config JSON response middleware
@@ -24,7 +24,7 @@ const dbPassword = process.env.DB_PASS;
 // Connect method Mongo DB
 mongoose
   .connect(
-    `mongodb+srv://${dbUser}:${dbPassword}@intranetcifra.1iksmgz.mongodb.net/?retryWrites=true&w=majority`
+    `mongodb+srv://${dbUser}:${dbPassword}@intranetcifra.1iksmgz.mongodb.net/?retryWrites=true&w=majority`,
   )
   .then(() => {
     app.listen(port);
