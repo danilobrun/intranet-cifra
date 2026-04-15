@@ -109,6 +109,12 @@ export function Sidebar({ isOpen, onClose }) {
         "3",
       ],
     },
+    {
+      to: "/portal/chatbot",
+      text: "Chatbot de Frota",
+      checkAllPath: false,
+      userTypes: ["1"],
+    },
   ];
 
   return (

@@ -19,6 +19,7 @@ import { Contracts } from "./views/Contracts";
 import { ForgotPasswordView } from "./views/ForgotPassword";
 import { ForgotPasswordCodeView } from "./views/ForgotPasswordCode";
 import { ResetPasswordView } from "./views/ResetPassword";
+import { ChatbotView } from "./views/Chatbot";
 
 function App() {
   return (
@@ -179,6 +180,14 @@ function App() {
             ]}
           >
             <Contracts />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/chatbot"
+        element={
+          <PrivateRoute userTypes={["1"]}>
+            <ChatbotView />
           </PrivateRoute>
         }
       />
