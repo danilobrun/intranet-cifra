@@ -21,7 +21,7 @@ registersRoutes(app);
 const dbUser = process.env.DB_USER;
 const dbPassword = process.env.DB_PASS;
 
-// Connect method Mongo DB
+// Connect method Mongo DB.
 mongoose
   .connect(
     `mongodb+srv://${dbUser}:${dbPassword}@intranetcifra.1iksmgz.mongodb.net/?retryWrites=true&w=majority`,
