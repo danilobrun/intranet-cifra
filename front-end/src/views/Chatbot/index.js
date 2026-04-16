@@ -73,10 +73,7 @@ export function ChatbotView() {
       text: content,
     };
 
-    setMessages((currentMessages) => [
-      ...currentMessages,
-      userMessage,
-    ]);
+    setMessages((currentMessages) => [...currentMessages, userMessage]);
     setDraft("");
     setIsAnswering(true);
 
@@ -86,8 +83,10 @@ export function ChatbotView() {
     try {
       const assistantText = await sendChatbotMessage(
         userMessage,
-        controller.signal
+        controller.signal,
       );
+
+      console.log(assistantText);
 
       setMessages((currentMessages) => [
         ...currentMessages,
@@ -106,9 +105,7 @@ export function ChatbotView() {
           {
             id: `assistant-error-${Date.now()}`,
             sender: "assistant",
-            text:
-              error.message ||
-              "Nao foi possivel consultar o chatbot no momento.",
+            text: "Não foi possível consultar o chatbot no momento.",
           },
         ]);
       }

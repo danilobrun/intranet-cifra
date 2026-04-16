@@ -1,4 +1,5 @@
 import { Badge, Card, Spinner } from "react-bootstrap";
+import ReactMarkdown from "react-markdown";
 import styled from "styled-components";
 
 export function ChatbotConversation({
@@ -31,7 +32,13 @@ export function ChatbotConversation({
                   ? "Assistente"
                   : userName || "Usuario"}
               </MessageAuthor>
-              <p className="mb-0">{message.text}</p>
+              {message.sender === "assistant" ? (
+                <MarkdownContent>
+                  <ReactMarkdown>{message.text}</ReactMarkdown>
+                </MarkdownContent>
+              ) : (
+                <p className="mb-0">{message.text}</p>
+              )}
             </MessageBubble>
           </MessageRow>
         ))}
@@ -110,6 +117,33 @@ const MessageAuthor = styled.small`
   display: block;
   font-weight: 600;
   margin-bottom: 0.5rem;
+`;
+
+const MarkdownContent = styled.div`
+  p:last-child,
+  ul:last-child,
+  ol:last-child {
+    margin-bottom: 0;
+  }
+
+  p,
+  ul,
+  ol {
+    margin-bottom: 0.75rem;
+  }
+
+  ul,
+  ol {
+    padding-left: 1.25rem;
+  }
+
+  li + li {
+    margin-top: 0.25rem;
+  }
+
+  strong {
+    font-weight: 700;
+  }
 `;
 
 const TypingLine = styled.div`
