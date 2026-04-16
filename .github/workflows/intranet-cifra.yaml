@@ -1,0 +1,36 @@
+name: Vercel Production Deployment
+
+on:
+  push:
+    branches:
+      - cifra-UI-2
+    paths:
+      - "api-express/**" # 👈 só dispara se mexer aqui
+
+env:
+  VERCEL_ORG_ID: ${{ secrets.VERCEL_ORG_ID }}
+  VERCEL_PROJECT_ID: ${{ secrets.VERCEL_PROJECT_ID }}
+
+jobs:
+  Deploy-Production:
+    runs-on: ubuntu-latest
+
+    defaults:
+      run:
+        working-directory: api-express # 👈 ESSENCIAL
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Install Vercel CLI
+        run: npm install -g vercel@latest
+
+      - name: Pull Vercel Environment
+        run: vercel pull --yes --environment=production --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Build
+        run: vercel build --prod --token=${{ secrets.VERCEL_TOKEN }}
+
+      - name: Deploy
+        run: vercel deploy --prebuilt --prod --token=${{ secrets.VERCEL_TOKEN }}
