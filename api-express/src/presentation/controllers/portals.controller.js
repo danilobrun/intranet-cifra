@@ -34,6 +34,7 @@ const listPortals = async (req, res) => {
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
             "Servidor de Arquivos 📂",
+            "Power BI - Frota (Checklist) SIGA",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -58,6 +59,7 @@ const listPortals = async (req, res) => {
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
             "Servidor de Arquivos 📂",
+            "Power BI - Frota (Checklist) SIGA",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -81,6 +83,7 @@ const listPortals = async (req, res) => {
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
             "Servidor de Arquivos 📂",
+            "Power BI - Frota (Checklist) SIGA",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -105,6 +108,7 @@ const listPortals = async (req, res) => {
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
             "Servidor de Arquivos 📂",
+            "Power BI - Frota (Checklist) SIGA",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -128,6 +132,7 @@ const listPortals = async (req, res) => {
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
             "Servidor de Arquivos 📂",
+            "Power BI - Frota (Checklist) SIGA",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -151,6 +156,7 @@ const listPortals = async (req, res) => {
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
             "Servidor de Arquivos 📂",
+            "Power BI - Frota (Checklist) SIGA",
           ],
         },
       }).sort({ updatedAt: -1 });
@@ -176,6 +182,7 @@ const listPortals = async (req, res) => {
             "Modelo Power Point CIFRA",
             "Tutorial ClickUp - Cifra Engenharia",
             "Servidor de Arquivos 📂",
+            "Power BI - Frota (Checklist) SIGA",
           ],
         },
       }).sort({ updatedAt: -1 });
