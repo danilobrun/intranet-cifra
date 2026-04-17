@@ -36,6 +36,20 @@ async function checkToken(req, res, next) {
   }
 }
 
+function ensureRoleCodes(allowedRoles = []) {
+  return (req, res, next) => {
+    const userRoles = Array.isArray(req.user?.roles) ? req.user.roles : [];
+    const isAllowed = allowedRoles.some((roleCode) => userRoles.includes(roleCode));
+
+    if (!isAllowed) {
+      return res.status(403).json({ msg: "Acesso negado!" });
+    }
+
+    next();
+  };
+}
+
 module.exports = {
   checkToken,
+  ensureRoleCodes,
 };
