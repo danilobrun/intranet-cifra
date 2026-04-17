@@ -13,14 +13,18 @@ export function AdminAddUserView() {
       navigate("/portal/users");
     } catch (error) {
       toast.error(
-        error.message || "Falha ao cadastrar usuário. Tente novamente."
+        error.message || "Falha ao cadastrar usuário. Tente novamente.",
       );
     }
   };
   return (
     <LayoutPortal>
       <h1 className="mt-4">Novo Usuário</h1>
-      <UpdateUserForm onSubmit={handlesubmit} buttonLabel="Cadastrar" />
+      <UpdateUserForm
+        onSubmit={handlesubmit}
+        buttonLabel="Cadastrar"
+        type="create"
+      />
     </LayoutPortal>
   );
 }

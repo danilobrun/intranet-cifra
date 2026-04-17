@@ -1,6 +1,7 @@
-const { checkToken } = require("../middleware/checktoken");
+const { checkToken, ensureRoleCodes } = require("../middleware/checktoken");
 const {
   listPortals,
+  listAllPortals,
   createPortal,
   listPortalsById,
   deletePortalsById,
@@ -9,6 +10,7 @@ const {
 
 const portalsRoutes = (app) => {
   app.get("/portals", checkToken, listPortals);
+  app.get("/admin/portals", checkToken, ensureRoleCodes(["1"]), listAllPortals);
   app.post("/portals/auth/register", checkToken, createPortal);
   app.get("/portals/:id", checkToken, listPortalsById);
   app.delete("/portals/:id", checkToken, deletePortalsById);
