@@ -12,7 +12,7 @@ export function Sidebar({ isOpen, onClose }) {
   const menuItems = [
     {
       to: "/portal",
-      text: "Dashboard",
+      text: "📊 Dashboard",
       checkAllPath: true,
       userTypes: [
         "1",
@@ -35,19 +35,25 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: "/portal/portals",
-      text: "Portais",
+      text: "🌐 Portais",
       checkAllPath: false,
       userTypes: ["1"],
     },
     {
       to: "/portal/users",
-      text: "Usuários",
+      text: "👥 Usuarios",
+      checkAllPath: false,
+      userTypes: ["1"],
+    },
+    {
+      to: "/portal/roles",
+      text: "🛡️ Roles",
       checkAllPath: false,
       userTypes: ["1"],
     },
     {
       to: `/portal/editProfile/${user._id}`,
-      text: "Editar Perfil",
+      text: "✏️ Editar Perfil",
       checkAllPath: false,
       userTypes: [
         "compesa",
@@ -69,7 +75,7 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: "/portal/addresses",
-      text: "Endereços",
+      text: "📍 Endereços",
       checkAllPath: false,
       userTypes: [
         "1",
@@ -90,7 +96,7 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: "/portal/contracts",
-      text: "Contratos",
+      text: "📑 Contratos",
       checkAllPath: false,
       userTypes: [
         "1",
@@ -111,7 +117,7 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: "/portal/chatbot",
-      text: "Chatbot de Frota",
+      text: "🤖 Chatbot de Frota (BETA)",
       checkAllPath: false,
       userTypes: ["1"],
     },
@@ -146,6 +152,7 @@ const SidebarStyled = styled.header`
   width: 280px;
   flex: 0 0 280px;
   flex-shrink: 0;
+
   @media (max-width: 991px) {
     position: fixed;
     top: 0;
@@ -155,6 +162,7 @@ const SidebarStyled = styled.header`
     height: 100vh;
     margin-left: 100%;
     transition: all 0.2s linear;
+
     ${(props) =>
       props.isOpen &&
       `

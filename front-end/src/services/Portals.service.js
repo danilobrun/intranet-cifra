@@ -17,6 +17,22 @@ export const getPortals = async () => {
   return response.json();
 };
 
+export const getAdminPortals = async () => {
+  const response = await fetch(`${apiUrl}/admin/portals`, {
+    headers: getAuthorizationHeaders(),
+  });
+  if (response.status === 401) {
+    alert("Acesso expirado, favor efetuar login novamente!");
+    removeStorageItem("user");
+    window.location.href = "https://intranet-cifra.netlify.app/";
+    return;
+  }
+  if (!response.ok) {
+    throw new Error("Reponse not ok.");
+  }
+  return response.json();
+};
+
 export const getPortalById = async (portalId) => {
   const response = await fetch(
     `${apiUrl}/portals/${portalId}?_embed=inscriptions`,
