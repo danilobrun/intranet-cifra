@@ -52,6 +52,7 @@ export function AdminEditUserView() {
             }}
             buttonLabel="Alterar"
             onSubmit={handleSubmit}
+            type="edit"
           />
         </>
       ) : (

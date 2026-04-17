@@ -9,7 +9,7 @@ import { PiauiContractTab } from "../../components/Contracts/PiauiContractTab";
 export function Contracts() {
   return (
     <LayoutPortal>
-      <h1 className="mt-4 mb-2">📝 Contratos</h1>
+      <h1 className="mt-4 mb-2">📑 Contratos</h1>
       <Div>
         <Tabs defaultActiveKey="pernambuco" id="uncontrolled-tab-example">
           <Tab eventKey="pernambuco" title="Pernambuco">

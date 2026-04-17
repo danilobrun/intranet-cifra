@@ -8,7 +8,7 @@ import { SergipeTab } from "../../components/Addresses/SergipeTab";
 export function Addresses() {
   return (
     <LayoutPortal>
-      <h1 className="mt-4 mb-2">🏠 Endereços</h1>
+      <h1 className="mt-4 mb-2">📍 Endereços</h1>
       <Div>
         <Tabs defaultActiveKey="pernambuco" id="uncontrolled-tab-example">
           <Tab eventKey="pernambuco" title="Pernambuco">
