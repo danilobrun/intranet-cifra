@@ -1,5 +1,5 @@
 const chatbotUrl =
-  "https://powder-contributing-eliminate-codes.trycloudflare.com/webhook-test/chatbot-frota";
+  "https://powder-contributing-eliminate-codes.trycloudflare.com/webhook/chatbot-frota";
 
 const parseResponseBody = async (response) => {
   const rawBody = await response.text();
@@ -101,7 +101,8 @@ export const sendChatbotMessage = async (message, signal) => {
 
   if (!response.ok) {
     throw new Error(
-      extractErrorMessage(data) || "Falha ao processar a solicitacao do chatbot."
+      extractErrorMessage(data) ||
+        "Falha ao processar a solicitacao do chatbot.",
     );
   }
 

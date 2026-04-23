@@ -8,7 +8,7 @@ export function ChatbotSidebar({
 }) {
   return (
     <SupportCard>
-      <h2 className="h5 mb-3">Sugestoes de uso</h2>
+      <h2 className="h5 mb-3">Sugestões de uso</h2>
       <PromptList>
         {quickPrompts.map((prompt) => (
           <Button
