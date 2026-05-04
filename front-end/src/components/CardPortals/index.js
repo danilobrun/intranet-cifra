@@ -5,7 +5,7 @@ import styled from "styled-components";
 export function CardPortals({ portal }) {
   return (
     <Card className="text-center shadow h-100">
-      <Card.Link href={portal.url} target="_blank" rel="noopener noreferrer">
+      <Card.Link href={`/portals/${portal._id}`} rel="noopener noreferrer">
         <CardImgStyled variant="top" src={portal.image} alt={portal.name} />
       </Card.Link>
       <Card.Body className="d-flex flex-column align-items-center">
