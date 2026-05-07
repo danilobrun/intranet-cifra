@@ -116,6 +116,19 @@ export function Sidebar({ isOpen, onClose }) {
       ],
     },
     {
+      to: "/portal/plates",
+      text: "📂 Gestão de Placas",
+      checkAllPath: false,
+      userTypes: [
+        "1",
+        "admin",
+        "gerente_frota",
+        "auxiliar_frota",
+        "coordenador",
+        "frota",
+      ],
+    },
+    {
       to: "/portal/chatbot",
       text: "🤖 Chatbot de Frota (BETA)",
       checkAllPath: false,

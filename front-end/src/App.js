@@ -21,6 +21,8 @@ import { ForgotPasswordView } from "./views/ForgotPassword";
 import { ForgotPasswordCodeView } from "./views/ForgotPasswordCode";
 import { ResetPasswordView } from "./views/ResetPassword";
 import { ChatbotView } from "./views/Chatbot";
+import { PlatesView } from "./views/Plates";
+import { InactivePlatesView } from "./views/InactivePlates";
 
 function App() {
   return (
@@ -197,6 +199,39 @@ function App() {
         element={
           <PrivateRoute userTypes={["1"]}>
             <ChatbotView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/plates"
+        element={
+          <PrivateRoute
+            userTypes={[
+              "1",
+              "admin",
+              "gerente_frota",
+              "auxiliar_frota",
+              "coordenador",
+              "frota",
+            ]}
+          >
+            <PlatesView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/plates/inactive"
+        element={
+          <PrivateRoute
+            userTypes={[
+              "1",
+              "admin",
+              "gerente_frota",
+              "auxiliar_frota",
+              "frota",
+            ]}
+          >
+            <InactivePlatesView />
           </PrivateRoute>
         }
       />
