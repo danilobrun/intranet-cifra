@@ -1,4 +1,7 @@
-import { Button, Table } from "react-bootstrap";
+import { faEllipsisVertical } from "@fortawesome/free-solid-svg-icons";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { forwardRef } from "react";
+import { Dropdown, Table } from "react-bootstrap";
 
 const formatDate = (value) => {
   if (!value) return "-";
@@ -16,6 +19,23 @@ const getUserLabel = (user) => {
   return user.name || user.email || "-";
 };
 
+const ActionMenuToggle = forwardRef(
+  ({ onClick, "aria-label": ariaLabel }, ref) => (
+    <button
+      type="button"
+      ref={ref}
+      className="btn btn-sm btn-light border-0"
+      aria-label={ariaLabel}
+      onClick={(event) => {
+        event.preventDefault();
+        onClick(event);
+      }}
+    >
+      <FontAwesomeIcon icon={faEllipsisVertical} />
+    </button>
+  ),
+);
+
 export function PlatesTable({
   plates,
   onViewMovements,
@@ -24,10 +44,21 @@ export function PlatesTable({
   canDeactivatePlate = false,
 }) {
   return (
-    <Table striped hover responsive>
-      <thead>
+    <Table striped hover responsive style={{ tableLayout: "fixed" }}>
+      <colgroup>
+        <col style={{ width: "96px" }} />
+        <col />
+        <col />
+        <col style={{ width: "120px" }} />
+        <col style={{ width: "72px" }} />
+        <col style={{ width: "80px" }} />
+        <col style={{ width: "175px" }} />
+        <col style={{ width: "120px" }} />
+        <col />
+      </colgroup>
+      <thead style={{ borderTop: 0 }}>
         <tr>
-          <th>Placa</th>
+          <th className="text-nowrap">Placa</th>
           <th>Condutor</th>
           <th>Contrato</th>
           <th>Estado</th>
@@ -35,14 +66,16 @@ export function PlatesTable({
           <th>Status</th>
           <th>Última atualização</th>
           <th>Responsável</th>
-          <th />
+          <th>
+            <span className="visually-hidden">Ações</span>
+          </th>
         </tr>
       </thead>
       <tbody>
         {plates.length ? (
           plates.map((plate) => (
             <tr key={plate._id}>
-              <td>{plate.placa}</td>
+              <td className="text-nowrap">{plate.placa}</td>
               <td>{plate.condutor || "-"}</td>
               <td>{plate.contrato || "-"}</td>
               <td>{plate.estado || "-"}</td>
@@ -50,31 +83,30 @@ export function PlatesTable({
               <td>{plate.status || "-"}</td>
               <td>{formatDate(plate.updatedAt)}</td>
               <td>{getUserLabel(plate.responsavel)}</td>
-              <td className="d-grid gap-1 d-xl-table-cell">
-                <Button
-                  size="sm"
-                  variant="secondary"
-                  className="me-xl-1"
-                  onClick={() => onViewMovements(plate)}
-                >
-                  Histórico
-                </Button>
-                <Button
-                  size="sm"
-                  className="me-xl-1"
-                  onClick={() => onEditPlate(plate)}
-                >
-                  Editar
-                </Button>
-                {canDeactivatePlate ? (
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    onClick={() => onDeactivatePlate(plate)}
-                  >
-                    Inativar
-                  </Button>
-                ) : null}
+              <td className="text-end">
+                <Dropdown align="end">
+                  <Dropdown.Toggle
+                    as={ActionMenuToggle}
+                    aria-label={`Abrir acoes da placa ${plate.placa}`}
+                  />
+
+                  <Dropdown.Menu>
+                    <Dropdown.Item onClick={() => onViewMovements(plate)}>
+                      Histórico
+                    </Dropdown.Item>
+                    <Dropdown.Item onClick={() => onEditPlate(plate)}>
+                      Editar
+                    </Dropdown.Item>
+                    {canDeactivatePlate ? (
+                      <Dropdown.Item
+                        className="text-danger"
+                        onClick={() => onDeactivatePlate(plate)}
+                      >
+                        Inativar
+                      </Dropdown.Item>
+                    ) : null}
+                  </Dropdown.Menu>
+                </Dropdown>
               </td>
             </tr>
           ))

@@ -165,6 +165,11 @@ const SidebarStyled = styled.header`
   width: 280px;
   flex: 0 0 280px;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  height: 100vh;
+  overflow-y: auto;
+  align-self: flex-start;
 
   @media (max-width: 991px) {
     position: fixed;

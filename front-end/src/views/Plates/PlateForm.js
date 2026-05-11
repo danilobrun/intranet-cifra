@@ -95,7 +95,7 @@ export function PlateForm({
         />
         <Form.Text muted>
           {isEditMode
-            ? "A placa nao pode ser alterada depois de criada."
+            ? "A placa não pode ser alterada depois de criada."
             : "Informe exatamente 7 caracteres, sem espaços ou traços."}
         </Form.Text>
       </Form.Group>
@@ -134,10 +134,10 @@ export function PlateForm({
       </Form.Group>
 
       <Form.Group className="mb-3" controlId="plate-crlv">
-        <Form.Label className="mb-0">CRLV</Form.Label>
+        <Form.Label className="mb-0">Número do CRLV</Form.Label>
         <Form.Control
           type="text"
-          placeholder="CRLV"
+          placeholder="Número do CRLV"
           name="crlv"
           value={formData.crlv}
           onChange={handleChange}
