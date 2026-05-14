@@ -86,8 +86,6 @@ export function ChatbotView() {
         controller.signal,
       );
 
-      console.log(assistantText);
-
       setMessages((currentMessages) => [
         ...currentMessages,
         {
