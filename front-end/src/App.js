@@ -21,6 +21,9 @@ import { ForgotPasswordView } from "./views/ForgotPassword";
 import { ForgotPasswordCodeView } from "./views/ForgotPasswordCode";
 import { ResetPasswordView } from "./views/ResetPassword";
 import { ChatbotView } from "./views/Chatbot";
+import { TutorialsView } from "./views/Tutorials";
+import { TutorialDetailView } from "./views/TutorialDetail";
+import { TutorialEditorView } from "./views/TutorialEditor";
 
 function App() {
   return (
@@ -197,6 +200,38 @@ function App() {
         element={
           <PrivateRoute userTypes={["1"]}>
             <ChatbotView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/tutorials"
+        element={
+          <PrivateRoute>
+            <TutorialsView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/tutorials/new"
+        element={
+          <PrivateRoute userTypes={["1"]}>
+            <TutorialEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/tutorials/:id/edit"
+        element={
+          <PrivateRoute userTypes={["1"]}>
+            <TutorialEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/tutorials/:id"
+        element={
+          <PrivateRoute>
+            <TutorialDetailView />
           </PrivateRoute>
         }
       />
