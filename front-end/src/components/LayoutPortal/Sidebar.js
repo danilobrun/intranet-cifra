@@ -116,6 +116,29 @@ export function Sidebar({ isOpen, onClose }) {
       ],
     },
     {
+      to: "/portal/tutorials",
+      text: "🔎 Tutoriais",
+      checkAllPath: false,
+      userTypes: [
+        "1",
+        "compesa",
+        "brk",
+        "verdeAlagoas",
+        "alagoasGerente",
+        "sergipe",
+        "igua",
+        "obras",
+        "compras",
+        "almoxarifado",
+        "rh",
+        "financeiro",
+        "frota",
+        "3",
+        "gca",
+        "recruitment",
+      ],
+    },
+    {
       to: "/portal/chatbot",
       text: "🤖 Chatbot de Frota (BETA)",
       checkAllPath: false,
@@ -152,6 +175,12 @@ const SidebarStyled = styled.header`
   width: 280px;
   flex: 0 0 280px;
   flex-shrink: 0;
+  position: sticky;
+  top: 0;
+  align-self: flex-start;
+  height: 100vh;
+  overflow-x: hidden;
+  overflow-y: auto;
 
   @media (max-width: 991px) {
     position: fixed;
