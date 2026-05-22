@@ -1,4 +1,4 @@
-const { checkToken } = require("../middleware/checktoken");
+const { checkToken, ensureRoleCodes } = require("../middleware/checktoken");
 const {
   getUserById,
   createUser,
@@ -12,15 +12,15 @@ const {
 } = require("../presentation/controllers/users.controller");
 
 const usersRoutes = (app) => {
-  app.get("/users", checkToken, listUsers);
+  app.get("/users", checkToken, ensureRoleCodes(["1"]), listUsers);
   app.get("/user/:id", checkToken, getUserById);
   app.post("/auth/register", createUser);
   app.post("/auth/login/", loginUser);
   app.post("/auth/forgot-password/request", requestPasswordResetCode);
   app.post("/auth/forgot-password/verify", verifyPasswordResetCode);
   app.post("/auth/forgot-password/reset", resetUserPassword);
-  app.delete("/user/:id", checkToken, deleteUser);
-  app.put("/user/:id", checkToken, editUser);
+  app.delete("/user/:id", checkToken, ensureRoleCodes(["1"]), deleteUser);
+  app.put("/user/:id", checkToken, ensureRoleCodes(["1"]), editUser);
 };
 
 module.exports = usersRoutes;

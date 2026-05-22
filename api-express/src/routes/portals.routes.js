@@ -11,10 +11,20 @@ const {
 const portalsRoutes = (app) => {
   app.get("/portals", checkToken, listPortals);
   app.get("/admin/portals", checkToken, ensureRoleCodes(["1"]), listAllPortals);
-  app.post("/portals/auth/register", checkToken, createPortal);
+  app.post(
+    "/portals/auth/register",
+    checkToken,
+    ensureRoleCodes(["1"]),
+    createPortal,
+  );
   app.get("/portals/:id", checkToken, listPortalsById);
-  app.delete("/portals/:id", checkToken, deletePortalsById);
-  app.put("/portals/:id", checkToken, editPortal);
+  app.delete(
+    "/portals/:id",
+    checkToken,
+    ensureRoleCodes(["1"]),
+    deletePortalsById,
+  );
+  app.put("/portals/:id", checkToken, ensureRoleCodes(["1"]), editPortal);
 };
 
 module.exports = portalsRoutes;
