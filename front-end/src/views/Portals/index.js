@@ -1,5 +1,5 @@
-import { Alert, Col, Container, Row } from "react-bootstrap";
-import { Layout } from "../../components/Layout";
+import { Alert, Col, Row } from "react-bootstrap";
+import { LayoutPortal } from "../../components/LayoutPortal";
 import { CardPortals } from "../../components/CardPortals";
 import { useEffect, useState } from "react";
 import { Loading } from "../../components/Loading";
@@ -31,58 +31,56 @@ export function PortalsView() {
   }`;
 
   return (
-    <Layout>
+    <LayoutPortal>
       <PageSection>
-        <Container>
-          <PageHeader>
-            <div>
-              <Title>Portais</Title>
-            </div>
-            {!loading && !errorMsg ? (
-              <PortalCount aria-label={portalCountLabel}>
-                {portalCountLabel}
-              </PortalCount>
-            ) : null}
-          </PageHeader>
-
-          {loading ? (
-            <LoadingPanel>
-              <Loading />
-            </LoadingPanel>
+        <PageHeader>
+          <div>
+            <Title>Portais</Title>
+          </div>
+          {!loading && !errorMsg ? (
+            <PortalCount aria-label={portalCountLabel}>
+              {portalCountLabel}
+            </PortalCount>
           ) : null}
+        </PageHeader>
 
-          {errorMsg ? (
-            <Alert variant="danger" className="mb-4">
-              {errorMsg}
-            </Alert>
-          ) : null}
+        {loading ? (
+          <LoadingPanel>
+            <Loading />
+          </LoadingPanel>
+        ) : null}
 
-          {!loading && !errorMsg && !hasPortals ? (
-            <EmptyState>
-              <strong>Nenhum portal disponivel.</strong>
-              <span>Seu perfil ainda nao possui portais liberados.</span>
-            </EmptyState>
-          ) : null}
+        {errorMsg ? (
+          <Alert variant="danger" className="mb-4">
+            {errorMsg}
+          </Alert>
+        ) : null}
 
-          {!loading && !errorMsg && hasPortals ? (
-            <Row className="g-3 g-lg-4" as="section" aria-label="Portais">
-              {portals.map((portal) => (
-                <Col key={portal._id} xs={12} sm={6} lg={4} xl={3}>
-                  <CardPortals portal={portal} />
-                </Col>
-              ))}
-            </Row>
-          ) : null}
-        </Container>
+        {!loading && !errorMsg && !hasPortals ? (
+          <EmptyState>
+            <strong>Nenhum portal disponivel.</strong>
+            <span>Seu perfil ainda nao possui portais liberados.</span>
+          </EmptyState>
+        ) : null}
+
+        {!loading && !errorMsg && hasPortals ? (
+          <Row className="g-3 g-lg-4" as="section" aria-label="Meus Portais">
+            {portals.map((portal) => (
+              <Col key={portal._id} xs={12} sm={6} lg={4} xl={3}>
+                <CardPortals portal={portal} />
+              </Col>
+            ))}
+          </Row>
+        ) : null}
       </PageSection>
-    </Layout>
+    </LayoutPortal>
   );
 }
 
 const PageSection = styled.section`
-  min-height: calc(100vh - 220px);
-  padding: 2rem 0 3rem;
-  background: #f8f9fa;
+  width: 100%;
+  min-height: calc(100vh - 72px);
+  padding: 1.5rem 0 2rem;
 `;
 
 const PageHeader = styled.header`
