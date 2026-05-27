@@ -3,6 +3,14 @@ import { toast } from "react-toastify";
 import { deleteUser } from "../../services/Users.service";
 import { Button, Modal, Table } from "react-bootstrap";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faEnvelope,
+  faGear,
+  faPhone,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function TableUsers({ users, onDeleteUser }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
@@ -29,43 +37,73 @@ export function TableUsers({ users, onDeleteUser }) {
   };
   return (
     <>
-      <Table striped hover responsive>
-        <thead>
-          <tr>
-            <th>Nome</th>
-            <th>E-mail</th>
-            <th>Telefone</th>
-          </tr>
-        </thead>
-        <tbody>
-          {users ? (
-            users.map((user) => (
-              <tr key={user._id}>
-                <td>{user.name}</td>
-                <td>{user.email}</td>
-                <td>{user.number}</td>
-                <td>
-                  <Button size="sm" as={Link} to={`/portal/users/${user._id}`}>
-                    Editar
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    className="ms-sm-1"
-                    onClick={() => handleClick(user)}
-                  >
-                    Deletar
-                  </Button>
-                </td>
+      <TableCard>
+        <TableScroll>
+          <UsersTable>
+            <thead>
+              <tr>
+                <th>
+                  <ColumnTitle>
+                    <HeaderIcon icon={faUser} />
+                    Nome
+                  </ColumnTitle>
+                </th>
+                <th>
+                  <ColumnTitle>
+                    <HeaderIcon icon={faEnvelope} />
+                    E-mail
+                  </ColumnTitle>
+                </th>
+                <th>
+                  <ColumnTitle>
+                    <HeaderIcon icon={faPhone} />
+                    Telefone
+                  </ColumnTitle>
+                </th>
+                <th>
+                  <ColumnTitle>
+                    <HeaderIcon icon={faGear} />
+                    Ações
+                  </ColumnTitle>
+                </th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={4}>Erro ao carregar usuários</td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+            </thead>
+            <tbody>
+              {users ? (
+                users.map((user) => (
+                  <tr key={user._id}>
+                    <td>{user.name}</td>
+                    <td>{user.email}</td>
+                    <td>{user.number}</td>
+                    <td>
+                      <ActionGroup>
+                        <Button
+                          size="sm"
+                          as={Link}
+                          to={`/portal/users/${user._id}`}
+                        >
+                          Editar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="danger"
+                          onClick={() => handleClick(user)}
+                        >
+                          Deletar
+                        </Button>
+                      </ActionGroup>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan={4}>Erro ao carregar usuários</td>
+                </tr>
+              )}
+            </tbody>
+          </UsersTable>
+        </TableScroll>
+      </TableCard>
       <Modal show={userToDelete} onHide={hideModal}>
         <Modal.Header closeButton>
           <Modal.Title>Tem certeza?</Modal.Title>
@@ -91,3 +129,91 @@ export function TableUsers({ users, onDeleteUser }) {
     </>
   );
 }
+
+const TableCard = styled.section`
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(33, 37, 41, 0.08);
+  overflow: hidden;
+`;
+
+const TableScroll = styled.div`
+  width: 100%;
+  overflow-x: auto;
+`;
+
+const UsersTable = styled(Table)`
+  width: 100%;
+  min-width: 760px;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  thead th {
+    background: linear-gradient(180deg, #7b838a 0%, #6c757d 100%);
+    color: #ffffff;
+    border: 0;
+    padding: 0.95rem 0.9rem;
+    font-size: 0.86rem;
+    font-weight: 700;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  thead th:first-child {
+    border-top-left-radius: 6px;
+  }
+
+  thead th:last-child {
+    border-top-right-radius: 6px;
+  }
+
+  tbody td {
+    padding: 1rem 0.9rem;
+    color: #343a40;
+    border-top: 0;
+    border-bottom: 1px solid #edf0f2;
+    vertical-align: middle;
+    background: #ffffff;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  tbody tr:hover td {
+    background: #f8f9fa;
+  }
+
+  @media (max-width: 575.98px) {
+    min-width: 680px;
+
+    thead th,
+    tbody td {
+      padding: 0.75rem;
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+  }
+`;
+
+const ColumnTitle = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.2;
+`;
+
+const HeaderIcon = styled(FontAwesomeIcon)`
+  color: #ffffff;
+  font-size: 0.85rem;
+  opacity: 0.9;
+`;
+
+const ActionGroup = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+`;
