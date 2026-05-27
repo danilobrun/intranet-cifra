@@ -1,6 +1,7 @@
 import { CloseButton, Nav } from "react-bootstrap";
 import styled from "styled-components";
 import { SidebarItem } from "./SidebarItem";
+import { SidebarInstitutionalMenu } from "./SidebarInstitutionalMenu";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/User/User.selectors";
 import { Link } from "react-router-dom";
@@ -144,6 +145,7 @@ export function Sidebar({ isOpen, onClose }) {
             <SidebarItem key={index} item={item} />
           ))}
       </Nav>
+      <SidebarInstitutionalMenu />
     </SidebarStyled>
   );
 }
@@ -152,6 +154,7 @@ const SidebarStyled = styled.header`
   width: 280px;
   flex: 0 0 280px;
   flex-shrink: 0;
+  overflow-y: auto;
 
   @media (max-width: 991px) {
     position: fixed;
