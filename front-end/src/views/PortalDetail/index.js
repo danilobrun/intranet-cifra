@@ -1,13 +1,18 @@
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Container } from "react-bootstrap";
+import { Alert } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { Layout } from "../../components/Layout";
 import { Loading } from "../../components/Loading";
 import { getPortalById } from "../../services/Portals.service";
 import { NotFoundView } from "../NotFound";
-import styled from "styled-components";
 import { BiTable } from "./biTable";
 import { GeneralTable } from "./generalTable";
+import {
+  IntroSection,
+  PageContainer,
+  PortalDescription,
+  PortalTitle,
+} from "./styles";
 
 export function PortalDetailView() {
   const { id } = useParams();
@@ -41,15 +46,17 @@ export function PortalDetailView() {
   const isBi = /^BI/i.test(portal.name.trim());
   return (
     <Layout>
-      <ContainerStyled>
+      <PageContainer>
         {errorMsg ? (
           <Alert variant="danger" className="mt-3">
             {errorMsg}
           </Alert>
         ) : (
           <>
-            <h1 className="text-center mt-4">{portal.name}</h1>
-            <p>{portal.description}</p>
+            <IntroSection>
+              <PortalTitle>{portal.name}</PortalTitle>
+              <PortalDescription>{portal.description}</PortalDescription>
+            </IntroSection>
             {isBi ? (
               <BiTable
                 responsible={portal.responsible}
@@ -60,11 +67,7 @@ export function PortalDetailView() {
             )}
           </>
         )}
-      </ContainerStyled>
+      </PageContainer>
     </Layout>
   );
 }
-
-const ContainerStyled = styled(Container)`
-  max-width: 900px;
-`;
