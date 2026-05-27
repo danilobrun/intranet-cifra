@@ -1,0 +1,296 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-05-27T14:14:06.4279305-03:00",
+  "title": "Design System: Cifra Intranet",
+  "extensions": {
+    "colorMeta": {
+      "primary-action-blue": {
+        "role": "primary",
+        "displayName": "Azul de Acao Bootstrap",
+        "canonical": "#0d6efd",
+        "tonalRamp": [
+          "oklch(18% 0.09 260)",
+          "oklch(28% 0.13 260)",
+          "oklch(40% 0.17 260)",
+          "oklch(52% 0.21 260)",
+          "oklch(62% 0.20 260)",
+          "oklch(74% 0.14 260)",
+          "oklch(86% 0.08 260)",
+          "oklch(95% 0.03 260)"
+        ]
+      },
+      "secondary-institutional-gray": {
+        "role": "secondary",
+        "displayName": "Cinza Institucional",
+        "canonical": "#6c757d",
+        "tonalRamp": [
+          "oklch(18% 0.01 250)",
+          "oklch(28% 0.012 250)",
+          "oklch(40% 0.014 250)",
+          "oklch(52% 0.014 250)",
+          "oklch(62% 0.012 250)",
+          "oklch(74% 0.01 250)",
+          "oklch(86% 0.008 250)",
+          "oklch(95% 0.004 250)"
+        ]
+      },
+      "operational-dark": {
+        "role": "secondary",
+        "displayName": "Escuro Operacional",
+        "canonical": "#212529",
+        "tonalRamp": [
+          "oklch(12% 0.01 250)",
+          "oklch(18% 0.01 250)",
+          "oklch(24% 0.01 250)",
+          "oklch(32% 0.01 250)",
+          "oklch(44% 0.01 250)",
+          "oklch(62% 0.008 250)",
+          "oklch(80% 0.006 250)",
+          "oklch(94% 0.004 250)"
+        ]
+      },
+      "surface-white": {
+        "role": "neutral",
+        "displayName": "Superficie Branca",
+        "canonical": "#ffffff",
+        "tonalRamp": [
+          "#212529",
+          "#343a40",
+          "#495057",
+          "#6c757d",
+          "#adb5bd",
+          "#ced4da",
+          "#f8f9fa",
+          "#ffffff"
+        ]
+      },
+      "surface-soft": {
+        "role": "neutral",
+        "displayName": "Superficie Suave",
+        "canonical": "#f8f9fa",
+        "tonalRamp": [
+          "#212529",
+          "#343a40",
+          "#495057",
+          "#6c757d",
+          "#adb5bd",
+          "#dee2e6",
+          "#f1f3f5",
+          "#f8f9fa"
+        ]
+      },
+      "border-muted": {
+        "role": "neutral",
+        "displayName": "Borda Muted",
+        "canonical": "#dee2e6",
+        "tonalRamp": [
+          "#212529",
+          "#343a40",
+          "#495057",
+          "#6c757d",
+          "#adb5bd",
+          "#ced4da",
+          "#dee2e6",
+          "#f8f9fa"
+        ]
+      },
+      "border-control": {
+        "role": "neutral",
+        "displayName": "Borda de Controle",
+        "canonical": "#ced4da",
+        "tonalRamp": [
+          "#212529",
+          "#343a40",
+          "#495057",
+          "#6c757d",
+          "#adb5bd",
+          "#ced4da",
+          "#dee2e6",
+          "#f8f9fa"
+        ]
+      },
+      "danger-action-red": {
+        "role": "tertiary",
+        "displayName": "Vermelho de Acao Perigosa",
+        "canonical": "#dc3545",
+        "tonalRamp": [
+          "oklch(18% 0.07 25)",
+          "oklch(28% 0.10 25)",
+          "oklch(40% 0.14 25)",
+          "oklch(52% 0.17 25)",
+          "oklch(62% 0.16 25)",
+          "oklch(74% 0.11 25)",
+          "oklch(86% 0.06 25)",
+          "oklch(95% 0.025 25)"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Abre paginas operacionais como Dashboard, Portais, Roles, Contratos e Enderecos."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Titulos compactos de componentes, cards, modais e paineis."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Texto de formularios, tabelas, descricoes e mensagens."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Labels de enfase, autores de mensagem e contadores."
+      }
+    },
+    "shadows": [
+      {
+        "name": "bootstrap-card-shadow",
+        "value": "var(--bs-box-shadow, 0 .5rem 1rem rgba(0, 0, 0, .15))",
+        "purpose": "Usada nos cards de portais para indicar item clicavel."
+      },
+      {
+        "name": "chatbot-ambient-lift",
+        "value": "0 18px 42px rgba(17, 24, 39, 0.08)",
+        "purpose": "Usada em paineis complexos do chatbot e superficies de suporte."
+      }
+    ],
+    "motion": [
+      {
+        "name": "state-fast",
+        "value": "150ms ease-out",
+        "purpose": "Transicoes curtas para hover, foco e feedback simples."
+      },
+      {
+        "name": "mobile-sidebar",
+        "value": "0.2s linear",
+        "purpose": "Transicao atual do menu lateral mobile."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "sm",
+        "value": "576px"
+      },
+      {
+        "name": "md",
+        "value": "768px"
+      },
+      {
+        "name": "lg",
+        "value": "992px"
+      },
+      {
+        "name": "xl-auth",
+        "value": "1450px"
+      }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Acao principal padrao herdada do Bootstrap.",
+      "html": "<button class=\"ds-btn-primary\">Acessar</button>",
+      "css": ".ds-btn-primary { background: #0d6efd; color: #ffffff; border: 1px solid #0d6efd; border-radius: 0.375rem; padding: 0.375rem 0.75rem; font: 400 1rem/1.5 system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; cursor: pointer; transition: background-color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out; } .ds-btn-primary:hover { background: #0b5ed7; border-color: #0a58ca; } .ds-btn-primary:focus-visible { outline: 0; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); } .ds-btn-primary:disabled { opacity: 0.65; cursor: not-allowed; }"
+    },
+    {
+      "name": "Dark Button",
+      "kind": "button",
+      "refersTo": "button-dark",
+      "description": "Acao forte em fluxos de chatbot ou controles operacionais.",
+      "html": "<button class=\"ds-btn-dark\">Enviar</button>",
+      "css": ".ds-btn-dark { background: #212529; color: #ffffff; border: 1px solid #212529; border-radius: 0.375rem; padding: 0.375rem 0.75rem; font: 400 1rem/1.5 system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; cursor: pointer; transition: background-color 150ms ease-out, border-color 150ms ease-out, box-shadow 150ms ease-out; } .ds-btn-dark:hover { background: #1c1f23; border-color: #1a1e21; } .ds-btn-dark:focus-visible { outline: 0; box-shadow: 0 0 0 0.25rem rgba(66, 70, 73, 0.5); } .ds-btn-dark:disabled { opacity: 0.65; cursor: not-allowed; }"
+    },
+    {
+      "name": "Search Input",
+      "kind": "input",
+      "refersTo": "input-default",
+      "description": "Campo de busca usado em roles, agenda e modais.",
+      "html": "<input class=\"ds-input-search\" type=\"text\" placeholder=\"Pesquisar portal\" />",
+      "css": ".ds-input-search { width: min(360px, 100%); padding: 8px 12px; border: 1px solid #ced4da; border-radius: 0.375rem; color: #212529; background: #ffffff; font: 400 1rem/1.5 system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; transition: border-color 150ms ease-out, box-shadow 150ms ease-out; } .ds-input-search::placeholder { color: #6c757d; } .ds-input-search:focus { outline: none; border-color: #0d6efd; box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15); } .ds-input-search:disabled { background: #e9ecef; opacity: 1; }"
+    },
+    {
+      "name": "Portal Card",
+      "kind": "card",
+      "refersTo": "portal-card",
+      "description": "Card clicavel da listagem de portais.",
+      "html": "<article class=\"ds-portal-card\"><div class=\"ds-portal-image\">Logo</div><h2>Portal</h2><p>Descricao curta do portal.</p><button>Sobre</button></article>",
+      "css": ".ds-portal-card { min-height: 260px; display: flex; flex-direction: column; align-items: center; text-align: center; background: #ffffff; color: #212529; border: 1px solid rgba(0, 0, 0, 0.125); border-radius: 0.375rem; padding: 1rem; box-shadow: 0 .5rem 1rem rgba(0, 0, 0, .15); font: 400 1rem/1.5 system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; } .ds-portal-card h2 { margin: 0.75rem 0 0.5rem; font-size: 1.25rem; line-height: 1.2; font-weight: 500; } .ds-portal-card p { margin: 0 0 1rem; color: #212529; } .ds-portal-image { width: 100%; min-height: 92px; display: grid; place-items: center; color: #6c757d; border-bottom: 1px solid #dee2e6; } .ds-portal-card button { margin-top: auto; background: #0d6efd; color: #ffffff; border: 1px solid #0d6efd; border-radius: 0.375rem; padding: 0.375rem 0.75rem; cursor: pointer; transition: background-color 150ms ease-out, border-color 150ms ease-out; } .ds-portal-card button:hover { background: #0b5ed7; border-color: #0a58ca; } .ds-portal-card button:focus-visible { outline: 0; box-shadow: 0 0 0 0.25rem rgba(13, 110, 253, 0.25); }"
+    },
+    {
+      "name": "Operational Table",
+      "kind": "custom",
+      "refersTo": "table-responsive",
+      "description": "Tabela responsiva para portais, agenda, usuarios e roles.",
+      "html": "<div class=\"ds-table-wrap\"><table class=\"ds-table\"><thead><tr><th>Nome</th><th>Link</th><th>Responsavel</th></tr></thead><tbody><tr><td>Portal</td><td><a href=\"#\">Acessar link</a></td><td>Equipe</td></tr><tr><td>Base</td><td><a href=\"#\">Abrir base</a></td><td>Operacao</td></tr></tbody></table></div>",
+      "css": ".ds-table-wrap { width: 100%; overflow-x: auto; } .ds-table { width: 100%; border-collapse: collapse; color: #212529; font: 400 1rem/1.5 system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; } .ds-table th, .ds-table td { padding: 0.5rem; border-bottom: 1px solid #dee2e6; text-align: left; vertical-align: top; white-space: nowrap; } .ds-table thead th { font-weight: 600; border-bottom-color: #ced4da; } .ds-table tbody tr:nth-child(odd) { background: rgba(0, 0, 0, 0.03); } .ds-table tbody tr:hover { background: rgba(13, 110, 253, 0.06); } .ds-table a { color: #0d6efd; text-decoration: underline; text-underline-offset: 2px; } .ds-table a:focus-visible { outline: 2px solid rgba(13, 110, 253, 0.5); outline-offset: 2px; }"
+    },
+    {
+      "name": "Sidebar Navigation",
+      "kind": "nav",
+      "refersTo": "operational-sidebar",
+      "description": "Navegacao lateral do ambiente autenticado.",
+      "html": "<nav class=\"ds-sidebar\"><a class=\"ds-sidebar-brand\" href=\"#\">Intranet Cifra</a><a class=\"ds-sidebar-link active\" href=\"#\">Dashboard</a><a class=\"ds-sidebar-link\" href=\"#\">Portais</a><a class=\"ds-sidebar-link\" href=\"#\">Contratos</a></nav>",
+      "css": ".ds-sidebar { width: 280px; min-height: 320px; padding: 1rem; background: #212529; color: #ffffff; font: 400 1rem/1.5 system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; } .ds-sidebar-brand { display: block; color: #ffffff; text-decoration: none; font-size: 1.5rem; margin-bottom: 1rem; } .ds-sidebar-link { display: block; color: #ffffff; text-decoration: none; border-radius: 0.375rem; padding: 0.5rem 1rem; margin-bottom: 0.25rem; transition: background-color 150ms ease-out; } .ds-sidebar-link:hover { background: rgba(255, 255, 255, 0.12); } .ds-sidebar-link.active { background: #0d6efd; color: #ffffff; } .ds-sidebar-link:focus-visible { outline: 2px solid rgba(255, 255, 255, 0.75); outline-offset: 2px; }"
+    },
+    {
+      "name": "Chatbot Card",
+      "kind": "card",
+      "refersTo": "chatbot-card",
+      "description": "Superficie elevada para conversa ou sugestoes de uso.",
+      "html": "<section class=\"ds-chat-card\"><header><div><strong>Assistente</strong><small>Atendimento interno da frota</small></div><span>Em fase de testes</span></header><div class=\"ds-chat-bubble assistant\"><small>Assistente</small><p>Como posso ajudar?</p></div><div class=\"ds-chat-bubble user\"><small>Usuario</small><p>Preciso de informacoes da frota.</p></div></section>",
+      "css": ".ds-chat-card { background: #ffffff; color: #212529; border: 1px solid #d9d9d9; border-radius: 20px; box-shadow: 0 18px 42px rgba(17, 24, 39, 0.08); padding: 1.5rem; font: 400 1rem/1.5 system-ui, -apple-system, \"Segoe UI\", Roboto, \"Helvetica Neue\", Arial, sans-serif; } .ds-chat-card header { display: flex; justify-content: space-between; align-items: center; gap: 1rem; margin-bottom: 1.5rem; } .ds-chat-card small { display: block; color: #6c757d; font-weight: 600; } .ds-chat-card header span { display: inline-block; background: #6c757d; color: #ffffff; border-radius: 0.375rem; padding: 0.35em 0.65em; font-size: 0.75rem; font-weight: 700; } .ds-chat-bubble { width: min(100%, 460px); padding: 1rem 1.1rem; border-radius: 18px; margin-bottom: 0.75rem; } .ds-chat-bubble p { margin: 0; } .ds-chat-bubble.assistant { background: #ffffff; color: #212529; border: 1px solid #d9d9d9; } .ds-chat-bubble.user { margin-left: auto; background: #212529; color: #ffffff; border: 1px solid #212529; } .ds-chat-bubble.user small { color: #ffffff; opacity: 0.85; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "Painel de Confianca Operacional",
+    "overview": "A Intranet Cifra deve parecer uma mesa de trabalho organizada para uso interno: direta, familiar e confiavel. O desenho atual parte do Bootstrap 5 e de styled-components pontuais, entao a evolucao visual deve lapidar a interface sem trocar a linguagem de uma vez.\n\nO sistema visual precisa manter a sensacao de produto operacional. A prioridade e ajudar colaboradores a entrar, encontrar portais, ler tabelas e acessar links sem ruido. A identidade aparece no uso consistente do logo, na estrutura previsivel de navegacao, nos tons institucionais discretos e no acabamento mais cuidadoso dos componentes.\n\nEste sistema rejeita o \"visual generico de Bootstrap sem identidade propria\" citado em PRODUCT.md. Tambem rejeita telas poluidas, excesso de cards decorativos, mudancas visuais bruscas, modismos de dashboard e uma aparencia antiga ou improvisada.",
+    "keyCharacteristics": [
+      "Base Bootstrap preservada, com padroes mais consistentes de cor, espacamento e estados.",
+      "Superficies brancas e cinzas claros para leitura de tabelas, formularios e portais.",
+      "Acentos usados para acao, estado e selecao, nunca como decoracao solta.",
+      "Navegacao simples: topo publico, sidebar operacional e tabelas como centro do fluxo.",
+      "Melhorias visuais discretas, sempre mantendo familiaridade para usuarios existentes."
+    ],
+    "rules": [
+      {
+        "name": "The Functional Accent Rule",
+        "body": "O azul primario deve indicar acao, foco ou selecao. Se um elemento nao e clicavel, atual ou importante para o fluxo, ele nao deve ganhar azul.",
+        "section": "colors"
+      },
+      {
+        "name": "The Neutral Trust Rule",
+        "body": "Superficies de operacao devem ficar em branco, cinza claro ou cinza institucional. Evite fundos saturados em telas de trabalho.",
+        "section": "colors"
+      },
+      {
+        "name": "The Product Type Rule",
+        "body": "Nao use fonte display em labels, botoes, tabelas ou dados. O sistema deve parecer confiavel por consistencia, nao por tipografia ornamental.",
+        "section": "typography"
+      },
+      {
+        "name": "The Flat First Rule",
+        "body": "Telas administrativas, formularios e tabelas ficam planas por padrao. Use sombra apenas para cards clicaveis, paineis complexos ou estados que realmente precisam de separacao.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "Do preservar a familiaridade do visual atual em qualquer melhoria.",
+      "Do usar o azul primario apenas para acoes, foco, selecao ou elementos interativos.",
+      "Do manter tabelas responsivas e links dentro de tabelas com aparencia claramente clicavel.",
+      "Do melhorar componentes Bootstrap com detalhes consistentes de borda, espacamento e estado, sem trocar todo o sistema visual de uma vez.",
+      "Do usar bordas cinza claras (`#dee2e6`, `#ced4da`, `#d9d9d9`) para organizar superficies sem pesar a interface.",
+      "Do manter contraste adequado e navegacao simples, conforme PRODUCT.md."
+    ],
+    "donts": [
+      "Don't criar um \"visual generico de Bootstrap sem identidade propria\".",
+      "Don't criar telas poluidas, excesso de cards decorativos ou modismos de dashboard.",
+      "Don't fazer mudancas visuais bruscas que transformem completamente a identidade ja reconhecida pelos usuarios.",
+      "Don't usar fontes display, gradientes chamativos, glassmorphism decorativo ou animacoes de enfeite em telas operacionais.",
+      "Don't usar cor saturada em estados inativos ou em elementos que nao sejam acao, foco, selecao ou alerta.",
+      "Don't depender apenas de cor para comunicar permissao, erro, sucesso ou selecao."
+    ]
+  }
+}
