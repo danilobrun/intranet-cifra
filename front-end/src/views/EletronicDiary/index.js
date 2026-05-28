@@ -17,6 +17,30 @@ import {
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 
+const getWhatsappLink = (phoneNumber) => {
+  const digits = String(phoneNumber || "").replace(/\D/g, "");
+  const normalizedDigits = digits.startsWith("0") ? digits.slice(1) : digits;
+
+  if (!normalizedDigits) {
+    return "";
+  }
+
+  const hasCountryCode =
+    normalizedDigits.startsWith("55") && normalizedDigits.length >= 12;
+  const hasBrazilianAreaCode =
+    normalizedDigits.length === 10 || normalizedDigits.length === 11;
+
+  if (!hasCountryCode && !hasBrazilianAreaCode) {
+    return "";
+  }
+
+  const phoneWithCountryCode = hasCountryCode
+    ? normalizedDigits
+    : `55${normalizedDigits}`;
+
+  return `https://wa.me/${phoneWithCountryCode}`;
+};
+
 export function EletronicDiary() {
   const [users, setUsers] = useState([]);
   const [search, setSearch] = useState("");
@@ -134,17 +158,34 @@ export function EletronicDiary() {
                         </EmptyCell>
                       </tr>
                     ) : filteredUsers.length ? (
-                      filteredUsers.map((user) => (
-                        <tr key={user._id}>
-                          <td>{user.name}</td>
-                          <td>{user.email}</td>
-                          <td>{user.number}</td>
-                          {isAdmin && <td>{user.personalNumber}</td>}
-                          <td>{user.function}</td>
-                          <td>{user.state}</td>
-                          <td>{user.lotation}</td>
-                        </tr>
-                      ))
+                      filteredUsers.map((user) => {
+                        const whatsappLink = getWhatsappLink(user.number);
+
+                        return (
+                          <tr key={user._id}>
+                            <td>{user.name}</td>
+                            <td>{user.email}</td>
+                            <td>
+                              {whatsappLink ? (
+                                <WhatsappLink
+                                  href={whatsappLink}
+                                  target="_blank"
+                                  rel="noopener noreferrer"
+                                  aria-label={`Iniciar conversa no WhatsApp com ${user.name}`}
+                                >
+                                  {user.number}
+                                </WhatsappLink>
+                              ) : (
+                                user.number
+                              )}
+                            </td>
+                            {isAdmin && <td>{user.personalNumber}</td>}
+                            <td>{user.function}</td>
+                            <td>{user.state}</td>
+                            <td>{user.lotation}</td>
+                          </tr>
+                        );
+                      })
                     ) : (
                       <tr>
                         <EmptyCell colSpan={visibleColumnCount}>
@@ -295,6 +336,23 @@ const HeaderIcon = styled(FontAwesomeIcon)`
   color: #ffffff;
   font-size: 0.85rem;
   opacity: 0.9;
+`;
+
+const WhatsappLink = styled.a`
+  color: #198754;
+  font-weight: 600;
+  text-decoration: none;
+
+  &:hover {
+    color: #146c43;
+    text-decoration: underline;
+  }
+
+  &:focus {
+    border-radius: 4px;
+    outline: 2px solid rgba(25, 135, 84, 0.35);
+    outline-offset: 2px;
+  }
 `;
 
 const EmptyCell = styled.td`
