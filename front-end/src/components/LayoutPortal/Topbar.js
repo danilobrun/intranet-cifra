@@ -9,11 +9,15 @@ import { logout } from "../../services/Users.service";
 import { useNavigate } from "react-router-dom";
 import { userLogout } from "../../store/User/User.actions";
 import { selectUser } from "../../store/User/User.selectors";
+import { getTimeGreeting } from "../../helpers/getTimeGreeting";
 
 export function Topbar({ onOpen }) {
   const user = useSelector(selectUser);
   const dispatch = useDispatch();
   const navigate = useNavigate();
+  const userName = user?.name?.toUpperCase() || "USUARIO";
+  const userGreeting = `${getTimeGreeting()}, ${userName}`;
+
   const handleLogout = () => {
     logout();
     dispatch(userLogout());
@@ -22,15 +26,10 @@ export function Topbar({ onOpen }) {
   return (
     <Navbar bg="light" expand="lg">
       <Container fluid>
-        <img
-          src="/images/logo-cifra-transparent.png"
-          alt="Logo"
-          style={{ width: "40px", height: "40px", objectFit: "contain" }}
-        />
         <NavbarToggle onClick={onOpen} />
         <Nav className="ms-auto">
           <Dropdown align="end">
-            <DropdownToggle variant="light">{user.name}</DropdownToggle>
+            <DropdownToggle variant="light">{userGreeting}</DropdownToggle>
             <MenuStyled>
               <DropdownItem onClick={handleLogout}>Sair</DropdownItem>
             </MenuStyled>
