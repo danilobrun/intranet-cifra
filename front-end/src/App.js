@@ -1,5 +1,4 @@
 import { Route, Routes } from "react-router-dom";
-import { HomeView } from "./views/Home";
 import { PortalsView } from "./views/Portals";
 import { NotFoundView } from "./views/NotFound";
 import { PortalDetailView } from "./views/PortalDetail";
@@ -25,19 +24,15 @@ import { ChatbotView } from "./views/Chatbot";
 function App() {
   return (
     <Routes>
-      <Route path="/" element={<HomeView />} />
       <Route path="/register" element={<RegisterView />} />
       <Route path="/recover-password" element={<ForgotPasswordView />} />
       <Route
         path="/recover-password/code"
         element={<ForgotPasswordCodeView />}
       />
+      <Route path="/recover-password/reset" element={<ResetPasswordView />} />
       <Route
-        path="/recover-password/reset"
-        element={<ResetPasswordView />}
-      />
-      <Route
-        path="/portals"
+        path="/"
         element={
           <PrivateRoute>
             <PortalsView />
