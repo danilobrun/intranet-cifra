@@ -8,10 +8,10 @@ import { selectUser } from "../../store/User/User.selectors";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faAddressBook,
   faBriefcase,
   faBuilding,
   faEnvelope,
+  faMagnifyingGlass,
   faMapMarkerAlt,
   faPhone,
   faUser,
@@ -64,13 +64,16 @@ export function EletronicDiary() {
           <>
             <DivHeader>
               <h2>☎️ Agenda Eletrônica</h2>
-              <Input
-                type="text"
-                placeholder="Pesquisar"
-                aria-label="Pesquisar contatos da agenda"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-              />
+              <SearchField>
+                <SearchIcon icon={faMagnifyingGlass} />
+                <Input
+                  type="text"
+                  placeholder="Pesquisar"
+                  aria-label="Pesquisar contatos da agenda"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                />
+              </SearchField>
             </DivHeader>
             <TableCard>
               <TableScroll>
@@ -175,40 +178,41 @@ const DivHeader = styled.div`
   margin-bottom: 12px;
 `;
 
-const SectionHeader = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 10px;
+const SearchField = styled.div`
+  position: relative;
+  width: min(340px, 100%);
 `;
 
-const SectionTitle = styled.h2`
-  margin: 0;
-  color: #212529;
-  font-size: 1.25rem;
-  font-weight: 700;
-  letter-spacing: 0;
-
-  @media (max-width: 575.98px) {
-    font-size: 1.1rem;
-  }
-`;
-
-const SectionIcon = styled(FontAwesomeIcon)`
+const SearchIcon = styled(FontAwesomeIcon)`
+  position: absolute;
+  top: 50%;
+  left: 16px;
   color: #6c757d;
-  font-size: 1rem;
+  font-size: 0.9rem;
+  pointer-events: none;
+  transform: translateY(-50%);
 `;
 
 const Input = styled.input`
-  width: min(320px, 100%);
+  width: 100%;
   min-height: 40px;
-  padding: 8px 12px;
-  border-radius: 0.375rem;
+  padding: 9px 16px 9px 42px;
+  border-radius: 10px;
   border: 1px solid #ced4da;
+  background: #ffffff;
+  color: #212529;
   outline: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+
+  &::placeholder {
+    color: #6c757d;
+  }
 
   &:focus {
     border-color: #0d6efd;
-    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.15);
+    box-shadow: 0 0 0 0.2rem rgba(13, 110, 253, 0.12);
   }
 `;
 
