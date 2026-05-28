@@ -5,6 +5,7 @@ import { SidebarInstitutionalMenu } from "./SidebarInstitutionalMenu";
 import { useSelector } from "react-redux";
 import { selectUser } from "../../store/User/User.selectors";
 import { Link } from "react-router-dom";
+import CifraLogoWhite from "../../assets/img/logo-cifra-branco.png";
 
 export function Sidebar({ isOpen, onClose }) {
   const user = useSelector(selectUser);
@@ -178,9 +179,9 @@ export function Sidebar({ isOpen, onClose }) {
         onClick={onClose}
         className="ms-auto d-lg-none"
       />
-      <Nav.Link className="h2 text-white" as={Link} to="/">
-        Intranet Cifra
-      </Nav.Link>
+      <BrandLink as={Link} to="/">
+        <BrandLogo src={CifraLogoWhite} alt="Cifra" />
+      </BrandLink>
       <hr />
       <Nav variant="pills" className="flex-column">
         {menuItems
@@ -220,4 +221,18 @@ const SidebarStyled = styled.header`
             margin-left: 0;
         `}
   }
+`;
+
+const BrandLink = styled(Nav.Link)`
+  display: inline-flex;
+  align-items: center;
+  width: fit-content;
+  padding: 0;
+`;
+
+const BrandLogo = styled.img`
+  width: 220px;
+  max-width: 100%;
+  height: auto;
+  object-fit: contain;
 `;
