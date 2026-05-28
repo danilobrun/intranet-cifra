@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { LayoutPortal } from "../../components/LayoutPortal";
-import { UsersHeader } from "../../components/UsersHeader";
+import { PortalHeader } from "../../components/PortalHeader";
 import { TableUsers } from "./TableUsers";
 import { useEffect } from "react";
 import { getUsers } from "../../services/Users.service";
@@ -29,12 +29,11 @@ export function AdminUsersView() {
   }, []);
   return (
     <LayoutPortal>
-      <div className="d-flex align-items-center justify-content-between">
-        <UsersHeader
-          title="👤 Usuários Cadastrados"
-          buttonText="Novo usuário"
-          buttonLink="/portal/admin-login"
-        />
+      <PortalHeader
+        title="👤 Usuários Cadastrados"
+        buttonText="Novo usuário"
+        buttonLink="/portal/admin-login"
+      >
         <SearchField>
           <SearchIcon icon={faMagnifyingGlass} />
           <Input
@@ -45,7 +44,7 @@ export function AdminUsersView() {
             onChange={(e) => setInput(e.target.value)}
           />
         </SearchField>
-      </div>
+      </PortalHeader>
       {loading && <Loading />}
       <TableUsers
         users={users.filter(
@@ -66,12 +65,10 @@ export function AdminUsersView() {
 const SearchField = styled.div`
   position: relative;
   width: min(340px, 100%);
-  margin-left: 16px;
+  flex: 0 1 340px;
 
   @media (max-width: 767.98px) {
-    width: 100%;
-    margin-left: 0;
-    margin-top: 12px;
+    flex: 1 1 220px;
   }
 `;
 

@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
-import { Button } from "react-bootstrap";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import { Loading } from "../../components/Loading";
+import { PortalHeader } from "../../components/PortalHeader";
 import {
   createRole,
   getRoleById,
@@ -214,19 +214,12 @@ export function AdminRolesView() {
 
   return (
     <LayoutPortal>
-      <HeaderRow>
-        <div>
-          <TitleRow>
-            <h1 className="mb-0">🛡️ Roles e portais liberados</h1>
-            <Button size="sm" className="mt-2" onClick={handleOpenCreateRole}>
-              Nova role
-            </Button>
-          </TitleRow>
-          <HelperText>
-            Clique em uma role para marcar ou desmarcar os portais que ela pode
-            ver.
-          </HelperText>
-        </div>
+      <PortalHeader
+        title="🛡️ Roles e portais liberados"
+        description="Clique em uma role para marcar ou desmarcar os portais que ela pode ver."
+        buttonText="Nova role"
+        onButtonClick={handleOpenCreateRole}
+      >
         <SearchField>
           <SearchIcon icon={faMagnifyingGlass} />
           <SearchInput
@@ -237,7 +230,7 @@ export function AdminRolesView() {
             onChange={(event) => setInput(event.target.value)}
           />
         </SearchField>
-      </HeaderRow>
+      </PortalHeader>
 
       {loading ? (
         <Loading />
@@ -273,31 +266,14 @@ export function AdminRolesView() {
   );
 }
 
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin: 16px 0;
-  flex-wrap: wrap;
-`;
-
-const HelperText = styled.p`
-  margin: 8px 0 0;
-  color: #6c757d;
-`;
-
-const TitleRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-`;
-
 const SearchField = styled.div`
   position: relative;
   width: min(340px, 100%);
-  margin-top: 18px;
+  flex: 0 1 340px;
+
+  @media (max-width: 767.98px) {
+    flex: 1 1 220px;
+  }
 `;
 
 const SearchIcon = styled(FontAwesomeIcon)`

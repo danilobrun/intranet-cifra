@@ -41,12 +41,11 @@ export function AdminPortalsView() {
 
   return (
     <LayoutPortal>
-      <div className="d-flex align-items-center justify-content-between">
-        <PortalHeader
-          title="🌐 Portais Cadastrados"
-          buttonText="Novo portal"
-          buttonLink="/portal/portals/cadastro"
-        />
+      <PortalHeader
+        title="🌐 Portais Cadastrados"
+        buttonText="Novo portal"
+        buttonLink="/portal/portals/cadastro"
+      >
         <SearchField>
           <SearchIcon icon={faMagnifyingGlass} />
           <Input
@@ -57,7 +56,7 @@ export function AdminPortalsView() {
             onChange={(e) => setInput(e.target.value)}
           />
         </SearchField>
-      </div>
+      </PortalHeader>
       {loading && <Loading />}
       <TablePortals portals={filteredPortals} onDeletePortal={fecthPortals} />
     </LayoutPortal>
@@ -67,12 +66,10 @@ export function AdminPortalsView() {
 const SearchField = styled.div`
   position: relative;
   width: min(340px, 100%);
-  margin-left: 16px;
+  flex: 0 1 340px;
 
   @media (max-width: 767.98px) {
-    width: 100%;
-    margin-left: 0;
-    margin-top: 12px;
+    flex: 1 1 220px;
   }
 `;
 
