@@ -40,7 +40,7 @@ export function SidebarInstitutionalMenu() {
         aria-controls="sidebar-institutional-menu"
         onClick={() => setIsOpen((currentValue) => !currentValue)}
       >
-        <span>Institucional</span>
+        <span>Menu</span>
         <Indicator aria-hidden="true" $isOpen={isOpen} />
       </ToggleButton>
 
@@ -99,7 +99,9 @@ const ToggleButton = styled.button`
   font: inherit;
   font-weight: 600;
   text-align: left;
-  transition: background-color 150ms ease-out, border-color 150ms ease-out;
+  transition:
+    background-color 150ms ease-out,
+    border-color 150ms ease-out;
 
   &:hover {
     background: rgba(255, 255, 255, 0.08);
@@ -122,7 +124,9 @@ const Indicator = styled.span`
   border-right: 2px solid currentColor;
   border-bottom: 2px solid currentColor;
   transform: rotate(${(props) => (props.$isOpen ? "45deg" : "225deg")});
-  transition: top 150ms ease-out, transform 150ms ease-out;
+  transition:
+    top 150ms ease-out,
+    transform 150ms ease-out;
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
@@ -166,7 +170,9 @@ const MenuLink = styled.a`
   border-radius: 0.375rem;
   color: #212529;
   text-decoration: none;
-  transition: background-color 150ms ease-out, color 150ms ease-out;
+  transition:
+    background-color 150ms ease-out,
+    color 150ms ease-out;
 
   &:hover {
     background: #f8f9fa;
@@ -195,7 +201,9 @@ const SocialLink = styled.a`
   border-radius: 0.375rem;
   color: #212529;
   text-decoration: none;
-  transition: background-color 150ms ease-out, color 150ms ease-out;
+  transition:
+    background-color 150ms ease-out,
+    color 150ms ease-out;
 
   svg {
     width: 1rem;
