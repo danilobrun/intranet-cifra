@@ -1,8 +1,8 @@
 import { Alert, Col, Row } from "react-bootstrap";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import { CardPortals } from "../../components/CardPortals";
+import { PortalCardsSkeleton } from "../../components/PortalCardsSkeleton";
 import { useEffect, useState } from "react";
-import { Loading } from "../../components/Loading";
 import { getPortals } from "../../services/Portals.service";
 import styled from "styled-components";
 
@@ -44,11 +44,7 @@ export function PortalsView() {
           ) : null}
         </PageHeader>
 
-        {loading ? (
-          <LoadingPanel>
-            <Loading />
-          </LoadingPanel>
-        ) : null}
+        {loading ? <PortalCardsSkeleton /> : null}
 
         {errorMsg ? (
           <Alert variant="danger" className="mb-4">
@@ -111,12 +107,6 @@ const PortalCount = styled.span`
   color: #6c757d;
   font-weight: 600;
   white-space: nowrap;
-`;
-
-const LoadingPanel = styled.div`
-  min-height: 16rem;
-  display: grid;
-  place-items: center;
 `;
 
 const EmptyState = styled.section`
