@@ -58,6 +58,12 @@ export function TableRoles({
       <TableCard>
         <TableScroll>
           <RolesTable aria-busy={isLoading}>
+            <colgroup>
+              <col style={{ width: "15%" }} />
+              <col style={{ width: "10%" }} />
+              <col style={{ width: "55%" }} />
+              <col style={{ width: "20%" }} />
+            </colgroup>
             <thead>
               <tr>
                 <th>

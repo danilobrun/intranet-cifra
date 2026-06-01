@@ -36,6 +36,11 @@ export function TablePortals({ portals, isLoading = false, onDeletePortal }) {
       <TableCard>
         <TableScroll>
           <PortalsTable aria-busy={isLoading}>
+            <colgroup>
+              <col style={{ width: "40%" }} />
+              <col style={{ width: "40%" }} />
+              <col style={{ width: "20%" }} />
+            </colgroup>
             <thead>
               <tr>
                 <th>

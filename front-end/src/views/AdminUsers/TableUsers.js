@@ -42,6 +42,12 @@ export function TableUsers({ users, isLoading = false, onDeleteUser }) {
       <TableCard>
         <TableScroll>
           <UsersTable aria-busy={isLoading}>
+            <colgroup>
+              <col style={{ width: "28%" }} />
+              <col style={{ width: "34%" }} />
+              <col style={{ width: "18%" }} />
+              <col style={{ width: "20%" }} />
+            </colgroup>
             <thead>
               <tr>
                 <th>
@@ -151,6 +157,7 @@ const UsersTable = styled(Table)`
   width: 100%;
   min-width: 760px;
   margin-bottom: 0;
+  table-layout: fixed;
   border-collapse: separate;
   border-spacing: 0;
 
@@ -163,6 +170,8 @@ const UsersTable = styled(Table)`
     font-weight: 700;
     vertical-align: middle;
     white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
   }
 
   thead th:first-child {
@@ -180,6 +189,7 @@ const UsersTable = styled(Table)`
     border-bottom: 1px solid #edf0f2;
     vertical-align: middle;
     background: #ffffff;
+    overflow-wrap: anywhere;
   }
 
   tbody tr:last-child td {

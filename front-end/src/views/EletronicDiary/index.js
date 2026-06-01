@@ -103,6 +103,15 @@ export function EletronicDiary() {
             <TableCard>
               <TableScroll>
                 <DiaryTable $wide={isAdmin} aria-busy={loading}>
+                  <colgroup>
+                    <col style={{ width: "30%" }} />
+                    <col style={{ width: "20%" }} />
+                    <col style={{ width: "10%" }} />
+                    {isAdmin && <col style={{ width: "10%" }} />}
+                    <col style={{ width: "20%" }} />
+                    <col style={{ width: "20%" }} />
+                    <col style={{ width: "10%" }} />
+                  </colgroup>
                   <thead>
                     <tr>
                       <th>
