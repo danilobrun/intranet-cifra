@@ -3,7 +3,6 @@ import { toast } from "react-toastify";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import { PortalHeader } from "../../components/PortalHeader";
 import { getAdminPortals } from "../../services/Portals.service";
-import { Loading } from "../../components/Loading";
 import { TablePortals } from "./TablePortals";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
@@ -56,8 +55,11 @@ export function AdminPortalsView() {
           />
         </SearchField>
       </PortalHeader>
-      {loading && <Loading />}
-      <TablePortals portals={filteredPortals} onDeletePortal={fecthPortals} />
+      <TablePortals
+        portals={filteredPortals}
+        isLoading={loading}
+        onDeletePortal={fecthPortals}
+      />
     </LayoutPortal>
   );
 }

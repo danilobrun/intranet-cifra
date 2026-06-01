@@ -5,7 +5,6 @@ import { TableUsers } from "./TableUsers";
 import { useEffect } from "react";
 import { getUsers } from "../../services/Users.service";
 import { toast } from "react-toastify";
-import { Loading } from "../../components/Loading";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
@@ -27,6 +26,23 @@ export function AdminUsersView() {
   useEffect(() => {
     fecthUsers();
   }, []);
+
+  const normalizedSearch = input.trim().toLowerCase();
+  const filteredUsers = users.filter((user) => {
+    if (!normalizedSearch) {
+      return true;
+    }
+
+    return (
+      user.name?.toLowerCase().includes(normalizedSearch) ||
+      user.email?.toLowerCase().includes(normalizedSearch) ||
+      String(user.number || "").toLowerCase().includes(normalizedSearch) ||
+      user.function?.toLowerCase().includes(normalizedSearch) ||
+      user.state?.toLowerCase().includes(normalizedSearch) ||
+      user.lotation?.toLowerCase().includes(normalizedSearch)
+    );
+  });
+
   return (
     <LayoutPortal>
       <PortalHeader
@@ -45,17 +61,9 @@ export function AdminUsersView() {
           />
         </SearchField>
       </PortalHeader>
-      {loading && <Loading />}
       <TableUsers
-        users={users.filter(
-          (user) =>
-            user.name?.toLowerCase().includes(input.toLowerCase()) ||
-            user.email?.toLowerCase().includes(input.toLowerCase()) ||
-            user.number?.includes(input.toLowerCase()) ||
-            user.function?.toLowerCase().includes(input.toLowerCase()) ||
-            user.state?.toLowerCase().includes(input.toLowerCase()) ||
-            user.lotation?.toLowerCase().includes(input.toLowerCase()),
-        )}
+        users={filteredUsers}
+        isLoading={loading}
         onDeleteUser={fecthUsers}
       />
     </LayoutPortal>

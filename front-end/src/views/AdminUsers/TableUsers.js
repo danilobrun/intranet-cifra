@@ -11,8 +11,9 @@ import {
   faPhone,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
+import { TableSkeletonRows } from "../../components/TableSkeletonRows";
 
-export function TableUsers({ users, onDeleteUser }) {
+export function TableUsers({ users, isLoading = false, onDeleteUser }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [userToDelete, setUserToDelete] = useState();
 
@@ -30,16 +31,17 @@ export function TableUsers({ users, onDeleteUser }) {
       toast.success("Usuário deletado com sucesso.");
       setIsSubmiting(false);
     } catch {
-      toast.error("Falha ao deleter usuário. Tente novamente.");
+      toast.error("Falha ao deletar usuário. Tente novamente.");
       setIsSubmiting(false);
     }
     hideModal();
   };
+
   return (
     <>
       <TableCard>
         <TableScroll>
-          <UsersTable>
+          <UsersTable aria-busy={isLoading}>
             <thead>
               <tr>
                 <th>
@@ -69,7 +71,9 @@ export function TableUsers({ users, onDeleteUser }) {
               </tr>
             </thead>
             <tbody>
-              {users ? (
+              {isLoading ? (
+                <TableSkeletonRows columns={4} />
+              ) : users.length ? (
                 users.map((user) => (
                   <tr key={user._id}>
                     <td>{user.name}</td>
@@ -97,21 +101,21 @@ export function TableUsers({ users, onDeleteUser }) {
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4}>Erro ao carregar usuários</td>
+                  <EmptyCell colSpan={4}>Nenhum usuário encontrado.</EmptyCell>
                 </tr>
               )}
             </tbody>
           </UsersTable>
         </TableScroll>
       </TableCard>
-      <Modal show={userToDelete} onHide={hideModal}>
+      <Modal show={Boolean(userToDelete)} onHide={hideModal}>
         <Modal.Header closeButton>
           <Modal.Title>Tem certeza?</Modal.Title>
         </Modal.Header>
         <Modal.Body>
           Ao clicar em confirmar, o usuário{" "}
           <strong>{userToDelete?.name}</strong> será excluído. Deseja realmente
-          remover o portal?
+          remover esse usuário?
         </Modal.Body>
         <Modal.Footer>
           <Button variant="secondary" onClick={hideModal}>
@@ -122,7 +126,7 @@ export function TableUsers({ users, onDeleteUser }) {
             disabled={isSubmiting}
             onClick={handleDelete}
           >
-            Deletar Usuario
+            Deletar usuário
           </Button>
         </Modal.Footer>
       </Modal>
@@ -216,4 +220,9 @@ const ActionGroup = styled.div`
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+`;
+
+const EmptyCell = styled.td`
+  color: #6c757d;
+  text-align: center;
 `;

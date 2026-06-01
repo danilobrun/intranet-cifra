@@ -2,11 +2,12 @@ import { useEffect } from "react";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import { getUsers } from "../../services/Users.service";
 import { useState } from "react";
-import { Alert, Spinner, Table } from "react-bootstrap";
+import { Alert, Table } from "react-bootstrap";
 import styled from "styled-components";
 import { selectUser } from "../../store/User/User.selectors";
 import { useSelector } from "react-redux";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { TableSkeletonRows } from "../../components/TableSkeletonRows";
 import {
   faBriefcase,
   faBuilding,
@@ -101,7 +102,7 @@ export function EletronicDiary() {
             </DivHeader>
             <TableCard>
               <TableScroll>
-                <DiaryTable $wide={isAdmin}>
+                <DiaryTable $wide={isAdmin} aria-busy={loading}>
                   <thead>
                     <tr>
                       <th>
@@ -152,11 +153,11 @@ export function EletronicDiary() {
                   </thead>
                   <tbody>
                     {loading ? (
-                      <tr>
-                        <EmptyCell colSpan={visibleColumnCount}>
-                          <Spinner animation="border" />
-                        </EmptyCell>
-                      </tr>
+                      <TableSkeletonRows
+                        columns={visibleColumnCount}
+                        rows={5}
+                        actionColumnIndex={null}
+                      />
                     ) : filteredUsers.length ? (
                       filteredUsers.map((user) => {
                         const whatsappLink = getWhatsappLink(user.number);

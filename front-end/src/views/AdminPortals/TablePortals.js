@@ -6,8 +6,9 @@ import { deletePortal } from "../../services/Portals.service";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faGear, faTag, faUser } from "@fortawesome/free-solid-svg-icons";
+import { TableSkeletonRows } from "../../components/TableSkeletonRows";
 
-export function TablePortals({ portals, onDeletePortal }) {
+export function TablePortals({ portals, isLoading = false, onDeletePortal }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [portalToDelete, setPortalToDelete] =
     useState(); /*guarda o estado valor do portal a ser deletado*/
@@ -34,7 +35,7 @@ export function TablePortals({ portals, onDeletePortal }) {
     <>
       <TableCard>
         <TableScroll>
-          <PortalsTable>
+          <PortalsTable aria-busy={isLoading}>
             <thead>
               <tr>
                 <th>
@@ -58,30 +59,38 @@ export function TablePortals({ portals, onDeletePortal }) {
               </tr>
             </thead>
             <tbody>
-              {portals.map((portal) => (
-                <tr key={portal._id}>
-                  <td>{portal.name}</td>
-                  <td>{portal.responsible}</td>
-                  <td>
-                    <ActionGroup>
-                      <Button
-                        size="sm"
-                        as={Link}
-                        to={`/portal/portals/${portal._id}`}
-                      >
-                        Editar
-                      </Button>
-                      <Button
-                        size="sm"
-                        variant="danger"
-                        onClick={() => handleClick(portal)}
-                      >
-                        Deletar
-                      </Button>
-                    </ActionGroup>
-                  </td>
+              {isLoading ? (
+                <TableSkeletonRows columns={3} />
+              ) : portals.length ? (
+                portals.map((portal) => (
+                  <tr key={portal._id}>
+                    <td>{portal.name}</td>
+                    <td>{portal.responsible}</td>
+                    <td>
+                      <ActionGroup>
+                        <Button
+                          size="sm"
+                          as={Link}
+                          to={`/portal/portals/${portal._id}`}
+                        >
+                          Editar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="danger"
+                          onClick={() => handleClick(portal)}
+                        >
+                          Deletar
+                        </Button>
+                      </ActionGroup>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <EmptyCell colSpan={3}>Nenhum portal encontrado.</EmptyCell>
                 </tr>
-              ))}
+              )}
             </tbody>
           </PortalsTable>
         </TableScroll>
@@ -198,4 +207,9 @@ const ActionGroup = styled.div`
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+`;
+
+const EmptyCell = styled.td`
+  color: #6c757d;
+  text-align: center;
 `;

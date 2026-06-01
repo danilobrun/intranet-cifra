@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import { LayoutPortal } from "../../components/LayoutPortal";
-import { Loading } from "../../components/Loading";
 import { PortalHeader } from "../../components/PortalHeader";
 import {
   createRole,
@@ -232,16 +231,13 @@ export function AdminRolesView() {
         </SearchField>
       </PortalHeader>
 
-      {loading ? (
-        <Loading />
-      ) : (
-        <TableRoles
-          roles={filteredRoles}
-          onManageRole={handleOpenRole}
-          onEditRole={handleOpenEditRole}
-          onDeleteRole={fetchRoles}
-        />
-      )}
+      <TableRoles
+        roles={filteredRoles}
+        isLoading={loading}
+        onManageRole={handleOpenRole}
+        onEditRole={handleOpenEditRole}
+        onDeleteRole={fetchRoles}
+      />
 
       <RoleUpsertModal
         show={Boolean(roleModalMode)}

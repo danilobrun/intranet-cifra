@@ -10,6 +10,7 @@ import {
   faGear,
   faLink,
 } from "@fortawesome/free-solid-svg-icons";
+import { TableSkeletonRows } from "../../components/TableSkeletonRows";
 
 const formatRolePortalPreview = (portals = []) => {
   if (!portals.length) {
@@ -28,6 +29,7 @@ const formatRolePortalPreview = (portals = []) => {
 
 export function TableRoles({
   roles,
+  isLoading = false,
   onManageRole,
   onEditRole,
   onDeleteRole,
@@ -55,7 +57,7 @@ export function TableRoles({
     <>
       <TableCard>
         <TableScroll>
-          <RolesTable>
+          <RolesTable aria-busy={isLoading}>
             <thead>
               <tr>
                 <th>
@@ -85,7 +87,9 @@ export function TableRoles({
               </tr>
             </thead>
             <tbody>
-              {roles.length ? (
+              {isLoading ? (
+                <TableSkeletonRows columns={4} />
+              ) : roles.length ? (
                 roles.map((role) => (
                   <tr key={role._id}>
                     <td>{role.cargo}</td>
@@ -116,7 +120,7 @@ export function TableRoles({
                 ))
               ) : (
                 <tr>
-                  <td colSpan={4}>Nenhuma role encontrada.</td>
+                  <EmptyCell colSpan={4}>Nenhuma role encontrada.</EmptyCell>
                 </tr>
               )}
             </tbody>
@@ -235,4 +239,9 @@ const ActionGroup = styled.div`
   align-items: center;
   gap: 0.5rem;
   flex-wrap: wrap;
+`;
+
+const EmptyCell = styled.td`
+  color: #6c757d;
+  text-align: center;
 `;
