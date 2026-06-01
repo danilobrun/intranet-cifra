@@ -208,7 +208,7 @@ const BrandLink = styled(Nav.Link)`
 `;
 
 const BrandLogo = styled.img`
-  width: 220px;
+  width: 200px;
   max-width: 100%;
   height: auto;
   object-fit: contain;
