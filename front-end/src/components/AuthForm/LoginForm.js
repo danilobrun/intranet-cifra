@@ -32,7 +32,7 @@ export function LoginForm({ redirectAfterLogin }) {
       dispatch(userLogin(userData));
 
       if (redirectAfterLogin) {
-        navigate("/portal");
+        navigate("/portals");
       }
     } catch (error) {
       const message =

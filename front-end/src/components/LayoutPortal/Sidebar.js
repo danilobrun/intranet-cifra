@@ -13,7 +13,7 @@ export function Sidebar({ isOpen, onClose }) {
 
   const menuItems = [
     {
-      to: "/",
+      to: "/portals",
       text: "🌐 Portais",
       checkAllPath: true,
       userTypes: [
@@ -156,7 +156,7 @@ export function Sidebar({ isOpen, onClose }) {
         onClick={onClose}
         className="ms-auto d-lg-none"
       />
-      <BrandLink as={Link} to="/">
+      <BrandLink as={Link} to="/portals">
         <BrandLogo src={CifraLogoWhite} alt="Cifra" />
       </BrandLink>
       <hr />

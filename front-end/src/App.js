@@ -20,10 +20,12 @@ import { ForgotPasswordView } from "./views/ForgotPassword";
 import { ForgotPasswordCodeView } from "./views/ForgotPasswordCode";
 import { ResetPasswordView } from "./views/ResetPassword";
 import { ChatbotView } from "./views/Chatbot";
+import { HomeView } from "./views/Home";
 
 function App() {
   return (
     <Routes>
+      <Route path="/" element={<HomeView />} />
       <Route path="/register" element={<RegisterView />} />
       <Route path="/recover-password" element={<ForgotPasswordView />} />
       <Route
@@ -32,7 +34,7 @@ function App() {
       />
       <Route path="/recover-password/reset" element={<ResetPasswordView />} />
       <Route
-        path="/"
+        path="/portals"
         element={
           <PrivateRoute>
             <PortalsView />

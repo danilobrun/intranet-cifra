@@ -16,7 +16,6 @@ export function AdminPortalsView() {
   const fecthPortals = async () => {
     try {
       const data = await getAdminPortals();
-      console.log(data);
       setPortals(data);
     } catch {
       toast.error("Falha ao buscar portais. Recarregue a página.");
