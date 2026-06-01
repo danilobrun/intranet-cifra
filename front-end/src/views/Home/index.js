@@ -23,12 +23,7 @@ export function HomeView() {
           </Button>
         </DivLogged>
       ) : (
-        <>
-          <LoginForm redirectAfterLogin={true} />
-          <p className="text-center mt-3">
-            Ainda nao possui uma conta? <Link to="/register">Cadastre-se</Link>
-          </p>
-        </>
+        <LoginForm redirectAfterLogin={true} />
       )}
     </PublicAuthLayout>
   );
