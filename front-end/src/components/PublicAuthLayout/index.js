@@ -265,8 +265,9 @@ const FooterAnchor = styled.a`
 `;
 
 const CarouselColumn = styled.aside`
-  margin-top: 8px;
-  height: clamp(560px, calc(100vh - 116px), 760px);
+  min-height: 0;
+  display: grid;
+  align-self: stretch;
   overflow: hidden;
 
   @media (max-width: 991.98px) {
@@ -282,12 +283,21 @@ const StyledCarousel = styled(Carousel)`
   width: 100%;
   height: 100%;
   min-height: 0;
+  display: flex;
   border-radius: 14px;
   overflow: hidden;
   background: oklch(18% 0.012 245);
 
-  & .carousel-inner,
-  .carousel-item {
+  & .carousel-inner {
+    flex: 1 1 auto;
+    width: 100%;
+    height: 100%;
+    min-height: 0;
+    overflow: hidden;
+    border-radius: inherit;
+  }
+
+  & .carousel-item {
     width: 100%;
     height: 100%;
     min-height: 0;
@@ -323,6 +333,8 @@ const StyledCarousel = styled(Carousel)`
 `;
 
 const SlideImage = styled.img`
+  position: absolute;
+  inset: 0;
   width: 100%;
   height: 100%;
   min-height: 0;
