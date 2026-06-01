@@ -2,10 +2,10 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { useParams } from "react-router-dom";
 import { LayoutPortal } from "../../components/LayoutPortal";
-import { Loading } from "../../components/Loading";
 import { getPortalById } from "../../services/Portals.service";
 import { BiTable } from "./biTable";
 import { GeneralTable } from "./generalTable";
+import { PortalDetailSkeleton } from "./PortalDetailSkeleton";
 import {
   IntroSection,
   PageContainer,
@@ -38,7 +38,9 @@ export function PortalDetailView() {
   if (loading) {
     return (
       <LayoutPortal>
-        <Loading />
+        <PageContainer>
+          <PortalDetailSkeleton />
+        </PageContainer>
       </LayoutPortal>
     );
   }
