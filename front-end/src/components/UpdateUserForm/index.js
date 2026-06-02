@@ -1,9 +1,29 @@
-import { forwardRef, useEffect, useState } from "react";
-import { Button, Dropdown, Form } from "react-bootstrap";
+import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { toast } from "react-toastify";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faEye, faEyeSlash, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { getRoles } from "../../services/Roles.service";
 import { selectUser } from "../../store/User/User.selectors";
+import { RoleChipsSelect } from "./RoleChipsSelect";
+import {
+  ActionsBar,
+  FieldControl,
+  FieldGroup,
+  FieldHint,
+  FieldLabel,
+  FieldsGrid,
+  FormSection,
+  PasswordField,
+  PasswordToggle,
+  PrimaryAction,
+  SecondaryAction,
+  SectionDescription,
+  SectionHeader,
+  SectionTitle,
+  UserForm,
+} from "./styles";
 
 const emptyFormData = {
   name: "",
@@ -31,43 +51,6 @@ const normalizeFormData = (value = emptyFormData) => ({
     : [...emptyFormData.roleCodes],
 });
 
-const getRoleLabel = (role) => {
-  const cargo = String(role?.cargo || "").trim();
-
-  return cargo || "Role sem identificacao";
-};
-
-const RoleSelectToggle = forwardRef(
-  ({ children, onClick, disabled, title, ...props }, ref) => {
-    return (
-      <button
-        {...props}
-        ref={ref}
-        type="button"
-        className="form-select text-start"
-        disabled={disabled}
-        title={title}
-        onClick={(event) => {
-          event.preventDefault();
-
-          if (!disabled) {
-            onClick(event);
-          }
-        }}
-        style={{
-          overflow: "hidden",
-          textOverflow: "ellipsis",
-          whiteSpace: "nowrap",
-        }}
-      >
-        {children}
-      </button>
-    );
-  },
-);
-
-RoleSelectToggle.displayName = "RoleSelectToggle";
-
 export function UpdateUserForm({
   initialValue = emptyFormData,
   buttonLabel = "Cadastrar",
@@ -75,6 +58,7 @@ export function UpdateUserForm({
   onSubmit,
 }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
   const [formData, setFormData] = useState(() =>
     normalizeFormData(initialValue),
   );
@@ -220,152 +204,200 @@ export function UpdateUserForm({
 
   const isRoleSelectDisabled =
     !isAdmin || isLoadingRoles || roleOptions.length === 0;
-  const selectedRoleLabels = roleOptions
-    .filter((role) => (formData.roleCodes || []).includes(role.code))
-    .map((role) => getRoleLabel(role));
-  const selectedRolesText = selectedRoleLabels.length
-    ? selectedRoleLabels.join(", ")
-    : "Selecione uma ou mais roles";
+  const submitIsDisabled =
+    isSubmiting || (isAdmin && (isLoadingRoles || !roleOptions.length));
 
   return (
-    <Form onSubmit={handleSubmit}>
-      <Form.Group className="mb-3" controlId="user-name">
-        <Form.Label className="mb-0">Nome</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Nome do usuario"
-          name="name"
-          value={formData.name}
-          onChange={handleChange}
-          required
-        />
-      </Form.Group>
+    <UserForm onSubmit={handleSubmit}>
+      <FormSection>
+        <SectionHeader>
+          <SectionTitle>Dados do usuário</SectionTitle>
+          <SectionDescription>
+            Informações básicas usadas para identificar o colaborador na
+            intranet.
+          </SectionDescription>
+        </SectionHeader>
 
-      <Form.Group className="mb-3" controlId="user-email">
-        <Form.Label className="mb-0">Email</Form.Label>
-        <Form.Control
-          type="email"
-          placeholder="Email do usuario"
-          name="email"
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-      </Form.Group>
+        <FieldsGrid>
+          <FieldGroup controlId="user-name">
+            <FieldLabel>Nome completo</FieldLabel>
+            <FieldControl
+              type="text"
+              placeholder="Nome do usuário"
+              name="name"
+              value={formData.name}
+              onChange={handleChange}
+              required
+              autoComplete="name"
+            />
+          </FieldGroup>
 
-      <Form.Group className="mb-3" controlId="user-number">
-        <Form.Label className="mb-0">Telefone Funcional</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Telefone funcional do usuario"
-          name="number"
-          value={formData.number}
-          onChange={handleChange}
-        />
-      </Form.Group>
+          <FieldGroup controlId="user-email">
+            <FieldLabel>E-mail corporativo</FieldLabel>
+            <FieldControl
+              type="email"
+              placeholder="seunome@cifraengenharia.com.br"
+              name="email"
+              value={formData.email}
+              onChange={handleChange}
+              required
+              autoComplete="email"
+            />
+          </FieldGroup>
+        </FieldsGrid>
+      </FormSection>
 
-      <Form.Group className="mb-3" controlId="user-personal-number">
-        <Form.Label className="mb-0">Telefone Pessoal</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Telefone pessoal do usuario"
-          name="personalNumber"
-          value={formData.personalNumber}
-          onChange={handleChange}
-        />
-      </Form.Group>
+      <FormSection>
+        <SectionHeader>
+          <SectionTitle>Contato</SectionTitle>
+          <SectionDescription>
+            Telefones usados para consulta interna e comunicação operacional.
+          </SectionDescription>
+        </SectionHeader>
 
-      <Form.Group className="mb-3" controlId="user-function">
-        <Form.Label className="mb-0">Funcao</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Funcao do usuario"
-          name="function"
-          value={formData.function}
-          onChange={handleChange}
-        />
-      </Form.Group>
+        <FieldsGrid>
+          <FieldGroup controlId="user-number">
+            <FieldLabel>Telefone funcional</FieldLabel>
+            <FieldControl
+              type="text"
+              placeholder="Telefone funcional do usuário"
+              name="number"
+              value={formData.number}
+              onChange={handleChange}
+              autoComplete="tel"
+            />
+          </FieldGroup>
 
-      <Form.Group className="mb-3" controlId="user-state">
-        <Form.Label className="mb-0">Estado</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Estado do usuario"
-          name="state"
-          value={formData.state}
-          onChange={handleChange}
-        />
-      </Form.Group>
+          <FieldGroup controlId="user-personal-number">
+            <FieldLabel>Telefone pessoal</FieldLabel>
+            <FieldControl
+              type="text"
+              placeholder="Telefone pessoal do usuário"
+              name="personalNumber"
+              value={formData.personalNumber}
+              onChange={handleChange}
+              autoComplete="tel"
+            />
+          </FieldGroup>
+        </FieldsGrid>
+      </FormSection>
 
-      <Form.Group className="mb-3" controlId="user-lotation">
-        <Form.Label className="mb-0">Lotacao</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Lotacao do usuario"
-          name="lotation"
-          value={formData.lotation}
-          onChange={handleChange}
-        />
-      </Form.Group>
+      <FormSection>
+        <SectionHeader>
+          <SectionTitle>Dados profissionais</SectionTitle>
+          <SectionDescription>
+            Dados usados para organizar colaboradores por função, estado e
+            lotação.
+          </SectionDescription>
+        </SectionHeader>
+
+        <FieldsGrid>
+          <FieldGroup $full controlId="user-function">
+            <FieldLabel>Função</FieldLabel>
+            <FieldControl
+              type="text"
+              placeholder="Função do usuário"
+              name="function"
+              value={formData.function}
+              onChange={handleChange}
+            />
+          </FieldGroup>
+
+          <FieldGroup controlId="user-state">
+            <FieldLabel>Estado</FieldLabel>
+            <FieldControl
+              type="text"
+              placeholder="Estado do usuário"
+              name="state"
+              value={formData.state}
+              onChange={handleChange}
+            />
+          </FieldGroup>
+
+          <FieldGroup controlId="user-lotation">
+            <FieldLabel>Lotação</FieldLabel>
+            <FieldControl
+              type="text"
+              placeholder="Lotação do usuário"
+              name="lotation"
+              value={formData.lotation}
+              onChange={handleChange}
+            />
+          </FieldGroup>
+        </FieldsGrid>
+      </FormSection>
 
       {isAdmin ? (
-        <Form.Group className="mb-3" controlId="user-roles">
-          <Form.Label className="mb-0">Roles</Form.Label>
-          <Dropdown autoClose="outside">
-            <Dropdown.Toggle
-              as={RoleSelectToggle}
+        <FormSection>
+          <SectionHeader>
+            <SectionTitle>Permissões</SectionTitle>
+            <SectionDescription>
+              Defina quais áreas e portais este usuário poderá acessar.
+            </SectionDescription>
+          </SectionHeader>
+
+          <FieldGroup controlId="user-roles">
+            <FieldLabel>Roles</FieldLabel>
+            <RoleChipsSelect
               disabled={isRoleSelectDisabled}
-              title={selectedRolesText}
-            >
-              {selectedRolesText}
-            </Dropdown.Toggle>
-            <Dropdown.Menu
-              className="w-100 p-2"
-              style={{ maxHeight: "260px", overflowY: "auto" }}
-            >
-              {roleOptions.map((role) => (
-                <Form.Check
-                  key={role._id || role.code}
-                  id={`user-role-${role._id || role.code}`}
-                  type="checkbox"
-                  label={getRoleLabel(role)}
-                  checked={(formData.roleCodes || []).includes(role.code)}
-                  onChange={() => handleRoleToggle(role.code)}
-                  className="mb-2"
-                />
-              ))}
-            </Dropdown.Menu>
-          </Dropdown>
-          <Form.Text muted>
-            {isLoadingRoles
-              ? "Carregando roles cadastradas..."
-              : roleOptions.length
-                ? "Selecione uma ou mais roles cadastradas no banco."
-                : "Nenhuma role cadastrada foi encontrada."}
-          </Form.Text>
-        </Form.Group>
+              isLoading={isLoadingRoles}
+              roleOptions={roleOptions}
+              selectedRoleCodes={formData.roleCodes || []}
+              onToggleRole={handleRoleToggle}
+            />
+            <FieldHint>
+              {isLoadingRoles
+                ? "Carregando roles cadastradas..."
+                : roleOptions.length
+                  ? "Selecione uma ou mais roles cadastradas no banco."
+                  : "Nenhuma role cadastrada foi encontrada."}
+            </FieldHint>
+          </FieldGroup>
+        </FormSection>
       ) : null}
 
-      <Form.Group className="mb-3" controlId="user-password">
-        <Form.Label className="mb-0">Senha</Form.Label>
-        <Form.Control
-          type="password"
-          placeholder="Insira a senha"
-          name="password"
-          value={formData.password}
-          onChange={handleChange}
-          required={type === "create"}
-        />
-      </Form.Group>
+      <FormSection>
+        <SectionHeader>
+          <SectionTitle>Acesso</SectionTitle>
+          <SectionDescription>
+            Defina a senha inicial do usuário. Ela poderá ser alterada depois.
+          </SectionDescription>
+        </SectionHeader>
 
-      <Button
-        type="submit"
-        disabled={
-          isSubmiting || (isAdmin && (isLoadingRoles || !roleOptions.length))
-        }
-      >
-        {buttonLabel}
-      </Button>
-    </Form>
+        <FieldGroup controlId="user-password">
+          <FieldLabel>Senha inicial</FieldLabel>
+          <PasswordField>
+            <FieldControl
+              type={showPassword ? "text" : "password"}
+              placeholder={
+                type === "create" ? "Insira a senha" : "Deixe em branco para manter"
+              }
+              name="password"
+              value={formData.password}
+              onChange={handleChange}
+              required={type === "create"}
+              autoComplete="new-password"
+            />
+            <PasswordToggle
+              type="button"
+              aria-label={showPassword ? "Ocultar senha" : "Mostrar senha"}
+              onClick={() => setShowPassword((currentValue) => !currentValue)}
+            >
+              <FontAwesomeIcon icon={showPassword ? faEyeSlash : faEye} />
+            </PasswordToggle>
+          </PasswordField>
+        </FieldGroup>
+      </FormSection>
+
+      <ActionsBar>
+        <SecondaryAction forwardedAs={Link} to="/portal/users" variant="light">
+          Cancelar
+        </SecondaryAction>
+        <PrimaryAction type="submit" disabled={submitIsDisabled}>
+          <FontAwesomeIcon icon={faUserPlus} />
+          {isSubmiting ? "Salvando..." : buttonLabel}
+        </PrimaryAction>
+      </ActionsBar>
+    </UserForm>
   );
 }
