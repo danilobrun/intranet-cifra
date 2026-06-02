@@ -3,8 +3,8 @@ import { useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import { LayoutPortal } from "../../components/LayoutPortal";
-import { Loading } from "../../components/Loading";
 import { UpsertRoleForm } from "../../components/UpsertRoleForm";
+import { RoleFormSkeleton } from "../../components/UpsertRoleForm/RoleFormSkeleton";
 import {
   createRole,
   getRolePortalOptions,
@@ -52,7 +52,7 @@ export function AdminAddRoleView() {
         </PageHeader>
 
         {loading ? (
-          <Loading />
+          <RoleFormSkeleton />
         ) : (
           <UpsertRoleForm
             portalOptions={portalOptions}

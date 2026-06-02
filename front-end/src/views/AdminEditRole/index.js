@@ -3,8 +3,8 @@ import { useNavigate, useParams } from "react-router-dom";
 import { toast } from "react-toastify";
 import styled from "styled-components";
 import { LayoutPortal } from "../../components/LayoutPortal";
-import { Loading } from "../../components/Loading";
 import { UpsertRoleForm } from "../../components/UpsertRoleForm";
+import { RoleFormSkeleton } from "../../components/UpsertRoleForm/RoleFormSkeleton";
 import {
   getRoleById,
   getRolePortalOptions,
@@ -62,7 +62,7 @@ export function AdminEditRoleView() {
         </PageHeader>
 
         {loading ? (
-          <Loading />
+          <RoleFormSkeleton />
         ) : role ? (
           <UpsertRoleForm
             initialValue={{
