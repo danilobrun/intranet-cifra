@@ -1,14 +1,14 @@
 import { useCallback, useEffect, useState } from "react";
-import { Alert, Button, Col, Row } from "react-bootstrap";
-import { Link } from "react-router-dom";
+import { Alert, Col, Row } from "react-bootstrap";
 import { toast } from "react-toastify";
 import { useSelector } from "react-redux";
 import styled from "styled-components";
 import { LayoutPortal } from "../../components/LayoutPortal";
-import { Loading } from "../../components/Loading";
 import { TutorialCard } from "../../components/Tutorials/TutorialCard";
+import { TutorialCardsSkeleton } from "../../components/Tutorials/TutorialCardsSkeleton";
 import { TutorialConfirmModal } from "../../components/Tutorials/TutorialConfirmModal";
 import { TutorialFilters } from "../../components/Tutorials/TutorialFilters";
+import { TutorialListHeader } from "../../components/Tutorials/TutorialListHeader";
 import {
   archiveTutorial,
   deleteTutorialPermanently,
@@ -41,7 +41,7 @@ export function TutorialsView() {
 
       setTutorials(data || []);
     } catch {
-      setErrorMsg("Falha ao buscar tutoriais. Recarregue a página.");
+      setErrorMsg("Falha ao buscar tutoriais. Recarregue a p\u00e1gina.");
     } finally {
       setLoading(false);
     }
@@ -63,7 +63,7 @@ export function TutorialsView() {
 
       if (action.type === "deletePermanent") {
         await deleteTutorialPermanently(action.tutorial._id);
-        toast.success("Tutorial excluído definitivamente.");
+        toast.success("Tutorial exclu\u00eddo definitivamente.");
       } else {
         await archiveTutorial(action.tutorial._id);
         toast.success("Tutorial arquivado com sucesso.");
@@ -80,43 +80,29 @@ export function TutorialsView() {
 
   return (
     <LayoutPortal>
-      <HeaderRow>
-        <div>
-          <TitleRow>
-            <h1 className="mb-0">🔎 Tutoriais</h1>
-            {isAdmin ? (
-              <Button
-                as={Link}
-                to="/portal/tutorials/new"
-                size="sm"
-                className="mt-2"
-              >
-                Novo tutorial
-              </Button>
-            ) : null}
-          </TitleRow>
-          <HelperText>
-            Consulte procedimentos internos em formato de passo a passo.
-          </HelperText>
-        </div>
-      </HeaderRow>
+      <TutorialListHeader
+        isAdmin={isAdmin}
+      />
 
       <TutorialFilters
+        count={tutorials.length}
         isAdmin={isAdmin}
+        isLoading={loading}
         search={search}
         status={status}
         onSearchChange={setSearch}
         onStatusChange={setStatus}
       />
 
-      {loading ? <Loading /> : null}
       {errorMsg ? <Alert variant="danger">{errorMsg}</Alert> : null}
+
+      {loading && !errorMsg ? <TutorialCardsSkeleton count={6} /> : null}
 
       {!loading && !errorMsg ? (
         tutorials.length ? (
-          <Row>
+          <Row className="g-3 g-lg-4">
             {tutorials.map((tutorial) => (
-              <Col key={tutorial._id} className="mb-4" xs={12} md={6} xl={4}>
+              <Col key={tutorial._id} xs={12} md={6} xl={4}>
                 <TutorialCard
                   tutorial={tutorial}
                   isAdmin={isAdmin}
@@ -137,7 +123,10 @@ export function TutorialsView() {
             ))}
           </Row>
         ) : (
-          <EmptyState>Nenhum tutorial encontrado.</EmptyState>
+          <EmptyState>
+            <strong>Nenhum tutorial encontrado.</strong>
+            <span>Tente alterar a busca ou o filtro selecionado.</span>
+          </EmptyState>
         )
       ) : null}
 
@@ -151,31 +140,18 @@ export function TutorialsView() {
   );
 }
 
-const HeaderRow = styled.div`
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  margin: 16px 0;
-  flex-wrap: wrap;
-`;
-
-const TitleRow = styled.div`
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  flex-wrap: wrap;
-`;
-
-const HelperText = styled.p`
-  margin: 8px 0 0;
-  color: #6c757d;
-`;
-
 const EmptyState = styled.div`
-  border: 1px dashed #ced4da;
-  border-radius: 0.5rem;
-  padding: 24px;
-  color: #6c757d;
+  display: grid;
+  gap: 6px;
+  padding: 26px;
+  border: 1px dashed oklch(84% 0.014 245);
+  border-radius: 12px;
+  background: oklch(99% 0.004 245);
+  color: oklch(49% 0.018 245);
   text-align: center;
+
+  strong {
+    color: oklch(28% 0.016 245);
+    font-size: 1rem;
+  }
 `;
