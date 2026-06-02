@@ -1,5 +1,22 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Form } from "react-bootstrap";
+import { Link } from "react-router-dom";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faShieldHalved } from "@fortawesome/free-solid-svg-icons";
+import { RolePortalSelector } from "./RolePortalSelector";
+import {
+  ActionsBar,
+  FieldControl,
+  FieldGroup,
+  FieldLabel,
+  FieldsGrid,
+  FormSection,
+  PrimaryAction,
+  RoleForm,
+  SecondaryAction,
+  SectionDescription,
+  SectionHeader,
+  SectionTitle,
+} from "./styles";
 
 const emptyFormData = {
   cargo: "",
@@ -15,9 +32,8 @@ const normalizeFormData = (value = emptyFormData) => ({
 
 export function UpsertRoleForm({
   initialValue = emptyFormData,
-  buttonLabel = "Cadastrar",
-  helperText,
-  isSubmittingExternal = false,
+  portalOptions = [],
+  buttonLabel = "Cadastrar role",
   onSubmit,
 }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
@@ -32,10 +48,17 @@ export function UpsertRoleForm({
   const handleChange = (event) => {
     const { name, value } = event.target;
 
-    setFormData({
-      ...formData,
+    setFormData((currentFormData) => ({
+      ...currentFormData,
       [name]: value,
-    });
+    }));
+  };
+
+  const handlePortalIdsChange = (portalIds) => {
+    setFormData((currentFormData) => ({
+      ...currentFormData,
+      portalIds,
+    }));
   };
 
   const handleSubmit = async (event) => {
@@ -54,40 +77,66 @@ export function UpsertRoleForm({
   };
 
   return (
-    <Form onSubmit={handleSubmit}>
-      {helperText ? (
-        <Alert variant="info" className="mt-3">
-          {helperText}
-        </Alert>
-      ) : null}
+    <RoleForm onSubmit={handleSubmit}>
+      <FormSection>
+        <SectionHeader>
+          <SectionTitle>Dados da role</SectionTitle>
+          <SectionDescription>
+            Identificação usada para controlar permissões de acesso no sistema.
+          </SectionDescription>
+        </SectionHeader>
 
-      <Form.Group className="mb-3" controlId="role-cargo">
-        <Form.Label className="mb-0">Cargo</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Nome do cargo da role"
-          name="cargo"
-          value={formData.cargo}
-          onChange={handleChange}
-          required
+        <FieldsGrid>
+          <FieldGroup controlId="role-cargo">
+            <FieldLabel>Cargo / nome da role</FieldLabel>
+            <FieldControl
+              type="text"
+              placeholder="Ex.: Funcionário"
+              name="cargo"
+              value={formData.cargo}
+              onChange={handleChange}
+              required
+            />
+          </FieldGroup>
+
+          <FieldGroup $compact controlId="role-code">
+            <FieldLabel>Code</FieldLabel>
+            <FieldControl
+              type="text"
+              placeholder="Ex.: 3"
+              name="code"
+              value={formData.code}
+              onChange={handleChange}
+              required
+            />
+          </FieldGroup>
+        </FieldsGrid>
+      </FormSection>
+
+      <FormSection>
+        <SectionHeader>
+          <SectionTitle>Portais liberados</SectionTitle>
+          <SectionDescription>
+            Defina quais portais usuários com esta role poderão acessar.
+          </SectionDescription>
+        </SectionHeader>
+
+        <RolePortalSelector
+          portals={portalOptions}
+          selectedPortalIds={formData.portalIds}
+          onChange={handlePortalIdsChange}
         />
-      </Form.Group>
+      </FormSection>
 
-      <Form.Group className="mb-3" controlId="role-code">
-        <Form.Label className="mb-0">Code</Form.Label>
-        <Form.Control
-          type="text"
-          placeholder="Codigo unico da role"
-          name="code"
-          value={formData.code}
-          onChange={handleChange}
-          required
-        />
-      </Form.Group>
-
-      <Button type="submit" disabled={isSubmiting || isSubmittingExternal}>
-        {buttonLabel}
-      </Button>
-    </Form>
+      <ActionsBar>
+        <SecondaryAction forwardedAs={Link} to="/portal/roles" variant="light">
+          Cancelar
+        </SecondaryAction>
+        <PrimaryAction type="submit" disabled={isSubmiting}>
+          <FontAwesomeIcon icon={faShieldHalved} />
+          {isSubmiting ? "Salvando..." : buttonLabel}
+        </PrimaryAction>
+      </ActionsBar>
+    </RoleForm>
   );
 }

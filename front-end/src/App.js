@@ -12,6 +12,8 @@ import { AdminUsersView } from "./views/AdminUsers";
 import { AdminEditUserView } from "./views/AdminEditUser";
 import { AdminAddUserView } from "./views/AdminAddUser";
 import { AdminRolesView } from "./views/AdminRoles";
+import { AdminAddRoleView } from "./views/AdminAddRole";
+import { AdminEditRoleView } from "./views/AdminEditRole";
 import { RegisterView } from "./views/Register";
 import { EditProfile } from "./views/EditProfile";
 import { Addresses } from "./views/Addresses";
@@ -79,6 +81,22 @@ function App() {
         element={
           <PrivateRoute userTypes={["1"]}>
             <AdminRolesView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="portal/roles/cadastro"
+        element={
+          <PrivateRoute userTypes={["1"]}>
+            <AdminAddRoleView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="portal/roles/:id"
+        element={
+          <PrivateRoute userTypes={["1"]}>
+            <AdminEditRoleView />
           </PrivateRoute>
         }
       />

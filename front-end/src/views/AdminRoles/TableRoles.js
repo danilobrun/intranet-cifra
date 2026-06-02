@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Button, Modal, Table } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { deleteRole } from "../../services/Roles.service";
 import styled from "styled-components";
@@ -30,8 +31,6 @@ const formatRolePortalPreview = (portals = []) => {
 export function TableRoles({
   roles,
   isLoading = false,
-  onManageRole,
-  onEditRole,
   onDeleteRole,
 }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
@@ -105,12 +104,9 @@ export function TableRoles({
                       <ActionGroup>
                         <Button
                           size="sm"
-                          variant="secondary"
-                          onClick={() => onManageRole(role)}
+                          as={Link}
+                          to={`/portal/roles/${role._id}`}
                         >
-                          Configurar portais
-                        </Button>
-                        <Button size="sm" onClick={() => onEditRole(role)}>
                           Editar
                         </Button>
                         <Button
