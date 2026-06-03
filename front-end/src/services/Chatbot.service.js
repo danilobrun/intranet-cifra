@@ -1,5 +1,5 @@
 const chatbotUrl =
-  "https://careers-supposed-favor-separately.trycloudflare.com/webhook/chatbot-frota";
+  "https://rabid-yeah-unrest.ngrok-free.dev/webhook/chatbot-frota";
 
 const parseResponseBody = async (response) => {
   const rawBody = await response.text();
