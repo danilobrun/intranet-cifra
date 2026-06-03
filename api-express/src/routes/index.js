@@ -1,3 +1,4 @@
+const boletinsRoutes = require("./boletins.routes");
 const carsRoutes = require("./cars.routes");
 const contratosRoutes = require("./contratos.routes");
 const inscriptionsRoutes = require("./inscriptions.routes");
@@ -15,6 +16,7 @@ const registersRoutes = (app) => {
       msg: "Bem vindo a API da Cifra Engenharia.",
     });
   });
+  boletinsRoutes(app);
   carsRoutes(app);
   contratosRoutes(app);
   usersRoutes(app);

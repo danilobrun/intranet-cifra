@@ -15,6 +15,8 @@ const PagamentoSchema = new mongoose.Schema(
   },
 );
 
+PagamentoSchema.index({ boletimId: 1 });
+
 const Pagamento = mongoose.model("Pagamento", PagamentoSchema);
 
 module.exports = Pagamento;

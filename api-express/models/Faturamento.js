@@ -15,6 +15,8 @@ const FaturamentoSchema = new mongoose.Schema(
   },
 );
 
+FaturamentoSchema.index({ boletimId: 1 });
+
 const Faturamento = mongoose.model("Faturamento", FaturamentoSchema);
 
 module.exports = Faturamento;

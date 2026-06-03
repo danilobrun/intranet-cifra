@@ -35,6 +35,14 @@ const BoletimSchema = new mongoose.Schema(
   },
 );
 
+BoletimSchema.index(
+  { contratoId: 1, numeroBm: 1, mes: 1, ano: 1 },
+  {
+    unique: true,
+    partialFilterExpression: { deletedAt: { $exists: false } },
+  },
+);
+
 const Boletim = mongoose.model("Boletim", BoletimSchema);
 
 module.exports = Boletim;
