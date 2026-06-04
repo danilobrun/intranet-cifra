@@ -1,4 +1,4 @@
-import { Route, Routes } from "react-router-dom";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { PortalsView } from "./views/Portals";
 import { NotFoundView } from "./views/NotFound";
 import { PortalDetailView } from "./views/PortalDetail";
@@ -18,6 +18,7 @@ import { RegisterView } from "./views/Register";
 import { EditProfile } from "./views/EditProfile";
 import { Addresses } from "./views/Addresses";
 import { Contracts } from "./views/Contracts";
+import { ContractEditorView } from "./views/ContractEditor";
 import { ForgotPasswordView } from "./views/ForgotPassword";
 import { ForgotPasswordCodeView } from "./views/ForgotPasswordCode";
 import { ResetPasswordView } from "./views/ResetPassword";
@@ -26,6 +27,7 @@ import { TutorialsView } from "./views/Tutorials";
 import { TutorialDetailView } from "./views/TutorialDetail";
 import { TutorialEditorView } from "./views/TutorialEditor";
 import { HomeView } from "./views/Home";
+import { canAccessContracts } from "./helpers/contractsPermissions";
 
 function App() {
   return (
@@ -186,27 +188,34 @@ function App() {
         }
       />
       <Route
+        path="/contratos"
+        element={
+          <PrivateRoute canAccess={canAccessContracts}>
+            <Contracts />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/contratos/novo"
+        element={
+          <PrivateRoute canAccess={canAccessContracts}>
+            <ContractEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/contratos/:id/editar"
+        element={
+          <PrivateRoute canAccess={canAccessContracts}>
+            <ContractEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
         path="/portal/contracts"
         element={
-          <PrivateRoute
-            userTypes={[
-              "1",
-              "compesa",
-              "brk",
-              "verdeAlagoas",
-              "alagoasGerente",
-              "sergipe",
-              "igua",
-              "obras",
-              "compras",
-              "almoxarifado",
-              "rh",
-              "financeiro",
-              "frota",
-              "3",
-            ]}
-          >
-            <Contracts />
+          <PrivateRoute canAccess={canAccessContracts}>
+            <Navigate to="/contratos" replace />
           </PrivateRoute>
         }
       />

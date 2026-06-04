@@ -6,6 +6,7 @@ import { useSelector } from "react-redux";
 import { selectUser } from "../../store/User/User.selectors";
 import { Link } from "react-router-dom";
 import CifraLogoWhite from "../../assets/img/logo-cifra-branco.png";
+import { canAccessContracts } from "../../helpers/contractsPermissions";
 
 export function Sidebar({ isOpen, onClose }) {
   const user = useSelector(selectUser);
@@ -118,25 +119,10 @@ export function Sidebar({ isOpen, onClose }) {
       ],
     },
     {
-      to: "/portal/contracts",
-      text: "📑 Contratos",
+      to: "/contratos",
+      text: "Contratos",
       checkAllPath: false,
-      userTypes: [
-        "1",
-        "compesa",
-        "brk",
-        "verdeAlagoas",
-        "alagoasGerente",
-        "sergipe",
-        "igua",
-        "obras",
-        "compras",
-        "almoxarifado",
-        "rh",
-        "financeiro",
-        "frota",
-        "3",
-      ],
+      canShow: canAccessContracts,
     },
     {
       to: "/portal/tutorials",
@@ -185,7 +171,11 @@ export function Sidebar({ isOpen, onClose }) {
       <hr />
       <Nav variant="pills" className="flex-column">
         {menuItems
-          .filter((item) => item.userTypes.includes(user.roles[0].code))
+          .filter((item) =>
+            item.canShow
+              ? item.canShow(user)
+              : item.userTypes.includes(user.roles[0].code),
+          )
           .map((item, index) => (
             <SidebarItem key={index} item={item} />
           ))}
