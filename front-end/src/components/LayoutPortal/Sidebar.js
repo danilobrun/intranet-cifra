@@ -7,6 +7,7 @@ import { selectUser } from "../../store/User/User.selectors";
 import { Link } from "react-router-dom";
 import CifraLogoWhite from "../../assets/img/logo-cifra-branco.png";
 import { canAccessContracts } from "../../helpers/contractsPermissions";
+import { canAccessBoletins } from "../../helpers/boletinsPermissions";
 
 export function Sidebar({ isOpen, onClose }) {
   const user = useSelector(selectUser);
@@ -120,9 +121,15 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: "/contratos",
-      text: "Contratos",
+      text: "📃 Contratos",
       checkAllPath: false,
       canShow: canAccessContracts,
+    },
+    {
+      to: "/boletins",
+      text: "💰 Boletins",
+      checkAllPath: false,
+      canShow: canAccessBoletins,
     },
     {
       to: "/portal/tutorials",

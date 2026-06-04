@@ -19,6 +19,10 @@ import { EditProfile } from "./views/EditProfile";
 import { Addresses } from "./views/Addresses";
 import { Contracts } from "./views/Contracts";
 import { ContractEditorView } from "./views/ContractEditor";
+import { Boletins } from "./views/Boletins";
+import { BoletimCreateView } from "./views/BoletimCreate";
+import { BoletimEditorView } from "./views/BoletimEditor";
+import { BoletinsDeletedView } from "./views/BoletinsDeleted";
 import { ForgotPasswordView } from "./views/ForgotPassword";
 import { ForgotPasswordCodeView } from "./views/ForgotPasswordCode";
 import { ResetPasswordView } from "./views/ResetPassword";
@@ -28,6 +32,7 @@ import { TutorialDetailView } from "./views/TutorialDetail";
 import { TutorialEditorView } from "./views/TutorialEditor";
 import { HomeView } from "./views/Home";
 import { canAccessContracts } from "./helpers/contractsPermissions";
+import { canAccessBoletins } from "./helpers/boletinsPermissions";
 
 function App() {
   return (
@@ -216,6 +221,38 @@ function App() {
         element={
           <PrivateRoute canAccess={canAccessContracts}>
             <Navigate to="/contratos" replace />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/boletins"
+        element={
+          <PrivateRoute canAccess={canAccessBoletins}>
+            <Boletins />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/boletins/novo"
+        element={
+          <PrivateRoute canAccess={canAccessBoletins}>
+            <BoletimCreateView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/boletins/:id/editar"
+        element={
+          <PrivateRoute canAccess={canAccessBoletins}>
+            <BoletimEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/boletins/excluidos"
+        element={
+          <PrivateRoute canAccess={canAccessBoletins}>
+            <BoletinsDeletedView />
           </PrivateRoute>
         }
       />

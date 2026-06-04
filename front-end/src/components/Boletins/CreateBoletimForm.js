@@ -1,0 +1,1 @@
+export { CreateBoletimForm } from "./BoletimForm";
