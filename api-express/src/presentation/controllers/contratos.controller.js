@@ -6,13 +6,15 @@ const STATUS_ACTIVE = "Ativo";
 const STATUS_INACTIVE = "Inativo";
 const CONTRATO_STATUSES = [STATUS_ACTIVE, STATUS_INACTIVE];
 const CONTRATO_ESTADOS = ["Pernambuco", "Sergipe", "Alagoas", "Piau\u00ed"];
+const USER_PUBLIC_SELECT = "_id name";
+const MANAGER_USER_SELECT = "_id name roles";
 
 const contratoPopulateConfig = [
-  { path: "gestorId", select: "_id name email" },
-  { path: "createdBy", select: "_id name email" },
-  { path: "updatedBy", select: "_id name email" },
-  { path: "inactivatedBy", select: "_id name email" },
-  { path: "reactivatedBy", select: "_id name email" },
+  { path: "gestorId", select: USER_PUBLIC_SELECT },
+  { path: "createdBy", select: USER_PUBLIC_SELECT },
+  { path: "updatedBy", select: USER_PUBLIC_SELECT },
+  { path: "inactivatedBy", select: USER_PUBLIC_SELECT },
+  { path: "reactivatedBy", select: USER_PUBLIC_SELECT },
 ];
 
 const normalizeText = (value = "") =>
@@ -58,7 +60,6 @@ const mapUser = (user) => {
   return {
     _id: user._id,
     name: user.name,
-    email: user.email,
   };
 };
 
@@ -155,6 +156,40 @@ const getCurrentUserProfile = async (req) => {
     canManageAll,
     isGerente,
   };
+};
+
+const mapManagerResponse = (user) => ({
+  _id: user._id,
+  name: user.name,
+});
+
+const listContractManagers = async (req, res) => {
+  try {
+    const profile = await getCurrentUserProfile(req);
+    if (!profile.ok) {
+      return res.status(profile.status).json({ msg: profile.msg });
+    }
+
+    if (!profile.canManageAll) {
+      return res.status(403).json({ msg: "Acesso negado." });
+    }
+
+    const users = await User.find()
+      .select(MANAGER_USER_SELECT)
+      .populate({ path: "roles", select: "_id code cargo" })
+      .sort({ name: 1 });
+
+    const managers = users
+      .filter((user) => hasGerenteRole(user.roles))
+      .map(mapManagerResponse);
+
+    return res.status(200).json(managers);
+  } catch (error) {
+    console.log("listContractManagers error", error);
+    return res.status(500).json({
+      msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
+    });
+  }
 };
 
 const parseRequiredDate = (value, fieldLabel) => {
@@ -752,6 +787,7 @@ const updateContratoStatus = async (req, res) => {
 };
 
 module.exports = {
+  listContractManagers,
   listContratos,
   listContratoById,
   createContrato,

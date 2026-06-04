@@ -6,7 +6,6 @@ async function checkToken(req, res, next) {
   //Get token by headers access with array authorization
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1];
-  console.log("token do usuário que é gerado ao logar na aplicação", token);
   if (!token) {
     res.status(401).json({ msg: "Acesso negado!" });
     return;
@@ -14,7 +13,6 @@ async function checkToken(req, res, next) {
 
   try {
     const secret = process.env.SECRET;
-    console.log("secret do env", secret);
     const data = jwt.verify(token, secret);
 
     const user = await User.findById(data.id).populate("roles");
@@ -39,7 +37,9 @@ async function checkToken(req, res, next) {
 function ensureRoleCodes(allowedRoles = []) {
   return (req, res, next) => {
     const userRoles = Array.isArray(req.user?.roles) ? req.user.roles : [];
-    const isAllowed = allowedRoles.some((roleCode) => userRoles.includes(roleCode));
+    const isAllowed = allowedRoles.some((roleCode) =>
+      userRoles.includes(roleCode),
+    );
 
     if (!isAllowed) {
       return res.status(403).json({ msg: "Acesso negado!" });

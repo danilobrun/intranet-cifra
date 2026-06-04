@@ -1,5 +1,6 @@
 const { checkToken } = require("../middleware/checktoken");
 const {
+  listContractManagers,
   listContratos,
   listContratoById,
   createContrato,
@@ -9,6 +10,7 @@ const {
 
 const contratosRoutes = (app) => {
   app.get("/contratos", checkToken, listContratos);
+  app.get("/contratos/gestores", checkToken, listContractManagers);
   app.get("/contratos/:id", checkToken, listContratoById);
   app.post("/contratos", checkToken, createContrato);
   app.put("/contratos/:id", checkToken, editContrato);

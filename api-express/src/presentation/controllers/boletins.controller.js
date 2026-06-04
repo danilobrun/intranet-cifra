@@ -16,6 +16,7 @@ const STATUS_PAGAMENTO_NAO_FATURADO = "N\u00e3o faturado";
 const STATUS_PAGAMENTO_NAO_PAGO = "N\u00e3o pago";
 const STATUS_PAGAMENTO_PARCIAL = "Parcialmente Pago";
 const STATUS_PAGAMENTO_PAGO = "Pago";
+const USER_PUBLIC_SELECT = "_id name";
 
 const FATURAMENTO_STATUSES = [
   STATUS_FATURAMENTO_NAO_FATURADO,
@@ -36,12 +37,12 @@ const boletimPopulateConfig = [
     select: "_id codigo nomeContrato cliente estado gestorId status",
     populate: {
       path: "gestorId",
-      select: "_id name email",
+      select: USER_PUBLIC_SELECT,
     },
   },
-  { path: "createdBy", select: "_id name email" },
-  { path: "updatedBy", select: "_id name email" },
-  { path: "deletedBy", select: "_id name email" },
+  { path: "createdBy", select: USER_PUBLIC_SELECT },
+  { path: "updatedBy", select: USER_PUBLIC_SELECT },
+  { path: "deletedBy", select: USER_PUBLIC_SELECT },
 ];
 
 const notDeletedFilter = {
@@ -101,7 +102,6 @@ const mapUser = (user) => {
   return {
     _id: user._id,
     name: user.name,
-    email: user.email,
   };
 };
 
@@ -459,7 +459,7 @@ const getContratoByIdForBoletim = async (contratoId, profile) => {
 
   const contrato = await Contrato.findById(contratoId)
     .select("_id codigo nomeContrato cliente estado gestorId status")
-    .populate({ path: "gestorId", select: "_id name email" });
+    .populate({ path: "gestorId", select: USER_PUBLIC_SELECT });
 
   if (!contrato) {
     return {

@@ -1,4 +1,3 @@
-import { canAccessContracts, userIsContractManager } from "../helpers/contractsPermissions";
 import { apiUrl, getAuthorizationHeaders } from "./Api.service";
 import { removeStorageItem } from "./Storage.service";
 
@@ -97,9 +96,5 @@ export const updateContractStatus = async (contractId, status) => {
 };
 
 export const getContractManagers = async () => {
-  const users = await requestJson(`${apiUrl}/users`);
-
-  return Array.isArray(users)
-    ? users.filter((user) => canAccessContracts(user) && userIsContractManager(user))
-    : [];
+  return requestJson(`${apiUrl}/contratos/gestores`);
 };

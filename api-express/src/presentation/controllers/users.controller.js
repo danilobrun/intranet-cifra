@@ -9,6 +9,8 @@ const Role = require("../../../models/Role");
 const RECOVERY_CODE_EXPIRATION_MINUTES = 15;
 const RECOVERY_CODE_RESEND_INTERVAL_MS = 60 * 1000;
 const CIFRA_EMAIL_DOMAIN = "@cifraengenharia.com.br";
+const USER_SAFE_SELECT =
+  "-password -resetPasswordCodeHash -resetPasswordCodeExpiresAt -resetPasswordCodeSentAt";
 
 const normalizeEmail = (email = "") => String(email).trim().toLowerCase();
 
@@ -151,7 +153,7 @@ const validateRecoveryCodeOrThrow = async (user, code) => {
 };
 
 const listUsers = async (req, res) => {
-  const users = await User.find().populate("roles");
+  const users = await User.find({}, USER_SAFE_SELECT).populate("roles");
 
   res.status(200).json(users);
 };
@@ -160,7 +162,7 @@ const listUsers = async (req, res) => {
 const getUserById = async (req, res) => {
   const id = req.params.id;
 
-  const user = await User.findById(id, "-password").populate("roles");
+  const user = await User.findById(id, USER_SAFE_SELECT).populate("roles");
 
   if (!user) {
     return res.status(404).json({ msg: "Usuario nao encontrado!" });
