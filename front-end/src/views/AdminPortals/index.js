@@ -40,7 +40,7 @@ export function AdminPortalsView() {
   return (
     <LayoutPortal>
       <PortalHeader
-        title="🌐 Portais Cadastrados"
+        title="Portais Cadastrados"
         buttonText="Novo portal"
         buttonLink="/portal/portals/cadastro"
       >

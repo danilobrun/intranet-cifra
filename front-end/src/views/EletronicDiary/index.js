@@ -88,7 +88,7 @@ export function EletronicDiary() {
         ) : (
           <>
             <DivHeader>
-              <h2>☎️ Agenda Eletrônica</h2>
+              <PageTitle>Agenda Eletrônica</PageTitle>
               <SearchField>
                 <SearchIcon icon={faMagnifyingGlass} />
                 <Input
@@ -227,6 +227,13 @@ const DivHeader = styled.div`
   gap: 1rem;
   flex-wrap: wrap;
   margin-bottom: 12px;
+`;
+
+const PageTitle = styled.h2`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin: 0;
 `;
 
 const SearchField = styled.div`

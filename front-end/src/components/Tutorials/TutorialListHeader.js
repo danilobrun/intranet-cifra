@@ -1,15 +1,12 @@
 import { Link } from "react-router-dom";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faBookOpen, faPlus } from "@fortawesome/free-solid-svg-icons";
+import { faPlus } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 
 export function TutorialListHeader({ isAdmin }) {
   return (
     <HeaderRow>
       <HeaderContent>
-        <IconFrame aria-hidden="true">
-          <FontAwesomeIcon icon={faBookOpen} />
-        </IconFrame>
         <TitleGroup>
           <Title>Tutoriais</Title>
           <Description>
@@ -42,20 +39,6 @@ const HeaderContent = styled.div`
   align-items: flex-start;
   gap: 14px;
   min-width: 0;
-`;
-
-const IconFrame = styled.span`
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  width: 46px;
-  min-width: 46px;
-  height: 46px;
-  border: 1px solid oklch(85% 0.026 253);
-  border-radius: 12px;
-  background: oklch(97% 0.018 253);
-  color: oklch(42% 0.16 253);
-  font-size: 1.15rem;
 `;
 
 const TitleGroup = styled.div`

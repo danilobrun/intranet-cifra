@@ -137,7 +137,7 @@ export function Boletins() {
   return (
     <LayoutPortal>
       <PortalHeader
-        title="💰 Boletins"
+        title="Boletins"
         description="Acompanhe BMs, faturamentos e pagamentos vinculados aos contratos."
         buttonText="Novo Boletim"
         buttonLink="/boletins/novo"

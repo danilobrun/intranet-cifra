@@ -8,7 +8,7 @@ import { SergipeTab } from "../../components/Addresses/SergipeTab";
 export function Addresses() {
   return (
     <LayoutPortal>
-      <h1 className="mt-4 mb-2">📍 Endereços</h1>
+      <PageTitle className="mt-4 mb-2">Endereços</PageTitle>
       <Div>
         <Tabs defaultActiveKey="pernambuco" id="uncontrolled-tab-example">
           <Tab eventKey="pernambuco" title="Pernambuco">
@@ -31,4 +31,10 @@ const Div = styled.div`
   display: flex;
   flex-direction: column;
   margin-top: 2rem;
+`;
+
+const PageTitle = styled.h1`
+  display: flex;
+  align-items: center;
+  gap: 10px;
 `;

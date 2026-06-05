@@ -86,7 +86,7 @@ export function Contracts() {
   return (
     <LayoutPortal>
       <PortalHeader
-        title="📃 Contratos"
+        title="Contratos"
         description="Gerencie os contratos usados no controle de BMs."
         buttonText="Novo contrato"
         buttonLink="/contratos/novo"

@@ -8,6 +8,20 @@ import { Link } from "react-router-dom";
 import CifraLogoWhite from "../../assets/img/logo-cifra-branco.png";
 import { canAccessContracts } from "../../helpers/contractsPermissions";
 import { canAccessBoletins } from "../../helpers/boletinsPermissions";
+import {
+  faAddressBook,
+  faBookOpen,
+  faFileContract,
+  faSackDollar,
+  faFolderOpen,
+  faGlobe,
+  faHouse,
+  faLocationDot,
+  faPenToSquare,
+  faRobot,
+  faShieldHalved,
+  faUsersGear,
+} from "@fortawesome/free-solid-svg-icons";
 
 export function Sidebar({ isOpen, onClose }) {
   const user = useSelector(selectUser);
@@ -16,7 +30,8 @@ export function Sidebar({ isOpen, onClose }) {
   const menuItems = [
     {
       to: "/portal",
-      text: "🏠 Início",
+      label: "Início",
+      icon: faHouse,
       checkAllPath: true,
       userTypes: [
         "1",
@@ -39,7 +54,8 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: "/portals",
-      text: "🌐 Portais",
+      label: "Portais",
+      icon: faGlobe,
       checkAllPath: true,
       userTypes: [
         "1",
@@ -62,27 +78,32 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: "/portal/portals",
-      text: "📂 Gerenciar Portais",
+      label: "Gerenciar Portais",
+      icon: faFolderOpen,
       checkAllPath: false,
       userTypes: ["1"],
     },
     {
       to: "/portal/users",
-      text: "👥 Gerenciar Usuários",
+      label: "Gerenciar Usuários",
+      icon: faUsersGear,
       checkAllPath: false,
       userTypes: ["1"],
     },
     {
       to: "/portal/roles",
-      text: "🛡️ Roles",
+      label: "Roles",
+      icon: faShieldHalved,
       checkAllPath: false,
       userTypes: ["1"],
     },
     {
       to: `/portal/editProfile/${user._id}`,
-      text: "✏️ Editar Perfil",
+      label: "Editar Perfil",
+      icon: faPenToSquare,
       checkAllPath: false,
       userTypes: [
+        "1",
         "compesa",
         "brk",
         "verdeAlagoas",
@@ -102,7 +123,8 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: "/diary",
-      text: "☎️ Agenda Eletrônica",
+      label: "Agenda Eletrônica",
+      icon: faAddressBook,
       checkAllPath: false,
       userTypes: [
         "1",
@@ -123,7 +145,8 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: "/portal/addresses",
-      text: "📍 Endereços",
+      label: "Endereços",
+      icon: faLocationDot,
       checkAllPath: false,
       userTypes: [
         "1",
@@ -144,19 +167,22 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: "/contratos",
-      text: "📃 Contratos",
+      label: "Contratos",
+      icon: faFileContract,
       checkAllPath: false,
       canShow: canAccessContracts,
     },
     {
       to: "/boletins",
-      text: "💰 Boletins",
+      label: "Boletins",
+      icon: faSackDollar,
       checkAllPath: false,
       canShow: canAccessBoletins,
     },
     {
       to: "/portal/tutorials",
-      text: "🔎 Tutoriais",
+      label: "Tutoriais",
+      icon: faBookOpen,
       checkAllPath: false,
       userTypes: [
         "1",
@@ -179,7 +205,8 @@ export function Sidebar({ isOpen, onClose }) {
     },
     {
       to: "/portal/chatbot",
-      text: "🤖 Chatbot de Frota (BETA)",
+      label: "Chatbot de Frota (BETA)",
+      icon: faRobot,
       checkAllPath: false,
       userTypes: ["1"],
     },

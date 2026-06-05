@@ -20,6 +20,14 @@ const getBrowserPosition = () =>
     });
   });
 
+const buildBrowserLocation = (position) => ({
+  id: "browser-location",
+  name: "Sua localização atual",
+  countryCode: "BR",
+  latitude: position.coords.latitude,
+  longitude: position.coords.longitude,
+});
+
 const mapHourlyForecast = (hourly = {}, currentTime) => {
   const times = hourly.time || [];
   const currentDate = currentTime ? new Date(currentTime) : new Date();
@@ -101,6 +109,11 @@ const getGeolocationErrorMessage = (error) => {
   return "Seu navegador não permite buscar a localização atual.";
 };
 
+const getInitialWeatherErrorMessage = (error) =>
+  error?.code
+    ? getGeolocationErrorMessage(error)
+    : "Não foi possível carregar o clima pela sua localização.";
+
 export function useDashboardWeather() {
   const [weather, setWeather] = useState(null);
   const [selectedLocation, setSelectedLocation] = useState(
@@ -123,10 +136,8 @@ export function useDashboardWeather() {
   useEffect(() => {
     let isMounted = true;
 
-    const fetchInitialWeather = async () => {
+    const loadDefaultWeatherAfterInitialError = async (message) => {
       try {
-        setLoading(true);
-        setErrorMessage("");
         const weatherData = await getWeatherByCoordinates(
           DEFAULT_WEATHER_LOCATION,
         );
@@ -135,15 +146,42 @@ export function useDashboardWeather() {
           return;
         }
 
+        setSelectedLocation(DEFAULT_WEATHER_LOCATION);
         setWeather(mapWeatherData(weatherData, DEFAULT_WEATHER_LOCATION));
+        setErrorMessage(`${message} Exibindo clima padrão de Maceió.`);
       } catch {
         if (isMounted) {
           setErrorMessage(
-            "Não foi possível carregar o clima inicial. Tente pesquisar uma cidade.",
+            "Não foi possível carregar o clima pela sua localização. Tente pesquisar uma cidade.",
+          );
+        }
+      }
+    };
+
+    const fetchInitialWeather = async () => {
+      try {
+        setLoading(true);
+        setIsDetectingLocation(true);
+        setErrorMessage("");
+        const position = await getBrowserPosition();
+        const location = buildBrowserLocation(position);
+        const weatherData = await getWeatherByCoordinates(location);
+
+        if (!isMounted) {
+          return;
+        }
+
+        setSelectedLocation(location);
+        setWeather(mapWeatherData(weatherData, location));
+      } catch (error) {
+        if (isMounted) {
+          await loadDefaultWeatherAfterInitialError(
+            getInitialWeatherErrorMessage(error),
           );
         }
       } finally {
         if (isMounted) {
+          setIsDetectingLocation(false);
           setLoading(false);
         }
       }
@@ -188,13 +226,7 @@ export function useDashboardWeather() {
       setIsDetectingLocation(true);
       setErrorMessage("");
       const position = await getBrowserPosition();
-      const location = {
-        id: "browser-location",
-        name: "Sua localização atual",
-        countryCode: "BR",
-        latitude: position.coords.latitude,
-        longitude: position.coords.longitude,
-      };
+      const location = buildBrowserLocation(position);
 
       await loadWeather(location);
     } catch (error) {

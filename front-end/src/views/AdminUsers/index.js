@@ -36,7 +36,9 @@ export function AdminUsersView() {
     return (
       user.name?.toLowerCase().includes(normalizedSearch) ||
       user.email?.toLowerCase().includes(normalizedSearch) ||
-      String(user.number || "").toLowerCase().includes(normalizedSearch) ||
+      String(user.number || "")
+        .toLowerCase()
+        .includes(normalizedSearch) ||
       user.function?.toLowerCase().includes(normalizedSearch) ||
       user.state?.toLowerCase().includes(normalizedSearch) ||
       user.lotation?.toLowerCase().includes(normalizedSearch)
@@ -46,7 +48,7 @@ export function AdminUsersView() {
   return (
     <LayoutPortal>
       <PortalHeader
-        title="👤 Usuários Cadastrados"
+        title="Usuários Cadastrados"
         buttonText="Novo usuário"
         buttonLink="/portal/admin-login"
       >

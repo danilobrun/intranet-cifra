@@ -5,6 +5,7 @@ import { faPlus } from "@fortawesome/free-solid-svg-icons";
 
 export function PortalHeader({
   title,
+  icon,
   description,
   buttonText,
   buttonLink,
@@ -17,7 +18,10 @@ export function PortalHeader({
   return (
     <HeaderRow>
       <HeaderContent>
-        <h1 className="mb-0">{title}</h1>
+        <TitleLine>
+          {icon ? <TitleIcon icon={icon} aria-hidden="true" /> : null}
+          <h1 className="mb-0">{title}</h1>
+        </TitleLine>
         {description ? <Description>{description}</Description> : null}
       </HeaderContent>
       {hasActions ? (
@@ -52,6 +56,22 @@ const HeaderRow = styled.div`
 
 const HeaderContent = styled.div`
   min-width: 240px;
+`;
+
+const TitleLine = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  h1 {
+    line-height: 1.2;
+  }
+`;
+
+const TitleIcon = styled(FontAwesomeIcon)`
+  flex: 0 0 auto;
+  color: #6c757d;
+  font-size: 1.35rem;
 `;
 
 const Description = styled.p`
