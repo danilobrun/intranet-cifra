@@ -15,10 +15,10 @@ export function HomeView() {
         <DivLogged>
           <p>Bem-vindo(a)!</p>
           <p>
-            Voce ja esta logado(a). Clique no botao abaixo para acessar os
-            portais!
+            Você já está logado(a). Clique no botão abaixo para acessar a
+            intranet!
           </p>
-          <Button as={Link} to="/portals">
+          <Button as={Link} to="/portal">
             Acessar
           </Button>
         </DivLogged>

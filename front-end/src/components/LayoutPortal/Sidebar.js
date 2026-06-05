@@ -15,6 +15,29 @@ export function Sidebar({ isOpen, onClose }) {
 
   const menuItems = [
     {
+      to: "/portal",
+      text: "🏠 Início",
+      checkAllPath: true,
+      userTypes: [
+        "1",
+        "compesa",
+        "brk",
+        "verdeAlagoas",
+        "alagoasGerente",
+        "sergipe",
+        "igua",
+        "obras",
+        "compras",
+        "almoxarifado",
+        "rh",
+        "financeiro",
+        "frota",
+        "3",
+        "gca",
+        "recruitment",
+      ],
+    },
+    {
       to: "/portals",
       text: "🌐 Portais",
       checkAllPath: true,
@@ -172,7 +195,7 @@ export function Sidebar({ isOpen, onClose }) {
         onClick={onClose}
         className="ms-auto d-lg-none"
       />
-      <BrandLink as={Link} to="/portals">
+      <BrandLink as={Link} to="/portal">
         <BrandLogo src={CifraLogoWhite} alt="Cifra" />
       </BrandLink>
       <hr />
