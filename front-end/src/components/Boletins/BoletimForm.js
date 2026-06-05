@@ -666,6 +666,7 @@ export function BoletimForm({
         },
       ]);
       setFaturamentoDraft(getEmptyFaturamentoDraft(mode));
+      toast.success("Faturamento adicionado. Salve o boletim para concluir.");
       return;
     }
 
@@ -719,6 +720,7 @@ export function BoletimForm({
         },
       ]);
       setPagamentoDraft(getEmptyPagamentoDraft(mode));
+      toast.success("Pagamento adicionado. Salve o boletim para concluir.");
       return;
     }
 
