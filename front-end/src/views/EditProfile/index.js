@@ -18,7 +18,6 @@ export function EditProfile() {
     const loadUser = async () => {
       try {
         const { user } = await getUserById(id);
-        console.log(user);
         setUserData(user);
       } catch (error) {
         toast.error("Falha ao buscar dados do usuário. Recarregue a página.");
