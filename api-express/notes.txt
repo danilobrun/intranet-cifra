@@ -1,5 +1,5 @@
 tips:
-1 [x]- confirm password é responsabilidade do front revalidar.
+1 [x]- confirm password é responsabilidade do front revalidar
 2 []- back-end API fica com regra de senha (min caracteres, maiscula e etc...), usar a lib JOI para validar.
 3 [x]- alterações no .env sempre reinciar o app pois o nodemoon não pega as att.
 4 [x] - Refatorar os validations, queria pegar todos os params passado pelo usuário e checar os vazios e retornar todos os campos vazios.
