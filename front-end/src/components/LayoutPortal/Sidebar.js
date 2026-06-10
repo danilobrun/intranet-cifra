@@ -8,10 +8,12 @@ import { Link } from "react-router-dom";
 import CifraLogoWhite from "../../assets/img/logo-cifra-branco.png";
 import { canAccessContracts } from "../../helpers/contractsPermissions";
 import { canAccessBoletins } from "../../helpers/boletinsPermissions";
+import { canAccessResumoContratos } from "../../helpers/resumoContratosPermissions";
 import {
   faAddressBook,
   faBookOpen,
   faFileContract,
+  faFileInvoiceDollar,
   faSackDollar,
   faFolderOpen,
   faGlobe,
@@ -178,6 +180,13 @@ export function Sidebar({ isOpen, onClose }) {
       icon: faSackDollar,
       checkAllPath: false,
       canShow: canAccessBoletins,
+    },
+    {
+      to: "/resumo-contratos",
+      label: "Resumo Contratos",
+      icon: faFileInvoiceDollar,
+      checkAllPath: false,
+      canShow: canAccessResumoContratos,
     },
     {
       to: "/portal/tutorials",

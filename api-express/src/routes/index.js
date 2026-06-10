@@ -5,6 +5,7 @@ const inscriptionsRoutes = require("./inscriptions.routes");
 const portalsRoutes = require("./portals.routes");
 const roleRoutes = require("./role.routes");
 const rentsRoutes = require("./rent.cars.routes");
+const resumoContratosRoutes = require("./resumoContratos.routes");
 const tutorialsRoutes = require("./tutorials.routes");
 const usersRoutes = require("./users.routes");
 const updateRoutes = require("./updates.routes");
@@ -25,6 +26,7 @@ const registersRoutes = (app) => {
   portalsRoutes(app);
   tutorialsRoutes(app);
   inscriptionsRoutes(app);
+  resumoContratosRoutes(app);
   updateRoutes(app);
 };
 

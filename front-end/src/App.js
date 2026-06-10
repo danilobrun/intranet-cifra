@@ -33,6 +33,10 @@ import { TutorialEditorView } from "./views/TutorialEditor";
 import { HomeView } from "./views/Home";
 import { canAccessContracts } from "./helpers/contractsPermissions";
 import { canAccessBoletins } from "./helpers/boletinsPermissions";
+import { canAccessResumoContratos } from "./helpers/resumoContratosPermissions";
+import { ResumoContratoDetailView } from "./views/ResumoContratoDetail";
+import { ResumoContratoEditorView } from "./views/ResumoContratoEditor";
+import { ResumoContratos } from "./views/ResumoContratos";
 
 function App() {
   return (
@@ -253,6 +257,38 @@ function App() {
         element={
           <PrivateRoute canAccess={canAccessBoletins}>
             <BoletinsDeletedView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/resumo-contratos"
+        element={
+          <PrivateRoute canAccess={canAccessResumoContratos}>
+            <ResumoContratos />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/resumo-contratos/novo"
+        element={
+          <PrivateRoute canAccess={canAccessResumoContratos}>
+            <ResumoContratoEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/resumo-contratos/:id/editar"
+        element={
+          <PrivateRoute canAccess={canAccessResumoContratos}>
+            <ResumoContratoEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/resumo-contratos/:id"
+        element={
+          <PrivateRoute canAccess={canAccessResumoContratos}>
+            <ResumoContratoDetailView />
           </PrivateRoute>
         }
       />
