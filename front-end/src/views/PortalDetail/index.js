@@ -1,12 +1,11 @@
 import { useCallback, useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { useParams } from "react-router-dom";
-import { Layout } from "../../components/Layout";
-import { Loading } from "../../components/Loading";
+import { LayoutPortal } from "../../components/LayoutPortal";
 import { getPortalById } from "../../services/Portals.service";
-import { NotFoundView } from "../NotFound";
 import { BiTable } from "./biTable";
 import { GeneralTable } from "./generalTable";
+import { PortalDetailSkeleton } from "./PortalDetailSkeleton";
 import {
   IntroSection,
   PageContainer,
@@ -37,15 +36,29 @@ export function PortalDetailView() {
     fetchPortal();
   }, [fetchPortal]);
   if (loading) {
-    return <Loading />;
+    return (
+      <LayoutPortal>
+        <PageContainer>
+          <PortalDetailSkeleton />
+        </PageContainer>
+      </LayoutPortal>
+    );
   }
   if (errorMsg === "404") {
-    return <NotFoundView />;
+    return (
+      <LayoutPortal>
+        <PageContainer>
+          <Alert variant="warning" className="mt-3">
+            Portal nao encontrado.
+          </Alert>
+        </PageContainer>
+      </LayoutPortal>
+    );
   }
 
-  const isBi = /^BI/i.test(portal.name.trim());
+  const isBi = portal?.name ? /^BI/i.test(portal.name.trim()) : false;
   return (
-    <Layout>
+    <LayoutPortal>
       <PageContainer>
         {errorMsg ? (
           <Alert variant="danger" className="mt-3">
@@ -68,6 +81,6 @@ export function PortalDetailView() {
           </>
         )}
       </PageContainer>
-    </Layout>
+    </LayoutPortal>
   );
 }

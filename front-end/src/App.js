@@ -1,5 +1,4 @@
-import { Route, Routes } from "react-router-dom";
-import { HomeView } from "./views/Home";
+import { Navigate, Route, Routes } from "react-router-dom";
 import { PortalsView } from "./views/Portals";
 import { NotFoundView } from "./views/NotFound";
 import { PortalDetailView } from "./views/PortalDetail";
@@ -13,14 +12,27 @@ import { AdminUsersView } from "./views/AdminUsers";
 import { AdminEditUserView } from "./views/AdminEditUser";
 import { AdminAddUserView } from "./views/AdminAddUser";
 import { AdminRolesView } from "./views/AdminRoles";
+import { AdminAddRoleView } from "./views/AdminAddRole";
+import { AdminEditRoleView } from "./views/AdminEditRole";
 import { RegisterView } from "./views/Register";
 import { EditProfile } from "./views/EditProfile";
 import { Addresses } from "./views/Addresses";
 import { Contracts } from "./views/Contracts";
+import { ContractEditorView } from "./views/ContractEditor";
+import { Boletins } from "./views/Boletins";
+import { BoletimCreateView } from "./views/BoletimCreate";
+import { BoletimEditorView } from "./views/BoletimEditor";
+import { BoletinsDeletedView } from "./views/BoletinsDeleted";
 import { ForgotPasswordView } from "./views/ForgotPassword";
 import { ForgotPasswordCodeView } from "./views/ForgotPasswordCode";
 import { ResetPasswordView } from "./views/ResetPassword";
 import { ChatbotView } from "./views/Chatbot";
+import { TutorialsView } from "./views/Tutorials";
+import { TutorialDetailView } from "./views/TutorialDetail";
+import { TutorialEditorView } from "./views/TutorialEditor";
+import { HomeView } from "./views/Home";
+import { canAccessContracts } from "./helpers/contractsPermissions";
+import { canAccessBoletins } from "./helpers/boletinsPermissions";
 
 function App() {
   return (
@@ -32,10 +44,7 @@ function App() {
         path="/recover-password/code"
         element={<ForgotPasswordCodeView />}
       />
-      <Route
-        path="/recover-password/reset"
-        element={<ResetPasswordView />}
-      />
+      <Route path="/recover-password/reset" element={<ResetPasswordView />} />
       <Route
         path="/portals"
         element={
@@ -82,6 +91,22 @@ function App() {
         element={
           <PrivateRoute userTypes={["1"]}>
             <AdminRolesView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="portal/roles/cadastro"
+        element={
+          <PrivateRoute userTypes={["1"]}>
+            <AdminAddRoleView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="portal/roles/:id"
+        element={
+          <PrivateRoute userTypes={["1"]}>
+            <AdminEditRoleView />
           </PrivateRoute>
         }
       />
@@ -168,27 +193,66 @@ function App() {
         }
       />
       <Route
+        path="/contratos"
+        element={
+          <PrivateRoute canAccess={canAccessContracts}>
+            <Contracts />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/contratos/novo"
+        element={
+          <PrivateRoute canAccess={canAccessContracts}>
+            <ContractEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/contratos/:id/editar"
+        element={
+          <PrivateRoute canAccess={canAccessContracts}>
+            <ContractEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
         path="/portal/contracts"
         element={
-          <PrivateRoute
-            userTypes={[
-              "1",
-              "compesa",
-              "brk",
-              "verdeAlagoas",
-              "alagoasGerente",
-              "sergipe",
-              "igua",
-              "obras",
-              "compras",
-              "almoxarifado",
-              "rh",
-              "financeiro",
-              "frota",
-              "3",
-            ]}
-          >
-            <Contracts />
+          <PrivateRoute canAccess={canAccessContracts}>
+            <Navigate to="/contratos" replace />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/boletins"
+        element={
+          <PrivateRoute canAccess={canAccessBoletins}>
+            <Boletins />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/boletins/novo"
+        element={
+          <PrivateRoute canAccess={canAccessBoletins}>
+            <BoletimCreateView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/boletins/:id/editar"
+        element={
+          <PrivateRoute canAccess={canAccessBoletins}>
+            <BoletimEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/boletins/excluidos"
+        element={
+          <PrivateRoute canAccess={canAccessBoletins}>
+            <BoletinsDeletedView />
           </PrivateRoute>
         }
       />
@@ -197,6 +261,38 @@ function App() {
         element={
           <PrivateRoute userTypes={["1"]}>
             <ChatbotView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/tutorials"
+        element={
+          <PrivateRoute>
+            <TutorialsView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/tutorials/new"
+        element={
+          <PrivateRoute userTypes={["1"]}>
+            <TutorialEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/tutorials/:id/edit"
+        element={
+          <PrivateRoute userTypes={["1"]}>
+            <TutorialEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/tutorials/:id"
+        element={
+          <PrivateRoute>
+            <TutorialDetailView />
           </PrivateRoute>
         }
       />

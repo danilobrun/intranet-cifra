@@ -1,7 +1,17 @@
 import { useState } from "react";
 import { Button, Modal, Table } from "react-bootstrap";
+import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { deleteRole } from "../../services/Roles.service";
+import styled from "styled-components";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import {
+  faBriefcase,
+  faCode,
+  faGear,
+  faLink,
+} from "@fortawesome/free-solid-svg-icons";
+import { TableSkeletonRows } from "../../components/TableSkeletonRows";
 
 const formatRolePortalPreview = (portals = []) => {
   if (!portals.length) {
@@ -20,8 +30,7 @@ const formatRolePortalPreview = (portals = []) => {
 
 export function TableRoles({
   roles,
-  onManageRole,
-  onEditRole,
+  isLoading = false,
   onDeleteRole,
 }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
@@ -45,52 +54,81 @@ export function TableRoles({
 
   return (
     <>
-      <Table striped hover responsive>
-        <thead>
-          <tr>
-            <th>Cargo</th>
-            <th>Code</th>
-            <th>Portais liberados</th>
-            <th />
-          </tr>
-        </thead>
-        <tbody>
-          {roles.length ? (
-            roles.map((role) => (
-              <tr key={role._id}>
-                <td>{role.cargo}</td>
-                <td>{role.code}</td>
-                <td>{formatRolePortalPreview(role.portals)}</td>
-                <td className="d-grid gap-1 d-sm-table-cell">
-                  <Button
-                    size="sm"
-                    variant="secondary"
-                    className="me-sm-1"
-                    onClick={() => onManageRole(role)}
-                  >
-                    Configurar portais
-                  </Button>
-                  <Button size="sm" onClick={() => onEditRole(role)}>
-                    Editar
-                  </Button>
-                  <Button
-                    size="sm"
-                    variant="danger"
-                    className="ms-sm-1"
-                    onClick={() => setRoleToDelete(role)}
-                  >
-                    Deletar
-                  </Button>
-                </td>
+      <TableCard>
+        <TableScroll>
+          <RolesTable aria-busy={isLoading}>
+            <colgroup>
+              <col style={{ width: "15%" }} />
+              <col style={{ width: "10%" }} />
+              <col style={{ width: "55%" }} />
+              <col style={{ width: "20%" }} />
+            </colgroup>
+            <thead>
+              <tr>
+                <th>
+                  <ColumnTitle>
+                    <HeaderIcon icon={faBriefcase} />
+                    Cargo
+                  </ColumnTitle>
+                </th>
+                <th>
+                  <ColumnTitle>
+                    <HeaderIcon icon={faCode} />
+                    Code
+                  </ColumnTitle>
+                </th>
+                <th>
+                  <ColumnTitle>
+                    <HeaderIcon icon={faLink} />
+                    Portais liberados
+                  </ColumnTitle>
+                </th>
+                <th>
+                  <ColumnTitle>
+                    <HeaderIcon icon={faGear} />
+                    Ações
+                  </ColumnTitle>
+                </th>
               </tr>
-            ))
-          ) : (
-            <tr>
-              <td colSpan={4}>Nenhuma role encontrada.</td>
-            </tr>
-          )}
-        </tbody>
-      </Table>
+            </thead>
+            <tbody>
+              {isLoading ? (
+                <TableSkeletonRows columns={4} />
+              ) : roles.length ? (
+                roles.map((role) => (
+                  <tr key={role._id}>
+                    <td>{role.cargo}</td>
+                    <td>{role.code}</td>
+                    <td>{formatRolePortalPreview(role.portals)}</td>
+                    <td>
+                      <ActionGroup>
+                        <Button
+                          size="sm"
+                          as={Link}
+                          to={`/portal/roles/${role._id}`}
+                        >
+                          Editar
+                        </Button>
+                        <Button
+                          size="sm"
+                          variant="danger"
+                          onClick={() => setRoleToDelete(role)}
+                        >
+                          Deletar
+                        </Button>
+                      </ActionGroup>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <EmptyCell colSpan={4}>Nenhuma role encontrada.</EmptyCell>
+                </tr>
+              )}
+            </tbody>
+          </RolesTable>
+        </TableScroll>
+      </TableCard>
 
       <Modal show={Boolean(roleToDelete)} onHide={hideModal}>
         <Modal.Header closeButton>
@@ -116,3 +154,96 @@ export function TableRoles({
     </>
   );
 }
+
+const TableCard = styled.section`
+  border: 1px solid #e9ecef;
+  border-radius: 8px;
+  background: #ffffff;
+  box-shadow: 0 10px 24px rgba(33, 37, 41, 0.08);
+  overflow: hidden;
+`;
+
+const TableScroll = styled.div`
+  width: 100%;
+  overflow-x: auto;
+`;
+
+const RolesTable = styled(Table)`
+  width: 100%;
+  min-width: 920px;
+  margin-bottom: 0;
+  border-collapse: separate;
+  border-spacing: 0;
+
+  thead th {
+    background: linear-gradient(180deg, #7b838a 0%, #6c757d 100%);
+    color: #ffffff;
+    border: 0;
+    padding: 0.95rem 0.9rem;
+    font-size: 0.86rem;
+    font-weight: 700;
+    vertical-align: middle;
+    white-space: nowrap;
+  }
+
+  thead th:first-child {
+    border-top-left-radius: 6px;
+  }
+
+  thead th:last-child {
+    border-top-right-radius: 6px;
+  }
+
+  tbody td {
+    padding: 1rem 0.9rem;
+    color: #343a40;
+    border-top: 0;
+    border-bottom: 1px solid #edf0f2;
+    vertical-align: middle;
+    background: #ffffff;
+  }
+
+  tbody tr:last-child td {
+    border-bottom: 0;
+  }
+
+  tbody tr:hover td {
+    background: #f8f9fa;
+  }
+
+  @media (max-width: 575.98px) {
+    min-width: 840px;
+
+    thead th,
+    tbody td {
+      padding: 0.75rem;
+      font-size: 0.86rem;
+      line-height: 1.35;
+    }
+  }
+`;
+
+const ColumnTitle = styled.span`
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  line-height: 1.2;
+`;
+
+const HeaderIcon = styled(FontAwesomeIcon)`
+  color: #ffffff;
+  font-size: 0.85rem;
+  opacity: 0.9;
+`;
+
+const ActionGroup = styled.div`
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  flex-wrap: wrap;
+`;
+
+const EmptyCell = styled.td`
+  color: #6c757d;
+  text-align: center;
+`;

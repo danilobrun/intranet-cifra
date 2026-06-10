@@ -1,7 +1,14 @@
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faRobot } from "@fortawesome/free-solid-svg-icons";
+import styled from "styled-components";
+
 export function ChatbotHeader() {
   return (
     <div>
-      <h1 className="mb-2">🤖 Chatbot de Frota</h1>
+      <Title className="mb-2">
+        <TitleIcon icon={faRobot} aria-hidden="true" />
+        Chatbot de Frota
+      </Title>
       <p className="text-muted mb-0">
         Um espaço único para conversar com o assistente e acompanhar demandas do
         portal.
@@ -9,3 +16,14 @@ export function ChatbotHeader() {
     </div>
   );
 }
+
+const Title = styled.h1`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+`;
+
+const TitleIcon = styled(FontAwesomeIcon)`
+  color: #6c757d;
+  font-size: 1.35rem;
+`;

@@ -1,31 +1,26 @@
-import { Alert, Button } from "react-bootstrap";
 import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { DashboardWelcomeHeader } from "../../components/Dashboard/WelcomeHeader";
+import { DashboardWeatherPanel } from "../../components/Dashboard/WeatherPanel";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import { selectUser } from "../../store/User/User.selectors";
 
 export function DashboardView() {
   const user = useSelector(selectUser);
+  const userName = user?.name || "Usuário";
+
   return (
     <LayoutPortal>
-      <h1 className="mt-4">Bem vindo(a) {user.name}!</h1>
-      {user.roles[0].code === "1" ? (
-        <>
-          <p>Utilize o menu para gerenciar os dados do site.</p>
-          <Button as={Link} to="/portals" className="text-uppercase">
-            Acessar
-          </Button>
-        </>
-      ) : (
-        <>
-          <Alert variant="info">
-            Você receberá as intruções das solicitações aos portais por e-mail!
-          </Alert>
-          <Button as={Link} to="/portals" className="text-uppercase">
-            Acessar
-          </Button>
-        </>
-      )}
+      <PageSection>
+        <DashboardWelcomeHeader userName={userName} />
+        <DashboardWeatherPanel />
+      </PageSection>
     </LayoutPortal>
   );
 }
+
+const PageSection = styled.section`
+  width: 100%;
+  min-height: calc(100vh - 72px);
+  padding: 1.5rem 0 2rem;
+`;

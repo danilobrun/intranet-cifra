@@ -1,6 +1,27 @@
 import { apiUrl, getAuthorizationHeaders } from "./Api.service";
 import { removeStorageItem, setStorageItem } from "./Storage.service";
 
+const handleExpiredSession = () => {
+  alert("Acesso expirado, favor efetuar login novamente!");
+  removeStorageItem("user");
+  window.location.href = "https://intranet-cifra.netlify.app/";
+};
+
+const getResponseMessage = async (response, fallbackMessage) => {
+  try {
+    const contentType = response.headers.get("content-type") || "";
+
+    if (contentType.includes("application/json")) {
+      const data = await response.json();
+      return data.msg || fallbackMessage;
+    }
+  } catch (error) {
+    return fallbackMessage;
+  }
+
+  return fallbackMessage;
+};
+
 const postJson = async (url, payload) => {
   const response = await fetch(url, {
     method: "POST",
@@ -62,9 +83,7 @@ export const getUsers = async () => {
   });
 
   if (response.status === 401) {
-    alert("Acesso expirado, favor efetuar login novamente!");
-    removeStorageItem("user");
-    window.location.href = "https://intranet-cifra.netlify.app/";
+    handleExpiredSession();
     return;
   }
   if (!response.ok) {
@@ -88,9 +107,7 @@ export const getUserById = async (userId) => {
     headers: getAuthorizationHeaders(),
   });
   if (response.status === 401) {
-    alert("Acesso expirado, favor efetuar login novamente!");
-    removeStorageItem("user");
-    window.location.href = "https://intranet-cifra.netlify.app/";
+    handleExpiredSession();
     return;
   }
   if (!response.ok) {
@@ -113,3 +130,87 @@ export const updateUser = async (userId, userData) => {
     throw new Error("Reponse not ok.");
   }
 };
+
+const requestAvatarBlob = async (url, options = {}, config = {}) => {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      ...getAuthorizationHeaders(),
+      ...(options.headers || {}),
+    },
+  });
+
+  if (response.status === 401) {
+    handleExpiredSession();
+    return null;
+  }
+
+  if (config.allowNotFound && response.status === 404) {
+    return null;
+  }
+
+  if (!response.ok) {
+    const message = await getResponseMessage(
+      response,
+      "Falha ao processar a foto de perfil.",
+    );
+    throw new Error(message);
+  }
+
+  return response.blob();
+};
+
+const sendAvatarCpf = async (url, cpf) => {
+  const response = await fetch(url, {
+    method: "PUT",
+    body: JSON.stringify({ cpf }),
+    headers: {
+      "content-type": "application/json",
+      ...getAuthorizationHeaders(),
+    },
+  });
+
+  if (response.status === 401) {
+    handleExpiredSession();
+    return null;
+  }
+
+  if (!response.ok) {
+    const message = await getResponseMessage(
+      response,
+      "Falha ao salvar a foto de perfil.",
+    );
+    throw new Error(message);
+  }
+
+  return response.json();
+};
+
+const previewAvatarCpf = (url, cpf) =>
+  requestAvatarBlob(url, {
+    method: "POST",
+    body: JSON.stringify({ cpf }),
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+
+export const getMyAvatar = () =>
+  requestAvatarBlob(`${apiUrl}/users/me/avatar`, {}, { allowNotFound: true });
+
+export const previewMyAvatar = (cpf) =>
+  previewAvatarCpf(`${apiUrl}/users/me/avatar/preview`, cpf);
+
+export const updateMyAvatar = (cpf) =>
+  sendAvatarCpf(`${apiUrl}/users/me/avatar`, cpf);
+
+export const getUserAvatar = (userId) =>
+  requestAvatarBlob(`${apiUrl}/users/${userId}/avatar`, {}, {
+    allowNotFound: true,
+  });
+
+export const previewUserAvatar = (userId, cpf) =>
+  previewAvatarCpf(`${apiUrl}/users/${userId}/avatar/preview`, cpf);
+
+export const updateUserAvatar = (userId, cpf) =>
+  sendAvatarCpf(`${apiUrl}/users/${userId}/avatar`, cpf);

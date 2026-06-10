@@ -1,6 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { getUserById, updateUser } from "../../services/Users.service";
+import {
+  getUserById,
+  updateMyAvatar,
+  updateUser,
+} from "../../services/Users.service";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import { Loading } from "../../components/Loading";
 import { UpdateUserForm } from "../../components/UpdateUserForm";
@@ -14,7 +18,6 @@ export function EditProfile() {
     const loadUser = async () => {
       try {
         const { user } = await getUserById(id);
-        console.log(user);
         setUserData(user);
       } catch (error) {
         toast.error("Falha ao buscar dados do usuário. Recarregue a página.");
@@ -26,12 +29,28 @@ export function EditProfile() {
 
   const navigate = useNavigate();
 
-  const handleSubmit = async (formData) => {
+  const handleSubmit = async (formData, avatarCpfToSave) => {
+    let userWasUpdated = false;
+
     try {
       await updateUser(id, formData);
+      userWasUpdated = true;
+
+      if (avatarCpfToSave) {
+        await updateMyAvatar(avatarCpfToSave);
+      }
+
       toast.success("Dados alterado com sucesso.");
       navigate("/portal");
-    } catch {
+    } catch (error) {
+      if (userWasUpdated) {
+        toast.error(
+          error.message ||
+            "Dados salvos, mas a foto de perfil nao foi atualizada.",
+        );
+        return;
+      }
+
       toast.error("Falha ao alterar usuário. Tente novamente.");
     }
   };
@@ -44,6 +63,7 @@ export function EditProfile() {
       ) : (
         <>
           <UpdateUserForm
+            avatarConfig={{ mode: "me" }}
             initialValue={{
               name: userData.name || "",
               email: userData.email || "",
