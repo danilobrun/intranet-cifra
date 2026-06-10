@@ -2,7 +2,7 @@
 const mongoose = require("mongoose");
 
 // Acesssos e propriedades dessa classe
-const User = mongoose.model("User", {
+const UserSchema = new mongoose.Schema({
   name: String,
   email: String,
   password: String,
@@ -15,6 +15,10 @@ const User = mongoose.model("User", {
   state: String,
   lotation: String,
   image: String,
+  avatarCpfEncrypted: {
+    type: String,
+    select: false,
+  },
   roles: [
     {
       type: mongoose.Schema.Types.ObjectId,
@@ -25,6 +29,8 @@ const User = mongoose.model("User", {
   createdAt: Date,
   updatedAt: Date,
 });
+
+const User = mongoose.model("User", UserSchema);
 
 // EXPORTS
 module.exports = User;

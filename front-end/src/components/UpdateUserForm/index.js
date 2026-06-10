@@ -6,6 +6,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faEye, faEyeSlash, faUserPlus } from "@fortawesome/free-solid-svg-icons";
 import { getRoles } from "../../services/Roles.service";
 import { selectUser } from "../../store/User/User.selectors";
+import { ProfileAvatarCard } from "./ProfileAvatarCard";
 import { RoleChipsSelect } from "./RoleChipsSelect";
 import {
   ActionsBar,
@@ -51,7 +52,10 @@ const normalizeFormData = (value = emptyFormData) => ({
     : [...emptyFormData.roleCodes],
 });
 
+const getCpfDigits = (value = "") => String(value || "").replace(/\D/g, "");
+
 export function UpdateUserForm({
+  avatarConfig,
   initialValue = emptyFormData,
   buttonLabel = "Cadastrar",
   type,
@@ -59,6 +63,9 @@ export function UpdateUserForm({
 }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
   const [showPassword, setShowPassword] = useState(false);
+  const [avatarDraftCpf, setAvatarDraftCpf] = useState("");
+  const [avatarCpfToSave, setAvatarCpfToSave] = useState("");
+  const [isAvatarPreviewLoading, setIsAvatarPreviewLoading] = useState(false);
   const [formData, setFormData] = useState(() =>
     normalizeFormData(initialValue),
   );
@@ -188,6 +195,13 @@ export function UpdateUserForm({
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    const avatarDraftCpfDigits = getCpfDigits(avatarDraftCpf);
+
+    if (avatarConfig && avatarDraftCpfDigits && !avatarCpfToSave) {
+      toast.error("Busque e valide a foto antes de salvar o formulario.");
+      return;
+    }
+
     if (isAdmin && !formData.roleCodes?.length) {
       toast.error("Selecione ao menos uma role.");
       return;
@@ -196,7 +210,7 @@ export function UpdateUserForm({
     setIsSubmiting(true);
 
     try {
-      await onSubmit(formData);
+      await onSubmit(formData, avatarCpfToSave || null);
     } finally {
       setIsSubmiting(false);
     }
@@ -205,10 +219,22 @@ export function UpdateUserForm({
   const isRoleSelectDisabled =
     !isAdmin || isLoadingRoles || roleOptions.length === 0;
   const submitIsDisabled =
-    isSubmiting || (isAdmin && (isLoadingRoles || !roleOptions.length));
+    isSubmiting ||
+    isAvatarPreviewLoading ||
+    (isAdmin && (isLoadingRoles || !roleOptions.length));
 
   return (
     <UserForm onSubmit={handleSubmit}>
+      {avatarConfig ? (
+        <ProfileAvatarCard
+          avatarConfig={avatarConfig}
+          userName={formData.name}
+          onDraftCpfChange={setAvatarDraftCpf}
+          onPreviewLoadingChange={setIsAvatarPreviewLoading}
+          onValidatedCpfChange={setAvatarCpfToSave}
+        />
+      ) : null}
+
       <FormSection>
         <SectionHeader>
           <SectionTitle>Dados do usuário</SectionTitle>

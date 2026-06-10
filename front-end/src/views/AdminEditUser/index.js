@@ -5,7 +5,11 @@ import styled from "styled-components";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import { Loading } from "../../components/Loading";
 import { UpdateUserForm } from "../../components/UpdateUserForm";
-import { getUserById, updateUser } from "../../services/Users.service";
+import {
+  getUserById,
+  updateUser,
+  updateUserAvatar,
+} from "../../services/Users.service";
 
 export function AdminEditUserView() {
   const { id } = useParams();
@@ -25,12 +29,28 @@ export function AdminEditUserView() {
     fetchUser();
   }, [id]);
 
-  const handleSubmit = async (formData) => {
+  const handleSubmit = async (formData, avatarCpfToSave) => {
+    let userWasUpdated = false;
+
     try {
       await updateUser(id, formData);
+      userWasUpdated = true;
+
+      if (avatarCpfToSave) {
+        await updateUserAvatar(id, avatarCpfToSave);
+      }
+
       toast.success("Usuário alterado com sucesso.");
       navigate("/portal/users");
-    } catch {
+    } catch (error) {
+      if (userWasUpdated) {
+        toast.error(
+          error.message ||
+            "Dados salvos, mas a foto de perfil nao foi atualizada.",
+        );
+        return;
+      }
+
       toast.error("Falha ao alterar usuário. Tente novamente.");
     }
   };
@@ -48,6 +68,7 @@ export function AdminEditUserView() {
 
         {userInfo ? (
           <UpdateUserForm
+            avatarConfig={{ mode: "user", userId: id }}
             initialValue={{
               name: userInfo.name,
               email: userInfo.email,

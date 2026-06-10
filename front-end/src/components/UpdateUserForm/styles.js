@@ -49,6 +49,84 @@ export const FieldsGrid = styled.div`
   }
 `;
 
+export const AvatarSectionGrid = styled.div`
+  display: grid;
+  grid-template-columns: minmax(180px, 240px) minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+
+  @media (max-width: 767.98px) {
+    grid-template-columns: 1fr;
+  }
+`;
+
+export const AvatarPreviewColumn = styled.div`
+  display: grid;
+  place-items: center;
+  min-width: 0;
+`;
+
+export const AvatarPreviewFrame = styled.div`
+  display: grid;
+  place-items: center;
+  width: min(180px, 100%);
+  aspect-ratio: 1;
+`;
+
+export const AvatarPreview = styled.div`
+  position: relative;
+  width: 160px;
+  max-width: 100%;
+  aspect-ratio: 1;
+  overflow: hidden;
+  display: grid;
+  place-items: center;
+  border: 1px solid oklch(86% 0.012 245);
+  border-radius: 50%;
+  background: oklch(96% 0.007 245);
+  color: oklch(42% 0.026 245);
+`;
+
+export const AvatarImage = styled.img`
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+`;
+
+export const AvatarFallback = styled.div`
+  display: grid;
+  place-items: center;
+  width: 100%;
+  height: 100%;
+  color: oklch(38% 0.026 245);
+  font-size: 2.35rem;
+  font-weight: 760;
+  letter-spacing: 0;
+
+  svg {
+    font-size: 3rem;
+    color: oklch(58% 0.018 245);
+  }
+`;
+
+export const AvatarStatusText = styled.div`
+  position: absolute;
+  inset: auto 10px 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  min-height: 30px;
+  padding: 0 10px;
+  border-radius: 999px;
+  background: oklch(99% 0.004 245 / 0.94);
+  color: oklch(35% 0.026 245);
+  font-size: 0.78rem;
+  font-weight: 700;
+  box-shadow: 0 8px 18px oklch(22% 0.018 245 / 0.12);
+`;
+
 export const FieldGroup = styled(Form.Group)`
   display: grid;
   gap: 8px;
@@ -91,6 +169,69 @@ export const FieldControl = styled(Form.Control)`
 export const FieldHint = styled(Form.Text)`
   color: oklch(49% 0.018 245);
   font-size: 0.86rem;
+`;
+
+export const AvatarActions = styled.div`
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-top: 4px;
+
+  @media (max-width: 575.98px) {
+    align-items: stretch;
+  }
+`;
+
+export const AvatarSearchButton = styled(Button)`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 44px;
+  padding: 0 18px;
+  border: 0;
+  border-radius: 10px;
+  background-color: oklch(54% 0.19 253);
+  color: oklch(98% 0.004 240);
+  font-weight: 760;
+
+  &:hover,
+  &:focus {
+    background-color: oklch(48% 0.2 253);
+    box-shadow: 0 10px 20px oklch(42% 0.18 253 / 0.2);
+  }
+
+  &:disabled {
+    background-color: oklch(68% 0.06 250);
+    box-shadow: none;
+  }
+
+  @media (max-width: 575.98px) {
+    width: 100%;
+  }
+`;
+
+export const AvatarFeedback = styled.div`
+  margin-top: 2px;
+  padding: 10px 12px;
+  border: 1px solid
+    ${({ $type }) =>
+      $type === "success"
+        ? "oklch(79% 0.08 152)"
+        : "oklch(78% 0.1 30)"};
+  border-radius: 10px;
+  background:
+    ${({ $type }) =>
+      $type === "success"
+        ? "oklch(97% 0.025 152)"
+        : "oklch(97% 0.018 30)"};
+  color:
+    ${({ $type }) =>
+      $type === "success"
+        ? "oklch(34% 0.078 152)"
+        : "oklch(38% 0.09 30)"};
+  font-size: 0.88rem;
+  line-height: 1.4;
 `;
 
 export const PasswordField = styled.div`

@@ -6,6 +6,12 @@ const {
   listUsers,
   deleteUser,
   editUser,
+  previewMyAvatar,
+  updateMyAvatar,
+  getMyAvatar,
+  previewUserAvatar,
+  updateUserAvatar,
+  getUserAvatar,
   requestPasswordResetCode,
   verifyPasswordResetCode,
   resetUserPassword,
@@ -13,6 +19,22 @@ const {
 
 const usersRoutes = (app) => {
   app.get("/users", checkToken, ensureRoleCodes(["1"]), listUsers);
+  app.post("/users/me/avatar/preview", checkToken, previewMyAvatar);
+  app.put("/users/me/avatar", checkToken, updateMyAvatar);
+  app.get("/users/me/avatar", checkToken, getMyAvatar);
+  app.post(
+    "/users/:id/avatar/preview",
+    checkToken,
+    ensureRoleCodes(["1"]),
+    previewUserAvatar,
+  );
+  app.put(
+    "/users/:id/avatar",
+    checkToken,
+    ensureRoleCodes(["1"]),
+    updateUserAvatar,
+  );
+  app.get("/users/:id/avatar", checkToken, getUserAvatar);
   app.get("/user/:id", checkToken, getUserById);
   app.post("/auth/register", createUser);
   app.post("/auth/login/", loginUser);

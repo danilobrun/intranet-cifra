@@ -2,15 +2,27 @@
 const crypto = require("crypto");
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
+const mongoose = require("mongoose");
 const nodemailer = require("nodemailer");
 const User = require("../../../models/User");
 const Role = require("../../../models/Role");
+const { validateCpf } = require("../../helpers/cpf");
+const {
+  AvatarCryptoConfigError,
+  AvatarCryptoDecryptError,
+  decryptAvatarCpf,
+  encryptAvatarCpf,
+} = require("../../helpers/avatarCpfCrypto");
+const {
+  AvatarImageFetchError,
+  findAvatarImageByCpf,
+} = require("../../helpers/avatarImage");
 
 const RECOVERY_CODE_EXPIRATION_MINUTES = 15;
 const RECOVERY_CODE_RESEND_INTERVAL_MS = 60 * 1000;
 const CIFRA_EMAIL_DOMAIN = "@cifraengenharia.com.br";
 const USER_SAFE_SELECT =
-  "-password -resetPasswordCodeHash -resetPasswordCodeExpiresAt -resetPasswordCodeSentAt";
+  "-password -avatarCpfEncrypted -resetPasswordCodeHash -resetPasswordCodeExpiresAt -resetPasswordCodeSentAt";
 
 const normalizeEmail = (email = "") => String(email).trim().toLowerCase();
 
@@ -150,6 +162,265 @@ const validateRecoveryCodeOrThrow = async (user, code) => {
   }
 
   return { ok: true };
+};
+
+const findUserForAvatarById = async (id) => {
+  const userId = String(id || "").trim();
+
+  if (!mongoose.Types.ObjectId.isValid(userId)) {
+    return {
+      ok: false,
+      status: 422,
+      msg: "Usuario invalido.",
+    };
+  }
+
+  const user = await User.findById(userId).select("+avatarCpfEncrypted");
+
+  if (!user) {
+    return {
+      ok: false,
+      status: 404,
+      msg: "Usuario nao encontrado!",
+    };
+  }
+
+  return {
+    ok: true,
+    user,
+  };
+};
+
+const getAvatarImageByCpf = async (cpf) => {
+  const cpfValidation = validateCpf(cpf);
+
+  if (!cpfValidation.ok) {
+    return {
+      ok: false,
+      status: 422,
+      msg: cpfValidation.msg,
+    };
+  }
+
+  try {
+    const avatarImage = await findAvatarImageByCpf(cpfValidation.cpf);
+
+    if (!avatarImage) {
+      return {
+        ok: false,
+        status: 404,
+        msg: "Foto nao encontrada para o CPF informado.",
+      };
+    }
+
+    return {
+      ok: true,
+      cpf: cpfValidation.cpf,
+      avatarImage,
+    };
+  } catch (error) {
+    if (error instanceof AvatarImageFetchError) {
+      return {
+        ok: false,
+        status: 502,
+        msg: "Nao foi possivel consultar a foto externa. Tente novamente mais tarde.",
+      };
+    }
+
+    throw error;
+  }
+};
+
+const sendAvatarImageResponse = (res, avatarImage) => {
+  res.set("Content-Type", avatarImage.contentType);
+  res.set("Content-Length", String(avatarImage.buffer.length));
+  res.set(
+    "Content-Disposition",
+    `inline; filename="${avatarImage.fileName}"`,
+  );
+  res.set("Cache-Control", "private, no-store");
+
+  return res.status(200).send(avatarImage.buffer);
+};
+
+const handleAvatarError = (error, res, context) => {
+  if (error instanceof AvatarCryptoConfigError) {
+    return res.status(500).json({
+      msg: "Chave de criptografia do avatar nao configurada.",
+    });
+  }
+
+  if (error instanceof AvatarCryptoDecryptError) {
+    return res.status(500).json({
+      msg: "Nao foi possivel ler a foto de perfil cadastrada.",
+    });
+  }
+
+  console.log(`${context} error`, error?.message || error);
+
+  return res.status(500).json({
+    msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
+  });
+};
+
+const previewAvatarFromCpf = async (req, res, context) => {
+  try {
+    const avatarResult = await getAvatarImageByCpf(req.body?.cpf);
+
+    if (!avatarResult.ok) {
+      return res.status(avatarResult.status).json({ msg: avatarResult.msg });
+    }
+
+    return sendAvatarImageResponse(res, avatarResult.avatarImage);
+  } catch (error) {
+    return handleAvatarError(error, res, context);
+  }
+};
+
+const saveAvatarCpfForUser = async (userId, cpf) => {
+  const userResult = await findUserForAvatarById(userId);
+
+  if (!userResult.ok) {
+    return userResult;
+  }
+
+  const avatarResult = await getAvatarImageByCpf(cpf);
+
+  if (!avatarResult.ok) {
+    return avatarResult;
+  }
+
+  userResult.user.avatarCpfEncrypted = encryptAvatarCpf(avatarResult.cpf);
+  userResult.user.updatedAt = new Date();
+
+  await userResult.user.save();
+
+  return {
+    ok: true,
+  };
+};
+
+const getStoredAvatarImageForUser = async (userId) => {
+  const userResult = await findUserForAvatarById(userId);
+
+  if (!userResult.ok) {
+    return userResult;
+  }
+
+  if (!userResult.user.avatarCpfEncrypted) {
+    return {
+      ok: false,
+      status: 404,
+      msg: "Foto de perfil nao cadastrada.",
+    };
+  }
+
+  const cpf = decryptAvatarCpf(userResult.user.avatarCpfEncrypted);
+  const avatarResult = await getAvatarImageByCpf(cpf);
+
+  if (!avatarResult.ok && avatarResult.status === 422) {
+    return {
+      ok: false,
+      status: 500,
+      msg: "Foto de perfil cadastrada esta invalida.",
+    };
+  }
+
+  if (!avatarResult.ok) {
+    return {
+      ok: false,
+      status: avatarResult.status,
+      msg: avatarResult.msg,
+    };
+  }
+
+  return {
+    ok: true,
+    avatarImage: avatarResult.avatarImage,
+  };
+};
+
+const previewMyAvatar = async (req, res) =>
+  previewAvatarFromCpf(req, res, "previewMyAvatar");
+
+const updateMyAvatar = async (req, res) => {
+  try {
+    const result = await saveAvatarCpfForUser(req.user?.id, req.body?.cpf);
+
+    if (!result.ok) {
+      return res.status(result.status).json({ msg: result.msg });
+    }
+
+    return res.status(200).json({
+      msg: "Foto de perfil atualizada com sucesso.",
+    });
+  } catch (error) {
+    return handleAvatarError(error, res, "updateMyAvatar");
+  }
+};
+
+const getMyAvatar = async (req, res) => {
+  try {
+    const result = await getStoredAvatarImageForUser(req.user?.id);
+
+    if (!result.ok) {
+      return res.status(result.status).json({ msg: result.msg });
+    }
+
+    return sendAvatarImageResponse(res, result.avatarImage);
+  } catch (error) {
+    return handleAvatarError(error, res, "getMyAvatar");
+  }
+};
+
+const previewUserAvatar = async (req, res) => {
+  try {
+    const userResult = await findUserForAvatarById(req.params.id);
+
+    if (!userResult.ok) {
+      return res.status(userResult.status).json({ msg: userResult.msg });
+    }
+
+    const avatarResult = await getAvatarImageByCpf(req.body?.cpf);
+
+    if (!avatarResult.ok) {
+      return res.status(avatarResult.status).json({ msg: avatarResult.msg });
+    }
+
+    return sendAvatarImageResponse(res, avatarResult.avatarImage);
+  } catch (error) {
+    return handleAvatarError(error, res, "previewUserAvatar");
+  }
+};
+
+const updateUserAvatar = async (req, res) => {
+  try {
+    const result = await saveAvatarCpfForUser(req.params.id, req.body?.cpf);
+
+    if (!result.ok) {
+      return res.status(result.status).json({ msg: result.msg });
+    }
+
+    return res.status(200).json({
+      msg: "Foto de perfil atualizada com sucesso.",
+    });
+  } catch (error) {
+    return handleAvatarError(error, res, "updateUserAvatar");
+  }
+};
+
+const getUserAvatar = async (req, res) => {
+  try {
+    const result = await getStoredAvatarImageForUser(req.params.id);
+
+    if (!result.ok) {
+      return res.status(result.status).json({ msg: result.msg });
+    }
+
+    return sendAvatarImageResponse(res, result.avatarImage);
+  } catch (error) {
+    return handleAvatarError(error, res, "getUserAvatar");
+  }
 };
 
 const listUsers = async (req, res) => {
@@ -636,6 +907,12 @@ module.exports = {
   loginUser,
   deleteUser,
   editUser,
+  previewMyAvatar,
+  updateMyAvatar,
+  getMyAvatar,
+  previewUserAvatar,
+  updateUserAvatar,
+  getUserAvatar,
   requestPasswordResetCode,
   verifyPasswordResetCode,
   resetUserPassword,
