@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { OverlayTrigger, Tooltip } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faInstagram, faLinkedin } from "@fortawesome/free-brands-svg-icons";
+import { faBars } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 
 const institutionalLinks = [
@@ -29,22 +31,53 @@ const socialLinks = [
   },
 ];
 
-export function SidebarInstitutionalMenu() {
+export function SidebarInstitutionalMenu({ isCollapsed }) {
   const [isOpen, setIsOpen] = useState(false);
 
-  return (
-    <Wrapper>
-      <ToggleButton
-        type="button"
-        aria-expanded={isOpen}
-        aria-controls="sidebar-institutional-menu"
-        onClick={() => setIsOpen((currentValue) => !currentValue)}
-      >
-        <span>Menu</span>
-        <Indicator aria-hidden="true" $isOpen={isOpen} />
-      </ToggleButton>
+  useEffect(() => {
+    setIsOpen(false);
+  }, [isCollapsed]);
 
-      <Menu id="sidebar-institutional-menu" hidden={!isOpen}>
+  const toggleButton = (
+    <ToggleButton
+      type="button"
+      aria-expanded={isOpen}
+      aria-controls="sidebar-institutional-menu"
+      aria-label={isCollapsed ? "Abrir menu institucional" : undefined}
+      onClick={() => setIsOpen((currentValue) => !currentValue)}
+      $collapsed={isCollapsed}
+    >
+      <ToggleIcon aria-hidden="true" $collapsed={isCollapsed}>
+        <FontAwesomeIcon icon={faBars} fixedWidth />
+      </ToggleIcon>
+      <ToggleText $collapsed={isCollapsed}>Menu</ToggleText>
+      <Indicator aria-hidden="true" $isOpen={isOpen} $collapsed={isCollapsed} />
+    </ToggleButton>
+  );
+
+  return (
+    <Wrapper $collapsed={isCollapsed}>
+      {isCollapsed ? (
+        <OverlayTrigger
+          placement="right"
+          delay={{ show: 250, hide: 0 }}
+          overlay={
+            <Tooltip id="sidebar-institutional-menu-tooltip">
+              Menu institucional
+            </Tooltip>
+          }
+        >
+          {toggleButton}
+        </OverlayTrigger>
+      ) : (
+        toggleButton
+      )}
+
+      <Menu
+        id="sidebar-institutional-menu"
+        hidden={!isOpen}
+        $collapsed={isCollapsed}
+      >
         <LinkGroup>
           {institutionalLinks.map((link) => (
             <MenuLink
@@ -53,6 +86,7 @@ export function SidebarInstitutionalMenu() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label={link.ariaLabel}
+              onClick={() => setIsOpen(false)}
             >
               {link.label}
             </MenuLink>
@@ -66,6 +100,7 @@ export function SidebarInstitutionalMenu() {
               href={link.href}
               target="_blank"
               rel="noopener noreferrer"
+              onClick={() => setIsOpen(false)}
             >
               <FontAwesomeIcon icon={link.icon} aria-hidden="true" />
               <span>{link.label}</span>
@@ -80,7 +115,7 @@ export function SidebarInstitutionalMenu() {
 const Wrapper = styled.div`
   position: relative;
   margin-top: auto;
-  padding-top: 1rem;
+  padding-top: ${(props) => (props.$collapsed ? "0.85rem" : "1rem")};
   border-top: 1px solid rgba(255, 255, 255, 0.16);
 `;
 
@@ -89,9 +124,9 @@ const ToggleButton = styled.button`
   min-height: 44px;
   display: flex;
   align-items: center;
-  justify-content: space-between;
-  gap: 0.75rem;
-  padding: 0.5rem 0.75rem;
+  justify-content: ${(props) => (props.$collapsed ? "center" : "space-between")};
+  gap: ${(props) => (props.$collapsed ? "0" : "0.75rem")};
+  padding: ${(props) => (props.$collapsed ? "0.5rem 0" : "0.5rem 0.75rem")};
   border: 1px solid rgba(255, 255, 255, 0.18);
   border-radius: 0.375rem;
   background: transparent;
@@ -112,11 +147,47 @@ const ToggleButton = styled.button`
     outline: 3px solid rgba(255, 255, 255, 0.45);
     outline-offset: 2px;
   }
+
+  @media (max-width: 991px) {
+    justify-content: space-between;
+    gap: 0.75rem;
+    padding: 0.5rem 0.75rem;
+  }
+`;
+
+const ToggleIcon = styled.span`
+  display: ${(props) => (props.$collapsed ? "inline-flex" : "none")};
+  align-items: center;
+  justify-content: center;
+  font-size: 1.05rem;
+
+  @media (max-width: 991px) {
+    display: none;
+  }
+`;
+
+const ToggleText = styled.span`
+  max-width: ${(props) => (props.$collapsed ? "0" : "120px")};
+  overflow: hidden;
+  opacity: ${(props) => (props.$collapsed ? 0 : 1)};
+  white-space: nowrap;
+  transition:
+    max-width 150ms ease-out,
+    opacity 120ms ease-out;
+
+  @media (max-width: 991px) {
+    max-width: 120px;
+    opacity: 1;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    transition: none;
+  }
 `;
 
 const Indicator = styled.span`
   flex: 0 0 auto;
-  display: block;
+  display: ${(props) => (props.$collapsed ? "none" : "block")};
   position: relative;
   top: ${(props) => (props.$isOpen ? "-1px" : "1px")};
   width: 0.55rem;
@@ -130,6 +201,10 @@ const Indicator = styled.span`
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;
+  }
+
+  @media (max-width: 991px) {
+    display: block;
   }
 `;
 
@@ -148,11 +223,22 @@ const Menu = styled.div`
   }
 
   @media (min-width: 992px) {
-    position: absolute;
-    right: 0;
-    bottom: calc(100% + 0.75rem);
-    left: 0;
-    z-index: 2;
+    position: ${(props) => (props.$collapsed ? "fixed" : "absolute")};
+    ${(props) =>
+      props.$collapsed
+        ? `
+            left: 92px;
+            right: auto;
+            bottom: 1rem;
+            width: 280px;
+            z-index: 1100;
+          `
+        : `
+            right: 0;
+            bottom: calc(100% + 0.75rem);
+            left: 0;
+            z-index: 2;
+          `}
     margin-top: 0;
   }
 `;

@@ -4,6 +4,8 @@ import DropdownItem from "react-bootstrap/esm/DropdownItem";
 import DropdownMenu from "react-bootstrap/esm/DropdownMenu";
 import DropdownToggle from "react-bootstrap/esm/DropdownToggle";
 import NavbarToggle from "react-bootstrap/esm/NavbarToggle";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faChevronLeft, faChevronRight } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -31,7 +33,11 @@ const getInitials = (name = "") => {
     .toUpperCase();
 };
 
-export function Topbar({ onOpen }) {
+export function Topbar({
+  onOpen,
+  isSidebarCollapsed,
+  onToggleSidebarCollapsed,
+}) {
   const user = useSelector(selectUser);
   const userId = user?._id;
   const [avatarUrl, setAvatarUrl] = useState(() =>
@@ -88,6 +94,22 @@ export function Topbar({ onOpen }) {
   return (
     <Navbar bg="light" expand="lg">
       <Container fluid>
+        <SidebarCollapseButton
+          type="button"
+          className="d-none d-lg-inline-flex"
+          aria-label={
+            isSidebarCollapsed ? "Expandir menu lateral" : "Recolher menu lateral"
+          }
+          onClick={onToggleSidebarCollapsed}
+          title={
+            isSidebarCollapsed ? "Expandir menu lateral" : "Recolher menu lateral"
+          }
+        >
+          <FontAwesomeIcon
+            icon={isSidebarCollapsed ? faChevronRight : faChevronLeft}
+            aria-hidden="true"
+          />
+        </SidebarCollapseButton>
         <NavbarToggle onClick={onOpen} />
         <Nav className="ms-auto">
           <Dropdown align="end">
@@ -110,6 +132,35 @@ export function Topbar({ onOpen }) {
     </Navbar>
   );
 }
+
+const SidebarCollapseButton = styled.button`
+  align-items: center;
+  justify-content: center;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  margin-right: 0.75rem;
+  border: 1px solid oklch(89% 0.009 245);
+  border-radius: 0.375rem;
+  background: oklch(99% 0.003 245);
+  color: oklch(31% 0.018 245);
+  transition:
+    background-color 150ms ease-out,
+    border-color 150ms ease-out,
+    color 150ms ease-out;
+
+  &:hover,
+  &:focus {
+    background: oklch(96% 0.007 245);
+    border-color: oklch(82% 0.014 245);
+    color: oklch(22% 0.018 245);
+  }
+
+  &:focus-visible {
+    outline: 3px solid rgba(13, 110, 253, 0.2);
+    outline-offset: 2px;
+  }
+`;
 
 const UserToggle = styled(DropdownToggle)`
   display: inline-flex;
