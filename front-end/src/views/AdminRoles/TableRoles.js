@@ -10,8 +10,14 @@ import {
   faCode,
   faGear,
   faLink,
+  faPen,
+  faTrash,
 } from "@fortawesome/free-solid-svg-icons";
 import { TableSkeletonRows } from "../../components/TableSkeletonRows";
+import {
+  TableActionCell,
+  TableIconAction,
+} from "../../components/TableActions";
 
 const formatRolePortalPreview = (portals = []) => {
   if (!portals.length) {
@@ -101,22 +107,25 @@ export function TableRoles({
                     <td>{role.code}</td>
                     <td>{formatRolePortalPreview(role.portals)}</td>
                     <td>
-                      <ActionGroup>
-                        <Button
-                          size="sm"
+                      <TableActionCell>
+                        <TableIconAction
                           as={Link}
                           to={`/portal/roles/${role._id}`}
+                          title="Editar"
+                          aria-label={`Editar ${role.cargo}`}
                         >
-                          Editar
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="danger"
+                          <FontAwesomeIcon icon={faPen} />
+                        </TableIconAction>
+                        <TableIconAction
+                          type="button"
+                          title="Excluir"
+                          aria-label={`Excluir ${role.cargo}`}
+                          $variant="danger"
                           onClick={() => setRoleToDelete(role)}
                         >
-                          Deletar
-                        </Button>
-                      </ActionGroup>
+                          <FontAwesomeIcon icon={faTrash} />
+                        </TableIconAction>
+                      </TableActionCell>
                     </td>
                   </tr>
                 ))
@@ -234,13 +243,6 @@ const HeaderIcon = styled(FontAwesomeIcon)`
   color: #ffffff;
   font-size: 0.85rem;
   opacity: 0.9;
-`;
-
-const ActionGroup = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
 `;
 
 const EmptyCell = styled.td`

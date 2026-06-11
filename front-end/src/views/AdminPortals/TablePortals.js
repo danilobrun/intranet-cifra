@@ -5,8 +5,18 @@ import { toast } from "react-toastify";
 import { deletePortal } from "../../services/Portals.service";
 import styled from "styled-components";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faGear, faTag, faUser } from "@fortawesome/free-solid-svg-icons";
+import {
+  faGear,
+  faPen,
+  faTag,
+  faTrash,
+  faUser,
+} from "@fortawesome/free-solid-svg-icons";
 import { TableSkeletonRows } from "../../components/TableSkeletonRows";
+import {
+  TableActionCell,
+  TableIconAction,
+} from "../../components/TableActions";
 
 export function TablePortals({ portals, isLoading = false, onDeletePortal }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
@@ -72,22 +82,25 @@ export function TablePortals({ portals, isLoading = false, onDeletePortal }) {
                     <td>{portal.name}</td>
                     <td>{portal.responsible}</td>
                     <td>
-                      <ActionGroup>
-                        <Button
-                          size="sm"
+                      <TableActionCell>
+                        <TableIconAction
                           as={Link}
                           to={`/portal/portals/${portal._id}`}
+                          title="Editar"
+                          aria-label={`Editar ${portal.name}`}
                         >
-                          Editar
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="danger"
+                          <FontAwesomeIcon icon={faPen} />
+                        </TableIconAction>
+                        <TableIconAction
+                          type="button"
+                          title="Excluir"
+                          aria-label={`Excluir ${portal.name}`}
+                          $variant="danger"
                           onClick={() => handleClick(portal)}
                         >
-                          Deletar
-                        </Button>
-                      </ActionGroup>
+                          <FontAwesomeIcon icon={faTrash} />
+                        </TableIconAction>
+                      </TableActionCell>
                     </td>
                   </tr>
                 ))
@@ -205,13 +218,6 @@ const HeaderIcon = styled(FontAwesomeIcon)`
   color: #ffffff;
   font-size: 0.85rem;
   opacity: 0.9;
-`;
-
-const ActionGroup = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
 `;
 
 const EmptyCell = styled.td`

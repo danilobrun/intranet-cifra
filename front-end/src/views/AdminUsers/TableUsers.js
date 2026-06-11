@@ -8,10 +8,16 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faEnvelope,
   faGear,
+  faPen,
   faPhone,
+  faTrash,
   faUser,
 } from "@fortawesome/free-solid-svg-icons";
 import { TableSkeletonRows } from "../../components/TableSkeletonRows";
+import {
+  TableActionCell,
+  TableIconAction,
+} from "../../components/TableActions";
 
 export function TableUsers({ users, isLoading = false, onDeleteUser }) {
   const [isSubmiting, setIsSubmiting] = useState(false);
@@ -86,22 +92,25 @@ export function TableUsers({ users, isLoading = false, onDeleteUser }) {
                     <td>{user.email}</td>
                     <td>{user.number}</td>
                     <td>
-                      <ActionGroup>
-                        <Button
-                          size="sm"
+                      <TableActionCell>
+                        <TableIconAction
                           as={Link}
                           to={`/portal/users/${user._id}`}
+                          title="Editar"
+                          aria-label={`Editar ${user.name}`}
                         >
-                          Editar
-                        </Button>
-                        <Button
-                          size="sm"
-                          variant="danger"
+                          <FontAwesomeIcon icon={faPen} />
+                        </TableIconAction>
+                        <TableIconAction
+                          type="button"
+                          title="Excluir"
+                          aria-label={`Excluir ${user.name}`}
+                          $variant="danger"
                           onClick={() => handleClick(user)}
                         >
-                          Deletar
-                        </Button>
-                      </ActionGroup>
+                          <FontAwesomeIcon icon={faTrash} />
+                        </TableIconAction>
+                      </TableActionCell>
                     </td>
                   </tr>
                 ))
@@ -223,13 +232,6 @@ const HeaderIcon = styled(FontAwesomeIcon)`
   color: #ffffff;
   font-size: 0.85rem;
   opacity: 0.9;
-`;
-
-const ActionGroup = styled.div`
-  display: inline-flex;
-  align-items: center;
-  gap: 0.5rem;
-  flex-wrap: wrap;
 `;
 
 const EmptyCell = styled.td`
