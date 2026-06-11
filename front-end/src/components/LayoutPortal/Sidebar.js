@@ -52,6 +52,8 @@ export function Sidebar({ isOpen, onClose }) {
         "3",
         "gca",
         "recruitment",
+        "ceo",
+        "dono",
       ],
     },
     {
@@ -76,6 +78,8 @@ export function Sidebar({ isOpen, onClose }) {
         "3",
         "gca",
         "recruitment",
+        "ceo",
+        "dono",
       ],
     },
     {
@@ -121,6 +125,8 @@ export function Sidebar({ isOpen, onClose }) {
         "3",
         "gca",
         "recruitment",
+        "ceo",
+        "dono",
       ],
     },
     {
@@ -143,6 +149,8 @@ export function Sidebar({ isOpen, onClose }) {
         "financeiro",
         "frota",
         "3",
+        "ceo",
+        "dono",
       ],
     },
     {
@@ -165,6 +173,8 @@ export function Sidebar({ isOpen, onClose }) {
         "financeiro",
         "frota",
         "3",
+        "ceo",
+        "dono",
       ],
     },
     {
@@ -210,6 +220,8 @@ export function Sidebar({ isOpen, onClose }) {
         "3",
         "gca",
         "recruitment",
+        "ceo",
+        "dono",
       ],
     },
     {
@@ -217,7 +229,7 @@ export function Sidebar({ isOpen, onClose }) {
       label: "Chatbot de Frota (BETA)",
       icon: faRobot,
       checkAllPath: false,
-      userTypes: ["1"],
+      userTypes: ["1", "ceo", "dono"],
     },
   ];
 
