@@ -115,6 +115,10 @@ const LoginFormWrapper = styled(Form)`
 
 const FormHeader = styled.div`
   margin-bottom: 34px;
+
+  @media (min-width: 992px) and (max-height: 820px) {
+    margin-bottom: 24px;
+  }
 `;
 
 const FormTitle = styled.h1`
@@ -123,6 +127,10 @@ const FormTitle = styled.h1`
   font-size: clamp(2rem, 4vw, 2.75rem);
   font-weight: 760;
   line-height: 1.08;
+
+  @media (min-width: 992px) and (max-height: 820px) {
+    font-size: clamp(1.85rem, 3.1vw, 2.35rem);
+  }
 `;
 
 const FormSubtitle = styled.p`
@@ -135,6 +143,10 @@ const FormSubtitle = styled.p`
 
 const FieldGroup = styled(Form.Group)`
   margin-bottom: 18px;
+
+  @media (min-width: 992px) and (max-height: 820px) {
+    margin-bottom: 14px;
+  }
 `;
 
 const FieldLabel = styled(Form.Label)`
@@ -169,6 +181,10 @@ const FieldControl = styled(Form.Control)`
   &:disabled {
     background-color: oklch(94% 0.006 240);
     color: oklch(52% 0.014 245);
+  }
+
+  @media (min-width: 992px) and (max-height: 820px) {
+    height: 46px;
   }
 `;
 
@@ -224,6 +240,10 @@ const RecoverLink = styled(Link)`
     color: oklch(42% 0.17 253);
     text-decoration: underline;
   }
+
+  @media (min-width: 992px) and (max-height: 820px) {
+    margin-bottom: 16px;
+  }
 `;
 
 const SubmitButton = styled(Button)`
@@ -254,6 +274,10 @@ const SubmitButton = styled(Button)`
     background-color: oklch(68% 0.06 250);
     box-shadow: none;
   }
+
+  @media (min-width: 992px) and (max-height: 820px) {
+    min-height: 46px;
+  }
 `;
 
 const RegisterText = styled.p`
@@ -273,5 +297,9 @@ const RegisterText = styled.p`
       color: oklch(42% 0.17 253);
       text-decoration: underline;
     }
+  }
+
+  @media (min-width: 992px) and (max-height: 820px) {
+    padding-top: 18px;
   }
 `;

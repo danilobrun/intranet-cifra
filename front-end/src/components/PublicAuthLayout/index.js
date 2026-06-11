@@ -127,6 +127,10 @@ const AuthPage = styled.main`
   place-items: center;
   padding: clamp(24px, 5vw, 48px);
   position: relative;
+
+  @media (min-width: 992px) and (max-height: 820px) {
+    padding: clamp(12px, 2vh, 18px) clamp(20px, 4vw, 36px);
+  }
 `;
 
 const DivImagem = styled.div`
@@ -182,6 +186,12 @@ const AuthPanel = styled.section`
     max-width: 720px;
   }
 
+  @media (min-width: 992px) and (max-height: 820px) {
+    --auth-column-block-padding: clamp(18px, 3vh, 28px);
+
+    min-height: calc(100vh - clamp(24px, 4vh, 36px));
+  }
+
   @media (max-width: 575.98px) {
     padding: 8px;
     border-radius: 14px;
@@ -201,6 +211,10 @@ const AuthColumn = styled.div`
     min-height: auto;
   }
 
+  @media (min-width: 992px) and (max-height: 820px) {
+    gap: 18px;
+  }
+
   @media (max-width: 575.98px) {
     padding: 24px 18px;
   }
@@ -218,6 +232,10 @@ const LogoImage = styled.img`
   width: clamp(154px, 14vw, 190px);
   height: auto;
   display: block;
+
+  @media (min-width: 992px) and (max-height: 820px) {
+    width: clamp(136px, 11vw, 160px);
+  }
 `;
 
 const AuthContent = styled.div`
@@ -354,6 +372,10 @@ const SlideOverlay = styled.div`
     oklch(12% 0.012 245 / 0),
     oklch(12% 0.012 245 / 0.78)
   );
+
+  @media (min-width: 992px) and (max-height: 820px) {
+    padding: 72px clamp(22px, 3vw, 38px) 52px;
+  }
 `;
 
 const SlideTitle = styled.p`
