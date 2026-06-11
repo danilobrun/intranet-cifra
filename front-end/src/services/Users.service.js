@@ -1,8 +1,46 @@
 import { apiUrl, getAuthorizationHeaders } from "./Api.service";
 import { removeStorageItem, setStorageItem } from "./Storage.service";
 
+let myAvatarCacheUserId = null;
+let myAvatarCacheUrl = "";
+let myAvatarCacheLoaded = false;
+let myAvatarCachePromise = null;
+let myAvatarCacheRequestId = 0;
+
+const revokeAvatarObjectUrl = (avatarUrl) => {
+  if (
+    avatarUrl &&
+    typeof URL !== "undefined" &&
+    typeof URL.revokeObjectURL === "function"
+  ) {
+    URL.revokeObjectURL(avatarUrl);
+  }
+};
+
+const createAvatarObjectUrl = (avatarBlob) => {
+  if (
+    !avatarBlob ||
+    typeof URL === "undefined" ||
+    typeof URL.createObjectURL !== "function"
+  ) {
+    return "";
+  }
+
+  return URL.createObjectURL(avatarBlob);
+};
+
+export const clearMyAvatarCache = () => {
+  revokeAvatarObjectUrl(myAvatarCacheUrl);
+  myAvatarCacheUserId = null;
+  myAvatarCacheUrl = "";
+  myAvatarCacheLoaded = false;
+  myAvatarCachePromise = null;
+  myAvatarCacheRequestId += 1;
+};
+
 const handleExpiredSession = () => {
   alert("Acesso expirado, favor efetuar login novamente!");
+  clearMyAvatarCache();
   removeStorageItem("user");
   window.location.href = "https://intranet-cifra.netlify.app/";
 };
@@ -45,6 +83,7 @@ export const login = async (credentialsData) => {
 };
 
 export const logout = () => {
+  clearMyAvatarCache();
   removeStorageItem("user");
 };
 
@@ -69,6 +108,8 @@ export const resetPassword = async (resetData) => {
 };
 
 const processAuthResponse = (data) => {
+  clearMyAvatarCache();
+
   const userData = {
     accessToken: data.token,
     ...data.user,
@@ -198,11 +239,80 @@ const previewAvatarCpf = (url, cpf) =>
 export const getMyAvatar = () =>
   requestAvatarBlob(`${apiUrl}/users/me/avatar`, {}, { allowNotFound: true });
 
+const prepareMyAvatarCacheForUser = (userId) => {
+  if (myAvatarCacheUserId === userId) {
+    return;
+  }
+
+  clearMyAvatarCache();
+  myAvatarCacheUserId = userId;
+};
+
+export const getCachedMyAvatarUrl = (userId) => {
+  if (!userId || myAvatarCacheUserId !== userId || !myAvatarCacheLoaded) {
+    return "";
+  }
+
+  return myAvatarCacheUrl;
+};
+
+export const getMyAvatarUrl = async (userId) => {
+  if (!userId) {
+    return "";
+  }
+
+  prepareMyAvatarCacheForUser(userId);
+
+  if (myAvatarCacheLoaded) {
+    return myAvatarCacheUrl;
+  }
+
+  if (myAvatarCachePromise) {
+    return myAvatarCachePromise;
+  }
+
+  const requestId = myAvatarCacheRequestId;
+
+  myAvatarCachePromise = getMyAvatar()
+    .then((avatarBlob) => {
+      if (
+        requestId !== myAvatarCacheRequestId ||
+        myAvatarCacheUserId !== userId
+      ) {
+        return "";
+      }
+
+      revokeAvatarObjectUrl(myAvatarCacheUrl);
+      myAvatarCacheUrl = createAvatarObjectUrl(avatarBlob);
+      myAvatarCacheLoaded = true;
+      myAvatarCachePromise = null;
+
+      return myAvatarCacheUrl;
+    })
+    .catch((error) => {
+      if (
+        requestId === myAvatarCacheRequestId &&
+        myAvatarCacheUserId === userId
+      ) {
+        myAvatarCacheUrl = "";
+        myAvatarCacheLoaded = false;
+        myAvatarCachePromise = null;
+      }
+
+      throw error;
+    });
+
+  return myAvatarCachePromise;
+};
+
 export const previewMyAvatar = (cpf) =>
   previewAvatarCpf(`${apiUrl}/users/me/avatar/preview`, cpf);
 
-export const updateMyAvatar = (cpf) =>
-  sendAvatarCpf(`${apiUrl}/users/me/avatar`, cpf);
+export const updateMyAvatar = async (cpf) => {
+  const data = await sendAvatarCpf(`${apiUrl}/users/me/avatar`, cpf);
+  clearMyAvatarCache();
+  return data;
+};
 
 export const getUserAvatar = (userId) =>
   requestAvatarBlob(`${apiUrl}/users/${userId}/avatar`, {}, {

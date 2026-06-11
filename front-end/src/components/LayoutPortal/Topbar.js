@@ -6,7 +6,11 @@ import DropdownToggle from "react-bootstrap/esm/DropdownToggle";
 import NavbarToggle from "react-bootstrap/esm/NavbarToggle";
 import styled from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import { getMyAvatar, logout } from "../../services/Users.service";
+import {
+  getCachedMyAvatarUrl,
+  getMyAvatarUrl,
+  logout,
+} from "../../services/Users.service";
 import { useNavigate } from "react-router-dom";
 import { userLogout } from "../../store/User/User.actions";
 import { selectUser } from "../../store/User/User.selectors";
@@ -29,7 +33,10 @@ const getInitials = (name = "") => {
 
 export function Topbar({ onOpen }) {
   const user = useSelector(selectUser);
-  const [avatarUrl, setAvatarUrl] = useState("");
+  const userId = user?._id;
+  const [avatarUrl, setAvatarUrl] = useState(() =>
+    getCachedMyAvatarUrl(userId),
+  );
   const dispatch = useDispatch();
   const navigate = useNavigate();
   const userName = user?.name || "Usuario";
@@ -39,18 +46,26 @@ export function Topbar({ onOpen }) {
 
   useEffect(() => {
     let isActive = true;
-    let currentAvatarUrl = "";
+
+    if (!userId) {
+      setAvatarUrl("");
+      return () => {
+        isActive = false;
+      };
+    }
 
     const loadAvatar = async () => {
       try {
-        const avatarBlob = await getMyAvatar();
+        const cachedAvatarUrl = getCachedMyAvatarUrl(userId);
+        setAvatarUrl(cachedAvatarUrl);
 
-        if (!isActive || !avatarBlob) {
+        const nextAvatarUrl = await getMyAvatarUrl(userId);
+
+        if (!isActive) {
           return;
         }
 
-        currentAvatarUrl = URL.createObjectURL(avatarBlob);
-        setAvatarUrl(currentAvatarUrl);
+        setAvatarUrl(nextAvatarUrl);
       } catch (error) {
         if (isActive) {
           setAvatarUrl("");
@@ -58,17 +73,12 @@ export function Topbar({ onOpen }) {
       }
     };
 
-    setAvatarUrl("");
     loadAvatar();
 
     return () => {
       isActive = false;
-
-      if (currentAvatarUrl) {
-        URL.revokeObjectURL(currentAvatarUrl);
-      }
     };
-  }, [user?._id]);
+  }, [userId]);
 
   const handleLogout = () => {
     logout();
