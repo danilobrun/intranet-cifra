@@ -6,6 +6,7 @@ import { faFileContract } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 
 const emptyFormData = {
+  clienteId: "",
   nomeContrato: "",
   orcamento: "",
   dataInicio: "",
@@ -86,6 +87,14 @@ const parseMoneyInput = (value) => {
 };
 
 const normalizeInitialValue = (value) => ({
+  clienteId: String(
+    value?.clienteId?.id ||
+      value?.clienteId?._id ||
+      value?.clienteId ||
+      value?.cliente?.id ||
+      value?.cliente?._id ||
+      "",
+  ),
   nomeContrato: String(value?.nomeContrato || ""),
   orcamento: getBudgetInputValue(value?.orcamento),
   dataInicio: getDateInputValue(value?.dataInicio),
@@ -94,6 +103,7 @@ const normalizeInitialValue = (value) => ({
 
 export function ResumoContratoForm({
   initialValue = emptyFormData,
+  clientes = [],
   buttonLabel = "Salvar contrato",
   onSubmit,
 }) {
@@ -121,6 +131,11 @@ export function ResumoContratoForm({
   const handleSubmit = async (event) => {
     event.preventDefault();
 
+    if (!formData.clienteId) {
+      setErrorMsg("Selecione um cliente.");
+      return;
+    }
+
     const budgetResult = parseMoneyInput(formData.orcamento);
 
     if (!budgetResult.ok) {
@@ -133,6 +148,7 @@ export function ResumoContratoForm({
 
     try {
       await onSubmit({
+        clienteId: formData.clienteId,
         nomeContrato: formData.nomeContrato.trim(),
         orcamento: budgetResult.value,
         dataInicio: formData.dataInicio || null,
@@ -149,11 +165,33 @@ export function ResumoContratoForm({
         <SectionHeader>
           <SectionTitle>Dados do contrato</SectionTitle>
           <SectionDescription>
-            Campos cadastrais usados no resumo macro de orçamento, BM e saldo.
+            Selecione o cliente e informe os dados principais do contrato.
           </SectionDescription>
         </SectionHeader>
 
         <FieldsGrid>
+          <FullWidthFieldGroup controlId="resumo-contrato-cliente">
+            <FieldLabel>Cliente</FieldLabel>
+            <FieldSelect
+              name="clienteId"
+              value={formData.clienteId}
+              onChange={handleChange}
+              disabled={!clientes.length}
+              required
+            >
+              <option value="">
+                {clientes.length
+                  ? "Selecione um cliente"
+                  : "Cadastre um cliente antes"}
+              </option>
+              {clientes.map((cliente) => (
+                <option key={cliente.id || cliente._id} value={cliente.id || cliente._id}>
+                  {cliente.nome}
+                </option>
+              ))}
+            </FieldSelect>
+          </FullWidthFieldGroup>
+
           <FullWidthFieldGroup controlId="resumo-contrato-name">
             <FieldLabel>Nome do contrato</FieldLabel>
             <FieldControl
@@ -311,6 +349,10 @@ const controlStyles = `
 `;
 
 const FieldControl = styled(Form.Control)`
+  ${controlStyles}
+`;
+
+const FieldSelect = styled(Form.Select)`
   ${controlStyles}
 `;
 

@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const Cliente = require("../../../models/Cliente");
 const ResumoContrato = require("../../../models/ResumoContrato");
 const ResumoContratoBm = require("../../../models/ResumoContratoBm");
 
@@ -8,7 +9,20 @@ const MONTHS = Array.from({ length: 12 }, (_, index) => index + 1);
 const hasOwn = (object, key) =>
   Object.prototype.hasOwnProperty.call(object || {}, key);
 
+const UNASSIGNED_CLIENT_ID = "__sem_cliente__";
 const getCurrentYear = () => new Date().getFullYear();
+
+const getIdText = (value) => {
+  if (value && typeof value === "object" && value._id) {
+    return String(value._id).trim();
+  }
+
+  if (value === undefined || value === null) {
+    return "";
+  }
+
+  return String(value).trim();
+};
 
 const getSafeNumber = (value, fallback = 0) => {
   const number = Number(value);
@@ -133,10 +147,123 @@ const parseOptionalDate = (value, fieldLabel) => {
   };
 };
 
+const parseRequiredMonth = (value) => {
+  const result = parseNumber(value, "Mes");
+
+  if (!result.ok) {
+    return result;
+  }
+
+  if (
+    !Number.isInteger(result.value) ||
+    result.value < 1 ||
+    result.value > 12
+  ) {
+    return {
+      ok: false,
+      status: 422,
+      msg: "Mes do BM invalido.",
+    };
+  }
+
+  return result;
+};
+
+const parseClienteId = (value, required = false) => {
+  const clienteId = getIdText(value);
+
+  if (!clienteId) {
+    if (required) {
+      return {
+        ok: false,
+        status: 422,
+        msg: "Cliente e obrigatorio.",
+      };
+    }
+
+    return {
+      ok: true,
+      value: null,
+    };
+  }
+
+  if (!mongoose.Types.ObjectId.isValid(clienteId)) {
+    return {
+      ok: false,
+      status: 422,
+      msg: "Cliente invalido.",
+    };
+  }
+
+  return {
+    ok: true,
+    value: clienteId,
+  };
+};
+
+const getBmPayload = (body = {}, options = {}) => {
+  const payload = {};
+  const shouldReadField = (fieldName) =>
+    !options.partial || hasOwn(body, fieldName);
+
+  if (shouldReadField("ano")) {
+    const result = parseYear(body.ano);
+    if (!result.ok) return result;
+    payload.ano = result.value;
+  }
+
+  if (shouldReadField("mes")) {
+    const result = parseRequiredMonth(body.mes);
+    if (!result.ok) return result;
+    payload.mes = result.value;
+  }
+
+  if (shouldReadField("bm")) {
+    const result = parseOptionalText(body.bm, "BM");
+    if (!result.ok) return result;
+    payload.bm = result.value;
+  }
+
+  if (shouldReadField("bmInicio")) {
+    const result = parseOptionalDate(body.bmInicio, "Inicio do ciclo do BM");
+    if (!result.ok) return result;
+    payload.bmInicio = result.value;
+  }
+
+  if (shouldReadField("bmFim")) {
+    const result = parseOptionalDate(body.bmFim, "Fim do ciclo do BM");
+    if (!result.ok) return result;
+    payload.bmFim = result.value;
+  }
+
+  if (shouldReadField("valorBm")) {
+    const result = parseNumber(body.valorBm, "Valor do BM", 0);
+    if (!result.ok) return result;
+    payload.valorBm = result.value;
+  }
+
+  if (shouldReadField("faturadoData")) {
+    const result = parseOptionalDate(body.faturadoData, "Data de faturamento");
+    if (!result.ok) return result;
+    payload.faturadoData = result.value;
+  }
+
+  return {
+    ok: true,
+    payload,
+  };
+};
+
 const getContratoPayload = (body = {}, options = {}) => {
   const payload = {};
   const shouldReadField = (fieldName) =>
     !options.partial || hasOwn(body, fieldName);
+
+  if (shouldReadField("clienteId")) {
+    const result = parseClienteId(body.clienteId, options.requireCliente);
+    if (!result.ok) return result;
+    payload.clienteId = result.value;
+  }
 
   if (shouldReadField("nomeContrato")) {
     const result = parseOptionalText(body.nomeContrato, "Nome do contrato");
@@ -190,8 +317,63 @@ const getCards = (orcamento, bm) => ({
   orcamento,
 });
 
+const mapClienteBrief = (cliente) => {
+  if (!cliente || !cliente._id) {
+    return null;
+  }
+
+  return {
+    id: String(cliente._id),
+    nome: cliente.nome || "",
+  };
+};
+
+const getContratoClienteId = (contrato) => {
+  const clienteId = contrato?.clienteId?._id || contrato?.clienteId;
+  return clienteId ? String(clienteId) : null;
+};
+
+const validateClienteExists = async (clienteId) => {
+  if (!clienteId) {
+    return {
+      ok: true,
+    };
+  }
+
+  const cliente = await Cliente.findById(clienteId);
+
+  if (!cliente) {
+    return {
+      ok: false,
+      status: 422,
+      msg: "Cliente nao encontrado.",
+    };
+  }
+
+  return {
+    ok: true,
+  };
+};
+
+const mapBmResponse = (bm) => ({
+  id: String(bm._id),
+  _id: bm._id,
+  contratoId: String(bm.contratoId),
+  ano: bm.ano,
+  mes: bm.mes,
+  bm: bm.bm || "",
+  bmInicio: bm.bmInicio || null,
+  bmFim: bm.bmFim || null,
+  valorBm: getSafeNumber(bm.valorBm),
+  faturadoData: bm.faturadoData || null,
+  createdAt: bm.createdAt,
+  updatedAt: bm.updatedAt,
+});
+
 const mapContratoResponse = (contrato) => ({
   id: String(contrato._id),
+  clienteId: getContratoClienteId(contrato),
+  cliente: mapClienteBrief(contrato.clienteId),
   nomeContrato: contrato.nomeContrato ?? "",
   orcamento: getSafeNumber(contrato.orcamento),
   dataInicio: contrato.dataInicio || null,
@@ -205,6 +387,8 @@ const mapContratoResumoResponse = (contrato, bm) => {
 
   return {
     id: String(contrato._id),
+    clienteId: getContratoClienteId(contrato),
+    cliente: mapClienteBrief(contrato.clienteId),
     nomeContrato: contrato.nomeContrato ?? "",
     orcamento,
     bm,
@@ -224,7 +408,10 @@ const findResumoContratoById = async (id) => {
     };
   }
 
-  const contrato = await ResumoContrato.findById(id);
+  const contrato = await ResumoContrato.findById(id).populate({
+    path: "clienteId",
+    select: "nome",
+  });
 
   if (!contrato) {
     return {
@@ -265,24 +452,32 @@ const getBmTotalsByContract = async (contratoIds, ano) => {
   );
 };
 
-const getBmsPorMes = async (contratoId, ano) => {
-  const bms = await ResumoContratoBm.find({ contratoId, ano }).sort({ mes: 1 });
+const getBmsDoContrato = async (contratoId, ano) => {
+  const bms = await ResumoContratoBm.find({ contratoId, ano }).sort({
+    mes: 1,
+    createdAt: 1,
+  });
+
+  return bms.map(mapBmResponse);
+};
+
+const getBmsPorMesFromList = (bms = []) => {
   const bmsPorMes = MONTHS.reduce((acc, mes) => {
     acc[String(mes)] = 0;
     return acc;
   }, {});
 
   bms.forEach((bm) => {
-    bmsPorMes[String(bm.mes)] = getSafeNumber(bm.valorBm);
+    bmsPorMes[String(bm.mes)] += getSafeNumber(bm.valorBm);
   });
 
   return bmsPorMes;
 };
 
 const getContratoDetailResponse = async (contrato, ano) => {
-  const bmsPorMes = await getBmsPorMes(contrato._id, ano);
-  const bm = Object.values(bmsPorMes).reduce(
-    (total, valorBm) => total + getSafeNumber(valorBm),
+  const bms = await getBmsDoContrato(contrato._id, ano);
+  const bm = bms.reduce(
+    (total, item) => total + getSafeNumber(item.valorBm),
     0,
   );
   const orcamento = getSafeNumber(contrato.orcamento);
@@ -291,6 +486,8 @@ const getContratoDetailResponse = async (contrato, ano) => {
     ano,
     contrato: {
       id: String(contrato._id),
+      clienteId: getContratoClienteId(contrato),
+      cliente: mapClienteBrief(contrato.clienteId),
       nomeContrato: contrato.nomeContrato ?? "",
       orcamento,
       dataInicio: contrato.dataInicio || null,
@@ -300,7 +497,8 @@ const getContratoDetailResponse = async (contrato, ano) => {
       gap: getGap(contrato.dataFim),
     },
     cards: getCards(orcamento, bm),
-    bmsPorMes,
+    bms,
+    bmsPorMes: getBmsPorMesFromList(bms),
   };
 };
 
@@ -361,7 +559,12 @@ const listResumoContratos = async (req, res) => {
   const ano = yearResult.value;
 
   try {
-    const contratos = await ResumoContrato.find().sort({ updatedAt: -1 });
+    const [clientes, contratos] = await Promise.all([
+      Cliente.find().sort({ nome: 1 }),
+      ResumoContrato.find()
+        .populate({ path: "clienteId", select: "nome" })
+        .sort({ updatedAt: -1 }),
+    ]);
     const bmTotalsByContract = await getBmTotalsByContract(
       contratos.map((contrato) => contrato._id),
       ano,
@@ -373,6 +576,39 @@ const listResumoContratos = async (req, res) => {
         bmTotalsByContract.get(String(contrato._id)) || 0,
       ),
     );
+    const totalContratosByCliente = new Map();
+    let totalContratosSemCliente = 0;
+
+    contratosResponse.forEach((contrato) => {
+      if (!contrato.clienteId) {
+        totalContratosSemCliente += 1;
+        return;
+      }
+
+      totalContratosByCliente.set(
+        contrato.clienteId,
+        (totalContratosByCliente.get(contrato.clienteId) || 0) + 1,
+      );
+    });
+
+    const clientesResponse = clientes.map((cliente) => ({
+      id: String(cliente._id),
+      _id: cliente._id,
+      nome: cliente.nome,
+      totalContratos: totalContratosByCliente.get(String(cliente._id)) || 0,
+      createdAt: cliente.createdAt,
+      updatedAt: cliente.updatedAt,
+    }));
+
+    if (totalContratosSemCliente > 0) {
+      clientesResponse.push({
+        id: UNASSIGNED_CLIENT_ID,
+        _id: null,
+        nome: "Sem cliente definido",
+        totalContratos: totalContratosSemCliente,
+        isUnassigned: true,
+      });
+    }
 
     const orcamentoTotal = contratosResponse.reduce(
       (total, contrato) => total + contrato.orcamento,
@@ -385,6 +621,8 @@ const listResumoContratos = async (req, res) => {
 
     return res.status(200).json({
       ano,
+      totalClientes: clientes.length,
+      clientes: clientesResponse,
       cards: getCards(orcamentoTotal, bmTotal),
       contratos: contratosResponse,
     });
@@ -397,7 +635,10 @@ const listResumoContratos = async (req, res) => {
 };
 
 const createResumoContrato = async (req, res) => {
-  const payloadResult = getContratoPayload(req.body, { partial: false });
+  const payloadResult = getContratoPayload(req.body, {
+    partial: false,
+    requireCliente: true,
+  });
 
   if (!payloadResult.ok) {
     return res
@@ -406,8 +647,17 @@ const createResumoContrato = async (req, res) => {
   }
 
   try {
+    const clienteResult = await validateClienteExists(
+      payloadResult.payload.clienteId,
+    );
+
+    if (!clienteResult.ok) {
+      return res.status(clienteResult.status).json({ msg: clienteResult.msg });
+    }
+
     const contrato = new ResumoContrato(payloadResult.payload);
     await contrato.save();
+    await contrato.populate({ path: "clienteId", select: "nome" });
 
     return res.status(201).json({
       msg: "Resumo de contrato criado com sucesso.",
@@ -465,8 +715,19 @@ const editResumoContrato = async (req, res) => {
       return res.status(findResult.status).json({ msg: findResult.msg });
     }
 
+    if (hasOwn(payloadResult.payload, "clienteId")) {
+      const clienteResult = await validateClienteExists(
+        payloadResult.payload.clienteId,
+      );
+
+      if (!clienteResult.ok) {
+        return res.status(clienteResult.status).json({ msg: clienteResult.msg });
+      }
+    }
+
     Object.assign(findResult.contrato, payloadResult.payload);
     await findResult.contrato.save();
+    await findResult.contrato.populate({ path: "clienteId", select: "nome" });
 
     return res.status(200).json({
       msg: "Resumo de contrato atualizado com sucesso.",
@@ -496,6 +757,143 @@ const deleteResumoContrato = async (req, res) => {
     });
   } catch (error) {
     console.log("deleteResumoContrato error", error);
+    return res.status(500).json({
+      msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
+    });
+  }
+};
+
+const findResumoContratoBmById = async (contratoId, bmId) => {
+  if (!mongoose.Types.ObjectId.isValid(bmId)) {
+    return {
+      ok: false,
+      status: 422,
+      msg: "BM invalido.",
+    };
+  }
+
+  const bm = await ResumoContratoBm.findOne({
+    _id: bmId,
+    contratoId,
+  });
+
+  if (!bm) {
+    return {
+      ok: false,
+      status: 404,
+      msg: "BM nao encontrado.",
+    };
+  }
+
+  return {
+    ok: true,
+    bm,
+  };
+};
+
+const createResumoContratoBm = async (req, res) => {
+  const payloadResult = getBmPayload(req.body, { partial: false });
+
+  if (!payloadResult.ok) {
+    return res
+      .status(payloadResult.status || 422)
+      .json({ msg: payloadResult.msg });
+  }
+
+  try {
+    const findResult = await findResumoContratoById(req.params.id);
+
+    if (!findResult.ok) {
+      return res.status(findResult.status).json({ msg: findResult.msg });
+    }
+
+    const bm = new ResumoContratoBm({
+      contratoId: findResult.contrato._id,
+      ...payloadResult.payload,
+    });
+    await bm.save();
+
+    const response = await getContratoDetailResponse(
+      findResult.contrato,
+      payloadResult.payload.ano,
+    );
+
+    return res.status(201).json(response);
+  } catch (error) {
+    console.log("createResumoContratoBm error", error);
+    return res.status(500).json({
+      msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
+    });
+  }
+};
+
+const editResumoContratoBm = async (req, res) => {
+  const payloadResult = getBmPayload(req.body, { partial: true });
+
+  if (!payloadResult.ok) {
+    return res
+      .status(payloadResult.status || 422)
+      .json({ msg: payloadResult.msg });
+  }
+
+  try {
+    const findResult = await findResumoContratoById(req.params.id);
+
+    if (!findResult.ok) {
+      return res.status(findResult.status).json({ msg: findResult.msg });
+    }
+
+    const bmResult = await findResumoContratoBmById(
+      findResult.contrato._id,
+      req.params.bmId,
+    );
+
+    if (!bmResult.ok) {
+      return res.status(bmResult.status).json({ msg: bmResult.msg });
+    }
+
+    Object.assign(bmResult.bm, payloadResult.payload);
+    await bmResult.bm.save();
+
+    const response = await getContratoDetailResponse(
+      findResult.contrato,
+      bmResult.bm.ano,
+    );
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log("editResumoContratoBm error", error);
+    return res.status(500).json({
+      msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
+    });
+  }
+};
+
+const deleteResumoContratoBm = async (req, res) => {
+  try {
+    const findResult = await findResumoContratoById(req.params.id);
+
+    if (!findResult.ok) {
+      return res.status(findResult.status).json({ msg: findResult.msg });
+    }
+
+    const bmResult = await findResumoContratoBmById(
+      findResult.contrato._id,
+      req.params.bmId,
+    );
+
+    if (!bmResult.ok) {
+      return res.status(bmResult.status).json({ msg: bmResult.msg });
+    }
+
+    const ano = bmResult.bm.ano;
+    await ResumoContratoBm.findByIdAndDelete(bmResult.bm._id);
+
+    const response = await getContratoDetailResponse(findResult.contrato, ano);
+
+    return res.status(200).json(response);
+  } catch (error) {
+    console.log("deleteResumoContratoBm error", error);
     return res.status(500).json({
       msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
     });
@@ -572,5 +970,8 @@ module.exports = {
   listResumoContratoById,
   editResumoContrato,
   deleteResumoContrato,
+  createResumoContratoBm,
+  editResumoContratoBm,
+  deleteResumoContratoBm,
   manageResumoContratoBms,
 };

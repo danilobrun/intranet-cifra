@@ -24,7 +24,7 @@ const dbPassword = process.env.DB_PASS;
 // Connect method Mongo DB
 mongoose
   .connect(
-    `mongodb+srv://${dbUser}:${dbPassword}@intranetcifra.1iksmgz.mongodb.net/?retryWrites=true&w=majority`,
+    `mongodb://${dbUser}:${dbPassword}@ac-7jao8bw-shard-00-00.1iksmgz.mongodb.net:27017,ac-7jao8bw-shard-00-01.1iksmgz.mongodb.net:27017,ac-7jao8bw-shard-00-02.1iksmgz.mongodb.net:27017/?ssl=true&replicaSet=atlas-cbwbup-shard-0&authSource=admin&appName=IntranetCifra`,
   )
   .then(() => {
     app.listen(port);

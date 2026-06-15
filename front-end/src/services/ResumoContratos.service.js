@@ -90,6 +90,32 @@ export const updateResumoContratoBms = async (contratoId, bmsData) => {
   });
 };
 
+export const createResumoContratoBm = async (contratoId, bmData) => {
+  return requestJson(`${apiUrl}/resumo-contratos/${contratoId}/bms`, {
+    method: "POST",
+    body: JSON.stringify(bmData),
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+};
+
+export const updateResumoContratoBm = async (contratoId, bmId, bmData) => {
+  return requestJson(`${apiUrl}/resumo-contratos/${contratoId}/bms/${bmId}`, {
+    method: "PUT",
+    body: JSON.stringify(bmData),
+    headers: {
+      "content-type": "application/json",
+    },
+  });
+};
+
+export const deleteResumoContratoBm = async (contratoId, bmId) => {
+  return requestJson(`${apiUrl}/resumo-contratos/${contratoId}/bms/${bmId}`, {
+    method: "DELETE",
+  });
+};
+
 export const deleteResumoContrato = async (contratoId) => {
   return requestJson(`${apiUrl}/resumo-contratos/${contratoId}`, {
     method: "DELETE",

@@ -5,6 +5,9 @@ const {
   listResumoContratoById,
   editResumoContrato,
   deleteResumoContrato,
+  createResumoContratoBm,
+  editResumoContratoBm,
+  deleteResumoContratoBm,
   manageResumoContratoBms,
 } = require("../presentation/controllers/resumoContratos.controller");
 
@@ -46,6 +49,24 @@ const resumoContratosRoutes = (app) => {
     checkToken,
     ensureRoleCodes(allowedResumoContratosRoles),
     manageResumoContratoBms,
+  );
+  app.post(
+    "/resumo-contratos/:id/bms",
+    checkToken,
+    ensureRoleCodes(allowedResumoContratosRoles),
+    createResumoContratoBm,
+  );
+  app.put(
+    "/resumo-contratos/:id/bms/:bmId",
+    checkToken,
+    ensureRoleCodes(allowedResumoContratosRoles),
+    editResumoContratoBm,
+  );
+  app.delete(
+    "/resumo-contratos/:id/bms/:bmId",
+    checkToken,
+    ensureRoleCodes(allowedResumoContratosRoles),
+    deleteResumoContratoBm,
   );
 };
 

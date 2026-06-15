@@ -9,10 +9,10 @@ import { formatCurrency } from "./utils";
 
 const SUMMARY_ITEMS = [
   {
-    key: "saldo",
-    label: "Saldo",
-    icon: faWallet,
-    tone: "saldo",
+    key: "orcamento",
+    label: "Orçamento",
+    icon: faSackDollar,
+    tone: "orcamento",
   },
   {
     key: "bm",
@@ -21,10 +21,10 @@ const SUMMARY_ITEMS = [
     tone: "bm",
   },
   {
-    key: "orcamento",
-    label: "Orçamento",
-    icon: faSackDollar,
-    tone: "orcamento",
+    key: "saldo",
+    label: "Saldo",
+    icon: faWallet,
+    tone: "saldo",
   },
 ];
 

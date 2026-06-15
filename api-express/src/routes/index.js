@@ -1,5 +1,6 @@
 const boletinsRoutes = require("./boletins.routes");
 const carsRoutes = require("./cars.routes");
+const clientesRoutes = require("./clientes.routes");
 const contratosRoutes = require("./contratos.routes");
 const inscriptionsRoutes = require("./inscriptions.routes");
 const portalsRoutes = require("./portals.routes");
@@ -19,6 +20,7 @@ const registersRoutes = (app) => {
   });
   boletinsRoutes(app);
   carsRoutes(app);
+  clientesRoutes(app);
   contratosRoutes(app);
   usersRoutes(app);
   rentsRoutes(app);

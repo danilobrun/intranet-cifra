@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import styled from "styled-components";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import { ResumoContratoForm } from "../../components/ResumoContratos/ResumoContratoForm";
+import { getClientes } from "../../services/Clientes.service";
 import {
   createResumoContrato,
   getResumoContratoById,
@@ -20,8 +21,27 @@ export function ResumoContratoEditorView() {
   const isEditing = Boolean(id);
   const navigate = useNavigate();
   const [contrato, setContrato] = useState();
+  const [clientes, setClientes] = useState([]);
+  const [loadingClientes, setLoadingClientes] = useState(true);
   const [loading, setLoading] = useState(isEditing);
   const [errorMsg, setErrorMsg] = useState("");
+
+  useEffect(() => {
+    const fetchClientes = async () => {
+      try {
+        setLoadingClientes(true);
+        const data = await getClientes();
+        setClientes(Array.isArray(data) ? data : []);
+      } catch (error) {
+        setClientes([]);
+        setErrorMsg(error.message || "Falha ao carregar clientes.");
+      } finally {
+        setLoadingClientes(false);
+      }
+    };
+
+    fetchClientes();
+  }, []);
 
   useEffect(() => {
     if (!isEditing) {
@@ -72,7 +92,7 @@ export function ResumoContratoEditorView() {
           <PageDescription>
             {isEditing
               ? "Atualize os dados cadastrais do contrato."
-              : "Cadastre um contrato para acompanhar orçamento, BM e saldo."}
+              : "Cadastre um contrato vinculado a um cliente."}
           </PageDescription>
         </PageHeader>
 
@@ -92,11 +112,12 @@ export function ResumoContratoEditorView() {
           </Alert>
         ) : null}
 
-        {loading ? (
+        {loading || loadingClientes ? (
           <LoadingState>Carregando contrato...</LoadingState>
         ) : !errorMsg && (!isEditing || contrato) ? (
           <ResumoContratoForm
             initialValue={contrato}
+            clientes={clientes}
             buttonLabel={isEditing ? "Salvar alterações" : "Salvar contrato"}
             onSubmit={handleSubmit}
           />

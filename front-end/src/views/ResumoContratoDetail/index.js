@@ -8,23 +8,22 @@ import {
   faCalendarDays,
   faHourglassHalf,
   faPen,
-  faSackDollar,
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import { PortalHeader } from "../../components/PortalHeader";
-import { GerenciarBmsModal } from "../../components/ResumoContratos/GerenciarBmsModal";
-import { ResumoContratoMonthlyCards } from "../../components/ResumoContratos/ResumoContratoMonthlyCards";
+import { ResumoContratoBmsTable } from "../../components/ResumoContratos/ResumoContratoBmsTable";
 import { ResumoContratosSummaryCards } from "../../components/ResumoContratos/ResumoContratosSummaryCards";
 import {
-  buildEmptyBmsPorMes,
   formatDate,
   formatGap,
   getResumoContratoName,
 } from "../../components/ResumoContratos/utils";
 import {
+  createResumoContratoBm,
+  deleteResumoContratoBm,
   getResumoContratoById,
-  updateResumoContratoBms,
+  updateResumoContratoBm,
 } from "../../services/ResumoContratos.service";
 import { useDailyRefresh } from "../../hooks/useDailyRefresh";
 
@@ -59,10 +58,9 @@ export function ResumoContratoDetailView() {
   const [selectedYear, setSelectedYear] = useState(currentYear);
   const [contrato, setContrato] = useState();
   const [cards, setCards] = useState(defaultCards);
-  const [bmsPorMes, setBmsPorMes] = useState(buildEmptyBmsPorMes());
+  const [bms, setBms] = useState([]);
   const [loading, setLoading] = useState(true);
   const [errorMsg, setErrorMsg] = useState("");
-  const [isBmsModalOpen, setIsBmsModalOpen] = useState(false);
   const [isSavingBms, setIsSavingBms] = useState(false);
 
   const availableYearOptions = useMemo(
@@ -81,14 +79,11 @@ export function ResumoContratoDetailView() {
 
       setContrato(data?.contrato);
       setCards(data?.cards || defaultCards);
-      setBmsPorMes({
-        ...buildEmptyBmsPorMes(),
-        ...(data?.bmsPorMes || {}),
-      });
+      setBms(Array.isArray(data?.bms) ? data.bms : []);
     } catch (error) {
       setContrato(undefined);
       setCards(defaultCards);
-      setBmsPorMes(buildEmptyBmsPorMes());
+      setBms([]);
       setErrorMsg(getErrorMessage(error));
     } finally {
       setLoading(false);
@@ -99,30 +94,55 @@ export function ResumoContratoDetailView() {
     fetchContratoDetail();
   }, [fetchContratoDetail]);
 
-  useDailyRefresh(fetchContratoDetail, !isBmsModalOpen);
+  useDailyRefresh(fetchContratoDetail);
 
   const handleYearChange = (event) => {
     setSelectedYear(Number(event.target.value));
   };
 
-  const handleSubmitBms = async ({ ano, bmsPorMes: nextBmsPorMes }) => {
+  const syncDetailResponse = (data) => {
+    setContrato(data?.contrato);
+    setCards(data?.cards || defaultCards);
+    setBms(Array.isArray(data?.bms) ? data.bms : []);
+  };
+
+  const handleCreateBm = async (payload) => {
     try {
       setIsSavingBms(true);
-      const data = await updateResumoContratoBms(id, {
-        ano,
-        bmsPorMes: nextBmsPorMes,
-      });
-
-      setContrato(data?.contrato);
-      setCards(data?.cards || defaultCards);
-      setBmsPorMes({
-        ...buildEmptyBmsPorMes(),
-        ...(data?.bmsPorMes || {}),
-      });
-      setIsBmsModalOpen(false);
-      toast.success("BMs atualizados com sucesso.");
+      const data = await createResumoContratoBm(id, payload);
+      syncDetailResponse(data);
+      toast.success("BM lançado com sucesso.");
     } catch (error) {
-      toast.error(error.message || "Falha ao salvar BMs.");
+      toast.error(error.message || "Falha ao lançar BM.");
+      throw error;
+    } finally {
+      setIsSavingBms(false);
+    }
+  };
+
+  const handleUpdateBm = async (bmId, payload) => {
+    try {
+      setIsSavingBms(true);
+      const data = await updateResumoContratoBm(id, bmId, payload);
+      syncDetailResponse(data);
+      toast.success("BM atualizado com sucesso.");
+    } catch (error) {
+      toast.error(error.message || "Falha ao atualizar BM.");
+      throw error;
+    } finally {
+      setIsSavingBms(false);
+    }
+  };
+
+  const handleDeleteBm = async (bmId) => {
+    try {
+      setIsSavingBms(true);
+      const data = await deleteResumoContratoBm(id, bmId);
+      syncDetailResponse(data);
+      toast.success("BM excluído com sucesso.");
+    } catch (error) {
+      toast.error(error.message || "Falha ao excluir BM.");
+      throw error;
     } finally {
       setIsSavingBms(false);
     }
@@ -144,15 +164,6 @@ export function ResumoContratoDetailView() {
           </Form.Select>
         </YearField>
 
-        <PrimaryAction
-          type="button"
-          onClick={() => setIsBmsModalOpen(true)}
-          disabled={loading || Boolean(errorMsg)}
-        >
-          <FontAwesomeIcon icon={faSackDollar} />
-          Gerenciar BMs
-        </PrimaryAction>
-
         <SecondaryAction as={Link} to={`/resumo-contratos/${id}/editar`}>
           <FontAwesomeIcon icon={faPen} />
           Editar contrato
@@ -164,14 +175,14 @@ export function ResumoContratoDetailView() {
         </SecondaryAction>
       </>
     ),
-    [availableYearOptions, errorMsg, id, loading, selectedYear],
+    [availableYearOptions, id, selectedYear],
   );
 
   return (
     <LayoutPortal>
       <PortalHeader
         title={loading && !contrato ? "Carregando contrato..." : contratoName}
-        description="Visão mensal de BM, orçamento e saldo do contrato."
+        description="Acompanhe orçamento, lançamentos de BM e saldo do contrato."
       >
         {headerActions}
       </PortalHeader>
@@ -225,18 +236,16 @@ export function ResumoContratoDetailView() {
             </InfoItem>
           </ContractInfoBar>
 
-          <ResumoContratoMonthlyCards bmsPorMes={bmsPorMes} />
+          <ResumoContratoBmsTable
+            bms={bms}
+            selectedYear={selectedYear}
+            isSubmiting={isSavingBms}
+            onCreateBm={handleCreateBm}
+            onUpdateBm={handleUpdateBm}
+            onDeleteBm={handleDeleteBm}
+          />
         </>
       ) : null}
-
-      <GerenciarBmsModal
-        show={isBmsModalOpen}
-        selectedYear={selectedYear}
-        bmsPorMes={bmsPorMes}
-        isSubmiting={isSavingBms}
-        onHide={() => setIsBmsModalOpen(false)}
-        onSubmit={handleSubmitBms}
-      />
     </LayoutPortal>
   );
 }
@@ -290,32 +299,6 @@ const actionButtonStyles = `
   @media (max-width: 767.98px) {
     flex: 1 1 170px;
     margin-top: 0;
-  }
-`;
-
-const PrimaryAction = styled.button`
-  ${actionButtonStyles}
-  border: 1px solid #0d6efd;
-  background: #0d6efd;
-  color: #ffffff;
-  box-shadow: 0 8px 18px rgba(13, 110, 253, 0.18);
-
-  &:hover,
-  &:focus {
-    border-color: #0b5ed7;
-    background: #0b5ed7;
-    color: #ffffff;
-    text-decoration: none;
-    transform: translateY(-1px);
-  }
-
-  &:disabled {
-    border-color: oklch(83% 0.012 245);
-    background: oklch(92% 0.006 245);
-    color: oklch(55% 0.014 245);
-    box-shadow: none;
-    cursor: not-allowed;
-    transform: none;
   }
 `;
 
