@@ -101,6 +101,17 @@ const parseYear = (value) => {
   return result;
 };
 
+const parseOptionalYear = (value) => {
+  if (value === undefined || value === null || value === "") {
+    return {
+      ok: true,
+      value: null,
+    };
+  }
+
+  return parseYear(value);
+};
+
 const parseOptionalText = (value, fieldLabel) => {
   if (value === undefined || value === null) {
     return {
@@ -502,6 +513,236 @@ const getContratoDetailResponse = async (contrato, ano) => {
   };
 };
 
+const parseExportClienteId = (value) => {
+  const clienteId = getIdText(value);
+
+  if (!clienteId) {
+    return {
+      ok: true,
+      value: null,
+      isUnassigned: false,
+    };
+  }
+
+  if (clienteId === UNASSIGNED_CLIENT_ID) {
+    return {
+      ok: true,
+      value: UNASSIGNED_CLIENT_ID,
+      isUnassigned: true,
+    };
+  }
+
+  const result = parseClienteId(clienteId, true);
+
+  if (!result.ok) {
+    return result;
+  }
+
+  return {
+    ok: true,
+    value: result.value,
+    isUnassigned: false,
+  };
+};
+
+const getContractClienteIdKey = (contrato) =>
+  getContratoClienteId(contrato) || UNASSIGNED_CLIENT_ID;
+
+const createClienteOnlyExportRow = (cliente) => ({
+  clienteId: cliente ? String(cliente._id || cliente.id || "") : null,
+  clienteNome: cliente?.nome || "Sem cliente definido",
+  contratoId: null,
+  nomeContrato: "",
+  orcamento: null,
+  bmTotal: null,
+  saldo: null,
+  dataInicio: null,
+  dataFim: null,
+  gap: null,
+  bmId: null,
+  ano: null,
+  mes: null,
+  bm: "",
+  bmInicio: null,
+  bmFim: null,
+  valorBm: null,
+  faturadoData: null,
+  statusFaturamento: "",
+});
+
+const createContratoExportBase = (contrato, bmTotal, clienteName) => {
+  const orcamento = getSafeNumber(contrato.orcamento);
+
+  return {
+    clienteId: getContratoClienteId(contrato),
+    clienteNome:
+      clienteName || contrato?.clienteId?.nome || "Sem cliente definido",
+    contratoId: String(contrato._id),
+    nomeContrato: contrato.nomeContrato ?? "",
+    orcamento,
+    bmTotal,
+    saldo: orcamento - bmTotal,
+    dataInicio: contrato.dataInicio || null,
+    dataFim: contrato.dataFim || null,
+    gap: getGap(contrato.dataFim),
+  };
+};
+
+const createContratoWithoutBmExportRow = (contrato, bmTotal, clienteName, ano) => ({
+  ...createContratoExportBase(contrato, bmTotal, clienteName),
+  bmId: null,
+  ano,
+  mes: null,
+  bm: "",
+  bmInicio: null,
+  bmFim: null,
+  valorBm: null,
+  faturadoData: null,
+  statusFaturamento: "",
+});
+
+const createBmExportRow = (contrato, bm, bmTotal, clienteName) => ({
+  ...createContratoExportBase(contrato, bmTotal, clienteName),
+  bmId: String(bm._id),
+  ano: bm.ano,
+  mes: bm.mes,
+  bm: bm.bm || "",
+  bmInicio: bm.bmInicio || null,
+  bmFim: bm.bmFim || null,
+  valorBm: getSafeNumber(bm.valorBm),
+  faturadoData: bm.faturadoData || null,
+  statusFaturamento: bm.faturadoData ? "Faturado" : "Nao faturado",
+});
+
+const appendContratoExportRows = ({
+  rows,
+  contrato,
+  clienteName,
+  bmsByContratoId,
+  bmTotalsByContratoId,
+  ano,
+}) => {
+  const contratoId = String(contrato._id);
+  const contratoBms = bmsByContratoId.get(contratoId) || [];
+  const bmTotal = bmTotalsByContratoId.get(contratoId) || 0;
+
+  if (!contratoBms.length) {
+    rows.push(
+      createContratoWithoutBmExportRow(contrato, bmTotal, clienteName, ano),
+    );
+    return;
+  }
+
+  contratoBms.forEach((bm) => {
+    rows.push(createBmExportRow(contrato, bm, bmTotal, clienteName));
+  });
+};
+
+const getResumoContratosExportRows = async ({ clienteId, isUnassigned, ano }) => {
+  const contratoFilter = {};
+
+  if (isUnassigned) {
+    contratoFilter.$or = [{ clienteId: null }, { clienteId: { $exists: false } }];
+  } else if (clienteId) {
+    contratoFilter.clienteId = clienteId;
+  }
+
+  const clienteFilter =
+    clienteId && !isUnassigned ? { _id: clienteId } : {};
+
+  const [clientes, contratos] = await Promise.all([
+    isUnassigned ? [] : Cliente.find(clienteFilter).sort({ nome: 1 }),
+    ResumoContrato.find(contratoFilter)
+      .populate({ path: "clienteId", select: "nome" })
+      .sort({ nomeContrato: 1, createdAt: 1 }),
+  ]);
+
+  const contratoIds = contratos.map((contrato) => contrato._id);
+  const bmFilter = contratoIds.length
+    ? { contratoId: { $in: contratoIds } }
+    : null;
+
+  if (bmFilter && ano) {
+    bmFilter.ano = ano;
+  }
+
+  const bms = bmFilter
+    ? await ResumoContratoBm.find(bmFilter).sort({
+        ano: 1,
+        mes: 1,
+        createdAt: 1,
+      })
+    : [];
+
+  const bmsByContratoId = new Map();
+  const bmTotalsByContratoId = new Map();
+
+  bms.forEach((bm) => {
+    const contratoId = String(bm.contratoId);
+
+    if (!bmsByContratoId.has(contratoId)) {
+      bmsByContratoId.set(contratoId, []);
+    }
+
+    bmsByContratoId.get(contratoId).push(bm);
+    bmTotalsByContratoId.set(
+      contratoId,
+      (bmTotalsByContratoId.get(contratoId) || 0) + getSafeNumber(bm.valorBm),
+    );
+  });
+
+  const contratosByClienteId = new Map();
+
+  contratos.forEach((contrato) => {
+    const clienteKey = getContractClienteIdKey(contrato);
+
+    if (!contratosByClienteId.has(clienteKey)) {
+      contratosByClienteId.set(clienteKey, []);
+    }
+
+    contratosByClienteId.get(clienteKey).push(contrato);
+  });
+
+  const rows = [];
+
+  clientes.forEach((cliente) => {
+    const clienteKey = String(cliente._id);
+    const contratosDoCliente = contratosByClienteId.get(clienteKey) || [];
+
+    if (!contratosDoCliente.length) {
+      rows.push(createClienteOnlyExportRow(cliente));
+      return;
+    }
+
+    contratosDoCliente.forEach((contrato) => {
+      appendContratoExportRows({
+        rows,
+        contrato,
+        clienteName: cliente.nome,
+        bmsByContratoId,
+        bmTotalsByContratoId,
+        ano,
+      });
+    });
+  });
+
+  const unassignedContracts =
+    contratosByClienteId.get(UNASSIGNED_CLIENT_ID) || [];
+
+  unassignedContracts.forEach((contrato) => {
+    appendContratoExportRows({
+      rows,
+      contrato,
+      clienteName: "Sem cliente definido",
+      bmsByContratoId,
+      bmTotalsByContratoId,
+      ano,
+    });
+  });
+
+  return rows;
+};
+
 const validateBmsPorMes = (bmsPorMes) => {
   if (!bmsPorMes || typeof bmsPorMes !== "object" || Array.isArray(bmsPorMes)) {
     return {
@@ -628,6 +869,55 @@ const listResumoContratos = async (req, res) => {
     });
   } catch (error) {
     console.log("listResumoContratos error", error);
+    return res.status(500).json({
+      msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
+    });
+  }
+};
+
+const exportResumoContratosMacro = async (req, res) => {
+  const yearResult = parseOptionalYear(req.query?.ano);
+
+  if (!yearResult.ok) {
+    return res.status(yearResult.status || 422).json({ msg: yearResult.msg });
+  }
+
+  const clienteResult = parseExportClienteId(req.query?.clienteId);
+
+  if (!clienteResult.ok) {
+    return res
+      .status(clienteResult.status || 422)
+      .json({ msg: clienteResult.msg });
+  }
+
+  try {
+    if (clienteResult.value && !clienteResult.isUnassigned) {
+      const clienteExistsResult = await validateClienteExists(clienteResult.value);
+
+      if (!clienteExistsResult.ok) {
+        return res
+          .status(clienteExistsResult.status)
+          .json({ msg: clienteExistsResult.msg });
+      }
+    }
+
+    const rows = await getResumoContratosExportRows({
+      clienteId: clienteResult.value,
+      isUnassigned: clienteResult.isUnassigned,
+      ano: yearResult.value,
+    });
+
+    return res.status(200).json({
+      filters: {
+        ano: yearResult.value,
+        clienteId: clienteResult.value,
+        isUnassigned: clienteResult.isUnassigned,
+      },
+      totalRows: rows.length,
+      rows,
+    });
+  } catch (error) {
+    console.log("exportResumoContratosMacro error", error);
     return res.status(500).json({
       msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
     });
@@ -966,6 +1256,7 @@ const manageResumoContratoBms = async (req, res) => {
 
 module.exports = {
   listResumoContratos,
+  exportResumoContratosMacro,
   createResumoContrato,
   listResumoContratoById,
   editResumoContrato,

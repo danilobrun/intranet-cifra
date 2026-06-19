@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Form, Table } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faDownload,
   faFileInvoiceDollar,
   faPen,
   faPlus,
@@ -10,9 +11,14 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import {
+  downloadCsv,
+  normalizeCsvFileName,
+} from "../../helpers/csvExport";
+import {
   RESUMO_CONTRATO_MONTH_OPTIONS,
   formatCurrency,
   formatCurrencyInputValue,
+  getResumoContratoName,
   parseCurrencyInput,
 } from "./utils";
 
@@ -62,6 +68,20 @@ const getShortDate = (value) => {
 const getMonthLabel = (value) =>
   RESUMO_CONTRATO_MONTH_OPTIONS.find((month) => month.value === Number(value))
     ?.label || "-";
+
+const getFullDate = (value) => {
+  if (!value) {
+    return "";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return date.toLocaleDateString("pt-BR", { timeZone: "UTC" });
+};
 
 const getCycleLabel = (bm) => {
   const startDate = getShortDate(bm?.bmInicio);
@@ -125,8 +145,42 @@ const buildPayload = (formData, selectedYear) => {
   };
 };
 
+const buildMicroCsvRows = ({ contrato, bms, selectedYear }) => {
+  const contratoName = getResumoContratoName(contrato);
+  const clienteName = contrato?.cliente?.nome || "Sem cliente";
+
+  const header = [
+    "Cliente",
+    "Contrato",
+    "Ano",
+    "Mês",
+    "BM",
+    "Início do ciclo",
+    "Fim do ciclo",
+    "Valor",
+    "Data de faturamento",
+    "Status de faturamento",
+  ];
+
+  const rows = bms.map((bm) => [
+    clienteName,
+    contratoName,
+    bm.ano || selectedYear,
+    getMonthLabel(bm.mes),
+    bm.bm || "",
+    getFullDate(bm.bmInicio),
+    getFullDate(bm.bmFim),
+    formatCurrency(bm.valorBm),
+    getFullDate(bm.faturadoData),
+    bm.faturadoData ? "Faturado" : "Não faturado",
+  ]);
+
+  return [header, ...rows];
+};
+
 export function ResumoContratoBmsTable({
   bms = [],
+  contrato,
   selectedYear,
   isSubmiting = false,
   onCreateBm,
@@ -248,6 +302,25 @@ export function ResumoContratoBmsTable({
     }
   };
 
+  const handleExportCsv = () => {
+    if (!sortedBms.length) {
+      return;
+    }
+
+    const contratoName = getResumoContratoName(contrato);
+    const fileName = `bms-${normalizeCsvFileName(
+      contratoName,
+      "contrato",
+    )}-${selectedYear}.csv`;
+    const csvRows = buildMicroCsvRows({
+      contrato,
+      bms: sortedBms,
+      selectedYear,
+    });
+
+    downloadCsv(fileName, csvRows);
+  };
+
   return (
     <BmsSection>
       <BmsHeader>
@@ -258,14 +331,30 @@ export function ResumoContratoBmsTable({
           </SectionDescription>
         </HeaderContent>
 
-        <LaunchButton
-          type="button"
-          onClick={handleAddRow}
-          disabled={isSubmiting}
-        >
-          <FontAwesomeIcon icon={faPlus} />
-          Lançar BM
-        </LaunchButton>
+        <HeaderActions>
+          <ExportButton
+            type="button"
+            onClick={handleExportCsv}
+            disabled={isSubmiting || !sortedBms.length}
+            title={
+              sortedBms.length
+                ? "Exportar lançamentos de BM em CSV"
+                : "Nenhum BM lançado para exportar"
+            }
+          >
+            <FontAwesomeIcon icon={faDownload} />
+            Exportar CSV
+          </ExportButton>
+
+          <LaunchButton
+            type="button"
+            onClick={handleAddRow}
+            disabled={isSubmiting}
+          >
+            <FontAwesomeIcon icon={faPlus} />
+            Lançar BM
+          </LaunchButton>
+        </HeaderActions>
       </BmsHeader>
 
       <TableCard>
@@ -530,6 +619,23 @@ const HeaderContent = styled.div`
   min-width: 220px;
 `;
 
+const HeaderActions = styled.div`
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+
+  @media (max-width: 575.98px) {
+    width: 100%;
+    justify-content: stretch;
+
+    button {
+      flex: 1 1 150px;
+    }
+  }
+`;
+
 const SectionTitle = styled.h2`
   margin: 0;
   color: oklch(22% 0.018 245);
@@ -544,21 +650,47 @@ const SectionDescription = styled.p`
   font-size: 0.92rem;
 `;
 
-const LaunchButton = styled.button`
+const HeaderButton = styled.button`
   display: inline-flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
   min-height: 40px;
   padding: 9px 16px;
-  border: 1px solid #0d6efd;
   border-radius: 10px;
-  background: #0d6efd;
-  color: #ffffff;
   font-size: 0.94rem;
   font-weight: 700;
   line-height: 1;
   white-space: nowrap;
+
+  &:disabled {
+    cursor: not-allowed;
+  }
+`;
+
+const ExportButton = styled(HeaderButton)`
+  border: 1px solid oklch(86% 0.012 245);
+  background: oklch(99% 0.004 245);
+  color: oklch(31% 0.018 245);
+
+  &:hover,
+  &:focus {
+    border-color: oklch(78% 0.018 245);
+    background: oklch(96% 0.006 245);
+    color: oklch(22% 0.018 245);
+  }
+
+  &:disabled {
+    border-color: oklch(89% 0.009 245);
+    background: oklch(95% 0.006 245);
+    color: oklch(58% 0.014 245);
+  }
+`;
+
+const LaunchButton = styled(HeaderButton)`
+  border: 1px solid #0d6efd;
+  background: #0d6efd;
+  color: #ffffff;
 
   &:hover,
   &:focus {
@@ -571,7 +703,6 @@ const LaunchButton = styled.button`
     border-color: oklch(83% 0.012 245);
     background: oklch(92% 0.006 245);
     color: oklch(55% 0.014 245);
-    cursor: not-allowed;
   }
 `;
 

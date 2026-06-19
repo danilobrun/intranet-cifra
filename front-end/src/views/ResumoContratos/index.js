@@ -5,6 +5,7 @@ import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBuilding,
+  faDownload,
   faEye,
   faFileContract,
   faPen,
@@ -21,8 +22,19 @@ import {
   deleteCliente,
   updateCliente,
 } from "../../services/Clientes.service";
-import { getResumoContratos } from "../../services/ResumoContratos.service";
+import {
+  getResumoContratos,
+  getResumoContratosMacroExport,
+} from "../../services/ResumoContratos.service";
 import { useDailyRefresh } from "../../hooks/useDailyRefresh";
+import {
+  RESUMO_CONTRATO_MONTH_OPTIONS,
+  formatCurrency,
+} from "../../components/ResumoContratos/utils";
+import {
+  downloadCsv,
+  normalizeCsvFileName,
+} from "../../helpers/csvExport";
 
 const getItemId = (item) => String(item?.id || item?._id || "");
 
@@ -42,6 +54,104 @@ const getPluralLabel = (value, singular, plural) =>
 const getContratoName = (contrato) =>
   contrato?.nomeContrato || contrato?.name || "Contrato";
 
+const getCsvDate = (value) => {
+  if (!value) {
+    return "";
+  }
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return date.toLocaleDateString("pt-BR", { timeZone: "UTC" });
+};
+
+const getCsvCurrency = (value) =>
+  value === undefined || value === null ? "" : formatCurrency(value);
+
+const getCsvGap = (value) => {
+  if (value === undefined || value === null || value === "") {
+    return "";
+  }
+
+  const numberValue = Number(value);
+
+  if (!Number.isFinite(numberValue)) {
+    return "";
+  }
+
+  return `${numberValue} dia${numberValue === 1 ? "" : "s"}`;
+};
+
+const getMonthLabel = (value) =>
+  RESUMO_CONTRATO_MONTH_OPTIONS.find((month) => month.value === Number(value))
+    ?.label || "";
+
+const getCycleLabel = (row) => {
+  const startDate = getCsvDate(row?.bmInicio);
+  const endDate = getCsvDate(row?.bmFim);
+
+  if (startDate && endDate) {
+    return `${startDate} a ${endDate}`;
+  }
+
+  if (startDate) {
+    return `Inicio ${startDate}`;
+  }
+
+  if (endDate) {
+    return `Fim ${endDate}`;
+  }
+
+  return "";
+};
+
+const buildMacroCsvRows = (rows = []) => {
+  const header = [
+    "Cliente",
+    "Contrato",
+    "Orçamento",
+    "BM total do contrato",
+    "Saldo",
+    "Data início",
+    "Data fim",
+    "GAP",
+    "Ano",
+    "Mês",
+    "BM",
+    "Início do ciclo",
+    "Fim do ciclo",
+    "Ciclo do BM",
+    "Valor do BM",
+    "Data de faturamento",
+    "Status de faturamento",
+  ];
+
+  const body = rows.map((row) => [
+    row.clienteNome || "",
+    row.nomeContrato || "",
+    getCsvCurrency(row.orcamento),
+    getCsvCurrency(row.bmTotal),
+    getCsvCurrency(row.saldo),
+    getCsvDate(row.dataInicio),
+    getCsvDate(row.dataFim),
+    getCsvGap(row.gap),
+    row.ano || "",
+    getMonthLabel(row.mes),
+    row.bm || "",
+    getCsvDate(row.bmInicio),
+    getCsvDate(row.bmFim),
+    getCycleLabel(row),
+    getCsvCurrency(row.valorBm),
+    getCsvDate(row.faturadoData),
+    row.bmId ? (row.faturadoData ? "Faturado" : "Não faturado") : "",
+  ]);
+
+  return [header, ...body];
+};
+
 export function ResumoContratos() {
   const [clientes, setClientes] = useState([]);
   const [contratos, setContratos] = useState([]);
@@ -55,6 +165,7 @@ export function ResumoContratos() {
   const [deleteAction, setDeleteAction] = useState();
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [isDeletingCliente, setIsDeletingCliente] = useState(false);
+  const [exportingScope, setExportingScope] = useState("");
 
   const fetchResumoContratos = useCallback(async () => {
     try {
@@ -227,6 +338,39 @@ export function ResumoContratos() {
     }
   };
 
+  const handleExportMacro = async (cliente) => {
+    const clienteId = cliente ? getItemId(cliente) : "";
+    const scope = cliente ? `cliente-${clienteId}` : "geral";
+
+    if (exportingScope) {
+      return;
+    }
+
+    try {
+      setExportingScope(scope);
+
+      const data = await getResumoContratosMacroExport({ clienteId });
+      const rows = Array.isArray(data?.rows) ? data.rows : [];
+
+      if (!rows.length) {
+        toast.info("Nenhum dado encontrado para exportar.");
+        return;
+      }
+
+      const fileDate = new Date().toISOString().slice(0, 10);
+      const fileBase = cliente
+        ? `resumo-contratos-${normalizeCsvFileName(cliente.nome, "cliente")}`
+        : "resumo-contratos-geral";
+
+      downloadCsv(`${fileBase}-${fileDate}.csv`, buildMacroCsvRows(rows));
+      toast.success("Exportação CSV gerada com sucesso.");
+    } catch (error) {
+      toast.error(error.message || "Falha ao exportar CSV.");
+    } finally {
+      setExportingScope("");
+    }
+  };
+
   const toggleCliente = (cliente) => {
     const clienteId = getItemId(cliente);
     setSelectedClienteId((currentClienteId) =>
@@ -236,6 +380,9 @@ export function ResumoContratos() {
 
   const canDeleteCliente =
     deleteConfirmText.trim() === (deleteAction?.cliente?.nome || "");
+  const isExportingGeneral = exportingScope === "geral";
+  const isExportingSelectedCliente =
+    selectedCliente && exportingScope === `cliente-${selectedClienteId}`;
 
   return (
     <LayoutPortal>
@@ -246,6 +393,15 @@ export function ResumoContratos() {
         <ClienteCount aria-label={clienteCountLabel}>
           {clienteCountLabel}
         </ClienteCount>
+
+        <SecondaryAction
+          type="button"
+          onClick={() => handleExportMacro()}
+          disabled={loading || Boolean(exportingScope)}
+        >
+          <FontAwesomeIcon icon={faDownload} />
+          {isExportingGeneral ? "Exportando..." : "Exportar geral"}
+        </SecondaryAction>
 
         <SecondaryAction type="button" onClick={openCreateClienteModal}>
           <FontAwesomeIcon icon={faUserPlus} />
@@ -357,6 +513,15 @@ export function ResumoContratos() {
                 )}
               </SectionDescription>
             </div>
+
+            <SecondaryAction
+              type="button"
+              onClick={() => handleExportMacro(selectedCliente)}
+              disabled={Boolean(exportingScope)}
+            >
+              <FontAwesomeIcon icon={faDownload} />
+              {isExportingSelectedCliente ? "Exportando..." : "Exportar cliente"}
+            </SecondaryAction>
           </ContractsHeader>
 
           {contratosDoCliente.length ? (
@@ -544,6 +709,12 @@ const headerActionStyles = css`
 
   @media (max-width: 767.98px) {
     flex: 1 1 170px;
+  }
+
+  &:disabled {
+    opacity: 0.62;
+    cursor: not-allowed;
+    transform: none;
   }
 `;
 

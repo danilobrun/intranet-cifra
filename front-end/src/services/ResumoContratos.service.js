@@ -60,6 +60,15 @@ export const getResumoContratoById = async (contratoId, { ano } = {}) => {
   );
 };
 
+export const getResumoContratosMacroExport = async ({ clienteId, ano } = {}) => {
+  return requestJson(
+    `${apiUrl}/resumo-contratos/exportacao-macro${getQueryString({
+      clienteId,
+      ano,
+    })}`,
+  );
+};
+
 export const createResumoContrato = async (contratoData) => {
   return requestJson(`${apiUrl}/resumo-contratos`, {
     method: "POST",

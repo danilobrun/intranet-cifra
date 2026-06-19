@@ -238,6 +238,7 @@ export function ResumoContratoDetailView() {
 
           <ResumoContratoBmsTable
             bms={bms}
+            contrato={contrato}
             selectedYear={selectedYear}
             isSubmiting={isSavingBms}
             onCreateBm={handleCreateBm}
