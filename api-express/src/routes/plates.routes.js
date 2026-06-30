@@ -2,6 +2,7 @@ const { checkToken, ensureRoleCodes } = require("../middleware/checktoken");
 const {
   listPlates,
   listInactivePlatesController,
+  getPlateController,
   listPlateMovementsController,
   createPlateController,
   desactivatePlateController,
@@ -25,6 +26,8 @@ const PLATE_INACTIVE_ACCESS_ROLES = [
   "auxiliar_frota",
   "frota",
 ];
+
+const PLATE_MOVEMENT_ACCESS_ROLES = PLATE_ACCESS_ROLES;
 
 const PLATE_EDIT_ROLES = [
   "1",
@@ -63,9 +66,15 @@ const platesRoutes = (app) => {
     createPlateController,
   );
   app.get(
+    "/plates/:id",
+    checkToken,
+    ensureRoleCodes(PLATE_EDIT_ROLES),
+    getPlateController,
+  );
+  app.get(
     "/plates/:id/movements",
     checkToken,
-    ensureRoleCodes(PLATE_INACTIVE_ACCESS_ROLES),
+    ensureRoleCodes(PLATE_MOVEMENT_ACCESS_ROLES),
     listPlateMovementsController,
   );
   app.patch(

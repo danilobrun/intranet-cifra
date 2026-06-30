@@ -38,6 +38,7 @@ import { ResumoContratoDetailView } from "./views/ResumoContratoDetail";
 import { ResumoContratoEditorView } from "./views/ResumoContratoEditor";
 import { ResumoContratos } from "./views/ResumoContratos";
 import { PlatesView } from "./views/Plates";
+import { PlateCreateView } from "./views/PlateCreate";
 import { InactivePlatesView } from "./views/InactivePlates";
 
 function App() {
@@ -348,6 +349,40 @@ function App() {
             ]}
           >
             <PlatesView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/plates/novo"
+        element={
+          <PrivateRoute
+            userTypes={[
+              "1",
+              "admin",
+              "gerente_frota",
+              "auxiliar_frota",
+              "coordenador",
+              "frota",
+            ]}
+          >
+            <PlateCreateView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/plates/:id/editar"
+        element={
+          <PrivateRoute
+            userTypes={[
+              "1",
+              "admin",
+              "gerente_frota",
+              "auxiliar_frota",
+              "coordenador",
+              "frota",
+            ]}
+          >
+            <PlateCreateView />
           </PrivateRoute>
         }
       />

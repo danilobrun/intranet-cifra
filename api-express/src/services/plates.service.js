@@ -243,6 +243,22 @@ const listActivePlates = (query = {}) => listPlatesByStatus(query, "ATIVA");
 
 const listInactivePlates = (query = {}) => listPlatesByStatus(query, "INATIVA");
 
+const getActivePlateById = async (id) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    throw new PlateServiceError(422, "Placa invalida.");
+  }
+
+  const plate = await Plate.findOne({ _id: id, status: "ATIVA" })
+    .populate("responsavel", "name email")
+    .populate("deletedBy", "name email");
+
+  if (!plate) {
+    throw new PlateServiceError(404, "Placa nao encontrada.");
+  }
+
+  return mapPlateSummary(plate);
+};
+
 const updatePlate = async (id, payload = {}, user) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new PlateServiceError(422, "Placa invalida.");
@@ -461,6 +477,7 @@ module.exports = {
   PlateServiceError,
   desactivatePlate,
   createPlate,
+  getActivePlateById,
   listActivePlates,
   listInactivePlates,
   listPlateMovements,

@@ -2,6 +2,7 @@ const {
   PlateServiceError,
   createPlate,
   desactivatePlate,
+  getActivePlateById,
   listActivePlates,
   listInactivePlates,
   listPlateMovements,
@@ -40,6 +41,16 @@ const listInactivePlatesController = async (req, res) => {
     return res.status(200).json(plates);
   } catch (error) {
     return handlePlateError(res, error, "listInactivePlates");
+  }
+};
+
+const getPlateController = async (req, res) => {
+  try {
+    const plate = await getActivePlateById(req.params.id);
+
+    return res.status(200).json(plate);
+  } catch (error) {
+    return handlePlateError(res, error, "getPlate");
   }
 };
 
@@ -110,6 +121,7 @@ const listPlateMovementsController = async (req, res) => {
 module.exports = {
   listPlates,
   listInactivePlatesController,
+  getPlateController,
   listPlateMovementsController,
   createPlateController,
   desactivatePlateController,

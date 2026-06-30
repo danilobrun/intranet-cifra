@@ -14,6 +14,7 @@ import { canAccessResumoContratos } from "../../helpers/resumoContratosPermissio
 import {
   faAddressBook,
   faBookOpen,
+  faCarSide,
   faFileContract,
   faFileInvoiceDollar,
   faSackDollar,
@@ -277,6 +278,21 @@ export function Sidebar({ isOpen, isCollapsed, onClose }) {
         "3",
         "ceo",
         "dono",
+      ],
+    },
+    {
+      to: "/portal/plates",
+      label: "Gestão de Placas",
+      icon: faCarSide,
+      section: "general",
+      checkAllPath: false,
+      userTypes: [
+        "1",
+        "admin",
+        "gerente_frota",
+        "auxiliar_frota",
+        "coordenador",
+        "frota",
       ],
     },
     {

@@ -61,6 +61,10 @@ export const getInactivePlates = async (filters = {}) => {
   return requestJson(buildUrlWithQuery("/plates/inactive", filters));
 };
 
+export const getPlateById = async (plateId) => {
+  return requestJson(`${apiUrl}/plates/${plateId}`);
+};
+
 export const createPlate = async (plateData) => {
   return requestJson(`${apiUrl}/plates`, {
     method: "POST",
