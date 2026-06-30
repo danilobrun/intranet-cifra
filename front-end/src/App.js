@@ -40,6 +40,7 @@ import { ResumoContratos } from "./views/ResumoContratos";
 import { PlatesView } from "./views/Plates";
 import { PlateCreateView } from "./views/PlateCreate";
 import { InactivePlatesView } from "./views/InactivePlates";
+import { CentroCustoFuncionariosView } from "./views/CentroCustoFuncionarios";
 
 function App() {
   return (
@@ -332,6 +333,14 @@ function App() {
         element={
           <PrivateRoute>
             <TutorialDetailView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/centro-custo/funcionarios"
+        element={
+          <PrivateRoute>
+            <CentroCustoFuncionariosView />
           </PrivateRoute>
         }
       />

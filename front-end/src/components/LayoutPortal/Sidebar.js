@@ -25,6 +25,7 @@ import {
   faPenToSquare,
   faRobot,
   faShieldHalved,
+  faUsers,
   faUsersGear,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -45,6 +46,11 @@ const menuSections = [
     key: "contracts",
     label: "Contratos & BMs",
     icon: faFileContract,
+  },
+  {
+    key: "costCenter",
+    label: "Centro de Custo",
+    icon: faUsers,
   },
 ];
 
@@ -279,6 +285,14 @@ export function Sidebar({ isOpen, isCollapsed, onClose }) {
         "ceo",
         "dono",
       ],
+    },
+    {
+      to: "/portal/centro-custo/funcionarios",
+      label: "Funcionarios",
+      icon: faUsers,
+      section: "costCenter",
+      checkAllPath: false,
+      canShow: (currentUser) => Boolean(currentUser?._id),
     },
     {
       to: "/portal/plates",
