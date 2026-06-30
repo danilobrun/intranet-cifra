@@ -115,11 +115,7 @@ const useIsDesktop = () => {
   return isDesktop;
 };
 
-export function Sidebar({
-  isOpen,
-  isCollapsed,
-  onClose,
-}) {
+export function Sidebar({ isOpen, isCollapsed, onClose }) {
   const user = useSelector(selectUser);
   const location = useLocation();
   const isDesktop = useIsDesktop();
@@ -490,7 +486,8 @@ const SidebarStyled = styled.header`
 const BrandRow = styled.div`
   display: flex;
   align-items: center;
-  justify-content: ${(props) => (props.$collapsed ? "center" : "space-between")};
+  justify-content: ${(props) =>
+    props.$collapsed ? "center" : "space-between"};
   gap: 0.75rem;
   min-height: 44px;
 

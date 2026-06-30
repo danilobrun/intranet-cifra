@@ -37,6 +37,8 @@ import { canAccessResumoContratos } from "./helpers/resumoContratosPermissions";
 import { ResumoContratoDetailView } from "./views/ResumoContratoDetail";
 import { ResumoContratoEditorView } from "./views/ResumoContratoEditor";
 import { ResumoContratos } from "./views/ResumoContratos";
+import { PlatesView } from "./views/Plates";
+import { InactivePlatesView } from "./views/InactivePlates";
 
 function App() {
   return (
@@ -329,6 +331,39 @@ function App() {
         element={
           <PrivateRoute>
             <TutorialDetailView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/plates"
+        element={
+          <PrivateRoute
+            userTypes={[
+              "1",
+              "admin",
+              "gerente_frota",
+              "auxiliar_frota",
+              "coordenador",
+              "frota",
+            ]}
+          >
+            <PlatesView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/plates/inactive"
+        element={
+          <PrivateRoute
+            userTypes={[
+              "1",
+              "admin",
+              "gerente_frota",
+              "auxiliar_frota",
+              "frota",
+            ]}
+          >
+            <InactivePlatesView />
           </PrivateRoute>
         }
       />

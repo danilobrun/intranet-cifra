@@ -45,7 +45,9 @@ export function SidebarItem({
         <OverlayTrigger
           placement="right"
           delay={{ show: 250, hide: 0 }}
-          overlay={<Tooltip id={getTooltipId(targetPath)}>{item.label}</Tooltip>}
+          overlay={
+            <Tooltip id={getTooltipId(targetPath)}>{item.label}</Tooltip>
+          }
         >
           {navLink}
         </OverlayTrigger>
@@ -98,7 +100,8 @@ const SidebarNavLink = styled(Link)`
       props.$active ? "#0d6efd" : "rgba(248, 249, 250, 0.1)"};
     color: #f8f9fa;
     text-decoration: none;
-    transform: ${(props) => (props.$active ? "translateX(0)" : "translateX(2px)")};
+    transform: ${(props) =>
+      props.$active ? "translateX(0)" : "translateX(2px)"};
   }
 
   &&:focus-visible {
