@@ -11,6 +11,7 @@ const DEFAULT_LIMIT = 50;
 const MAX_LIMIT = 100;
 const MAX_CSV_FILE_SIZE_BYTES = 2 * 1024 * 1024;
 const IMPORT_ORIGIN = "Importacao CSV";
+const FUNCIONARIOS_EXPORT_FILE_NAME = "funcionarios-centro-custo.csv";
 const REQUIRED_CSV_COLUMNS = {
   nome: "Nome",
   cpf: "CPF",
@@ -42,6 +43,56 @@ const normalizeHeader = (value = "") =>
     .replace(/[\u0300-\u036f]/g, "")
     .toLowerCase()
     .replace(/[^a-z0-9]/g, "");
+
+const escapeCsvCell = (value) => {
+  const text = String(value ?? "");
+  const safeText = /^[=+\-@]/.test(text.trimStart()) ? `'${text}` : text;
+  const escapedText = safeText.replace(/"/g, '""');
+
+  return /[";\r\n]/.test(escapedText) ? `"${escapedText}"` : escapedText;
+};
+
+const buildCsvContent = (rows = []) =>
+  `\uFEFF${rows
+    .map((row) => row.map(escapeCsvCell).join(";"))
+    .join("\r\n")}`;
+
+const formatCsvDate = (value) => {
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "short",
+    timeStyle: "short",
+    timeZone: "America/Sao_Paulo",
+  }).format(date);
+};
+
+const formatCpfForExport = (value = "") => {
+  const digits = normalizeCpf(value);
+
+  if (digits.length !== 11) {
+    return value || "";
+  }
+
+  return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(
+    6,
+    9,
+  )}-${digits.slice(9)}`;
+};
+
+const formatOrigemForExport = (value = "") => {
+  if (value === IMPORT_ORIGIN) {
+    return "Importação CSV";
+  }
+
+  return value || "";
+};
 
 const ensureAuthenticatedUser = (user) => {
   if (!user?.id) {
@@ -117,6 +168,12 @@ const mapUser = (user) => {
     name: user.name,
     email: user.email,
   };
+};
+
+const getUserExportName = (user) => {
+  if (!user) return "";
+
+  return user.name || user.email || "";
 };
 
 const mapFuncionario = (funcionario) => ({
@@ -655,6 +712,46 @@ const listFuncionarios = async (query = {}) => {
   };
 };
 
+const exportFuncionariosCsv = async (query = {}) => {
+  const filters = buildFuncionarioFilters(query);
+  const funcionarios = await Funcionario.find(filters)
+    .populate(funcionarioPopulateConfig)
+    .sort({ nome: 1, createdAt: -1 });
+  const rows = [
+    [
+      "Nome",
+      "CPF",
+      "Centro de Custo",
+      "Status",
+      "Origem",
+      "Criado Por",
+      "Atualizado Por",
+      "Inativado Por",
+      "Criado Em",
+      "Atualizado Em",
+      "Inativado Em",
+    ],
+    ...funcionarios.map((funcionario) => [
+      funcionario.nome,
+      formatCpfForExport(funcionario.cpf),
+      funcionario.centroCusto,
+      funcionario.status,
+      formatOrigemForExport(funcionario.origem),
+      getUserExportName(funcionario.createdBy),
+      getUserExportName(funcionario.updatedBy),
+      getUserExportName(funcionario.inactivatedBy),
+      formatCsvDate(funcionario.createdAt),
+      formatCsvDate(funcionario.updatedAt),
+      formatCsvDate(funcionario.inactivatedAt),
+    ]),
+  ];
+
+  return {
+    fileName: FUNCIONARIOS_EXPORT_FILE_NAME,
+    content: buildCsvContent(rows),
+  };
+};
+
 const getFuncionarioById = async (id) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
     throw new FuncionarioServiceError(422, "Funcionário inválido.");
@@ -844,6 +941,7 @@ const importFuncionariosCsv = async (files = {}, user) => {
 module.exports = {
   FuncionarioServiceError,
   createFuncionario,
+  exportFuncionariosCsv,
   getFuncionarioById,
   importFuncionariosCsv,
   inactivateFuncionario,

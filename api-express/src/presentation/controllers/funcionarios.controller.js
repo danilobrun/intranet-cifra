@@ -1,6 +1,7 @@
 const {
   FuncionarioServiceError,
   createFuncionario,
+  exportFuncionariosCsv,
   getFuncionarioById,
   importFuncionariosCsv,
   inactivateFuncionario,
@@ -33,6 +34,22 @@ const listFuncionariosController = async (req, res) => {
   }
 };
 
+const exportFuncionariosCsvController = async (req, res) => {
+  try {
+    const result = await exportFuncionariosCsv(req.query);
+
+    res.set("Content-Type", "text/csv; charset=utf-8");
+    res.set(
+      "Content-Disposition",
+      `attachment; filename="${result.fileName}"`,
+    );
+
+    return res.status(200).send(result.content);
+  } catch (error) {
+    return handleFuncionarioError(res, error, "exportFuncionariosCsv");
+  }
+};
+
 const getFuncionarioController = async (req, res) => {
   try {
     const funcionario = await getFuncionarioById(req.params.id);
@@ -48,7 +65,7 @@ const createFuncionarioController = async (req, res) => {
     const funcionario = await createFuncionario(req.body, req.user);
 
     return res.status(201).json({
-      msg: "Funcionario cadastrado com sucesso.",
+      msg: "Funcionário cadastrado com sucesso.",
       funcionario,
     });
   } catch (error) {
@@ -89,7 +106,7 @@ const updateFuncionarioController = async (req, res) => {
     );
 
     return res.status(200).json({
-      msg: "Funcionario atualizado com sucesso.",
+      msg: "Funcionário atualizado com sucesso.",
       funcionario,
     });
   } catch (error) {
@@ -103,8 +120,8 @@ const inactivateFuncionarioController = async (req, res) => {
 
     return res.status(200).json({
       msg: result.changed
-        ? "Funcionario inativado com sucesso."
-        : "Funcionario ja estava inativo.",
+        ? "Funcionário inativado com sucesso."
+        : "Funcionário já estava inativo.",
       funcionario: result.funcionario,
     });
   } catch (error) {
@@ -114,6 +131,7 @@ const inactivateFuncionarioController = async (req, res) => {
 
 module.exports = {
   createFuncionarioController,
+  exportFuncionariosCsvController,
   getFuncionarioController,
   importFuncionariosCsvController,
   inactivateFuncionarioController,

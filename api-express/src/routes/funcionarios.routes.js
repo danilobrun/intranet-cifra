@@ -2,6 +2,7 @@ const formidable = require("express-formidable");
 const { checkToken } = require("../middleware/checktoken");
 const {
   createFuncionarioController,
+  exportFuncionariosCsvController,
   getFuncionarioController,
   importFuncionariosCsvController,
   inactivateFuncionarioController,
@@ -17,6 +18,7 @@ const csvUploadMiddleware = formidable({
 
 const funcionariosRoutes = (app) => {
   app.get("/funcionarios", checkToken, listFuncionariosController);
+  app.get("/funcionarios/exportar", checkToken, exportFuncionariosCsvController);
   app.post(
     "/funcionarios/importar/preview",
     checkToken,

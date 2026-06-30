@@ -2,6 +2,7 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faDownload,
   faFilter,
   faMagnifyingGlass,
   faUpload,
@@ -13,6 +14,7 @@ import { LayoutPortal } from "../../components/LayoutPortal";
 import { PortalHeader } from "../../components/PortalHeader";
 import {
   createFuncionario,
+  exportarFuncionarios,
   getFuncionarios,
   inactivateFuncionario,
   updateFuncionario,
@@ -51,6 +53,7 @@ export function CentroCustoFuncionariosView() {
   const [funcionarioToInactivate, setFuncionarioToInactivate] = useState();
   const [isInactivateSubmitting, setIsInactivateSubmitting] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   const fetchFuncionarios = useCallback(async () => {
     try {
@@ -65,7 +68,9 @@ export function CentroCustoFuncionariosView() {
         limit: PAGE_LIMIT,
       });
 
-      setFuncionarios(Array.isArray(data?.funcionarios) ? data.funcionarios : []);
+      setFuncionarios(
+        Array.isArray(data?.funcionarios) ? data.funcionarios : [],
+      );
       setPagination(data?.pagination || initialPagination);
     } catch (error) {
       setFuncionarios([]);
@@ -174,23 +179,49 @@ export function CentroCustoFuncionariosView() {
     await fetchFuncionarios();
   };
 
+  const handleExportFuncionarios = async () => {
+    try {
+      setIsExporting(true);
+
+      await exportarFuncionarios({
+        search: filters.search.trim(),
+        status: filters.status,
+        centroCusto: filters.centroCusto.trim(),
+      });
+    } catch (error) {
+      toast.error(
+        error.message ||
+          "Não foi possível exportar os funcionários. Tente novamente.",
+      );
+    } finally {
+      setIsExporting(false);
+    }
+  };
+
   return (
     <LayoutPortal>
       <PortalHeader
         title="Funcionários"
-        icon={faUsers}
         description="Cadastre e mantenha a base de funcionários usada nas movimentações de centro de custo."
         buttonText="Novo funcionário"
         onButtonClick={handleOpenCreateModal}
       >
-        <ImportHeaderAction
+        <SecondaryHeaderAction
+          type="button"
+          disabled={isExporting}
+          onClick={handleExportFuncionarios}
+        >
+          <FontAwesomeIcon icon={faDownload} />
+          {isExporting ? "Exportando..." : "Exportar CSV"}
+        </SecondaryHeaderAction>
+        <SecondaryHeaderAction
           type="button"
           disabled={loading}
           onClick={() => setShowImportModal(true)}
         >
           <FontAwesomeIcon icon={faUpload} />
           Importar CSV
-        </ImportHeaderAction>
+        </SecondaryHeaderAction>
       </PortalHeader>
 
       <FiltersPanel>
@@ -202,7 +233,7 @@ export function CentroCustoFuncionariosView() {
           <ResultCount>
             {loading
               ? "Carregando..."
-                : `${pagination.total || 0} funcionário(s)`}
+              : `${pagination.total || 0} funcionário(s)`}
           </ResultCount>
         </FiltersHeader>
 
@@ -321,7 +352,7 @@ const headerActionStyles = css`
   }
 `;
 
-const ImportHeaderAction = styled.button`
+const SecondaryHeaderAction = styled.button`
   ${headerActionStyles}
   border: 1px solid oklch(86% 0.012 245);
   background: oklch(99% 0.004 245);
