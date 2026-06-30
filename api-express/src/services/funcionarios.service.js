@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const fs = require("fs/promises");
 const Funcionario = require("../../models/Funcionario");
 const { normalizeCpf, validateCpf } = require("../helpers/cpf");
 
@@ -8,6 +9,13 @@ const EDITABLE_FIELDS = ["nome", "cpf", "centroCusto"];
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 50;
 const MAX_LIMIT = 100;
+const MAX_CSV_FILE_SIZE_BYTES = 2 * 1024 * 1024;
+const IMPORT_ORIGIN = "Importacao CSV";
+const REQUIRED_CSV_COLUMNS = {
+  nome: "Nome",
+  cpf: "CPF",
+  centroCusto: "Centro de Custo",
+};
 
 class FuncionarioServiceError extends Error {
   constructor(statusCode, msg, details = {}) {
@@ -26,6 +34,14 @@ const normalizeText = (value) => {
 
 const escapeRegex = (value = "") =>
   value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const normalizeHeader = (value = "") =>
+  String(value || "")
+    .trim()
+    .normalize("NFD")
+    .replace(/[\u0300-\u036f]/g, "")
+    .toLowerCase()
+    .replace(/[^a-z0-9]/g, "");
 
 const ensureAuthenticatedUser = (user) => {
   if (!user?.id) {
@@ -287,6 +303,322 @@ const handleDuplicateMongoError = (error) => {
   throw error;
 };
 
+const getCsvFilePath = (file) => file?.filepath || file?.path;
+
+const getUploadedFile = (files = {}) => {
+  const preferredFile = files.file || files.csv || files.arquivo;
+  const file = Array.isArray(preferredFile) ? preferredFile[0] : preferredFile;
+
+  if (file) {
+    return file;
+  }
+
+  const firstFile = Object.values(files)[0];
+  return Array.isArray(firstFile) ? firstFile[0] : firstFile;
+};
+
+const removeUploadedFile = async (file) => {
+  const filePath = getCsvFilePath(file);
+
+  if (!filePath) {
+    return;
+  }
+
+  try {
+    await fs.unlink(filePath);
+  } catch {
+    // O arquivo temporario pode ja ter sido removido pelo ambiente.
+  }
+};
+
+const readUploadedCsv = async (files = {}) => {
+  const file = getUploadedFile(files);
+  const filePath = getCsvFilePath(file);
+
+  if (!file || !filePath) {
+    throw new FuncionarioServiceError(
+      422,
+      "Envie um arquivo CSV no campo file.",
+    );
+  }
+
+  if (file.size > MAX_CSV_FILE_SIZE_BYTES) {
+    await removeUploadedFile(file);
+    throw new FuncionarioServiceError(
+      413,
+      "Arquivo CSV excede o limite de 2MB.",
+    );
+  }
+
+  try {
+    const csvText = await fs.readFile(filePath, "utf8");
+
+    if (!normalizeText(csvText)) {
+      throw new FuncionarioServiceError(422, "Arquivo CSV vazio.");
+    }
+
+    return csvText;
+  } finally {
+    await removeUploadedFile(file);
+  }
+};
+
+const countDelimiterOutsideQuotes = (line = "", delimiter) => {
+  let count = 0;
+  let insideQuotes = false;
+
+  for (let index = 0; index < line.length; index += 1) {
+    const char = line[index];
+    const nextChar = line[index + 1];
+
+    if (char === '"') {
+      if (insideQuotes && nextChar === '"') {
+        index += 1;
+      } else {
+        insideQuotes = !insideQuotes;
+      }
+      continue;
+    }
+
+    if (!insideQuotes && char === delimiter) {
+      count += 1;
+    }
+  }
+
+  return count;
+};
+
+const detectCsvDelimiter = (csvText = "") => {
+  const firstLine =
+    String(csvText).replace(/^\uFEFF/, "").split(/\r?\n/)[0] || "";
+  const semicolonCount = countDelimiterOutsideQuotes(firstLine, ";");
+  const commaCount = countDelimiterOutsideQuotes(firstLine, ",");
+
+  return semicolonCount >= commaCount ? ";" : ",";
+};
+
+const parseCsvRows = (csvText = "", delimiter = ";") => {
+  const text = String(csvText).replace(/^\uFEFF/, "");
+  const rows = [];
+  let row = [];
+  let field = "";
+  let insideQuotes = false;
+
+  for (let index = 0; index < text.length; index += 1) {
+    const char = text[index];
+    const nextChar = text[index + 1];
+
+    if (char === '"') {
+      if (insideQuotes && nextChar === '"') {
+        field += '"';
+        index += 1;
+      } else {
+        insideQuotes = !insideQuotes;
+      }
+      continue;
+    }
+
+    if (!insideQuotes && char === delimiter) {
+      row.push(field);
+      field = "";
+      continue;
+    }
+
+    if (!insideQuotes && char === "\n") {
+      row.push(field);
+      rows.push(row);
+      row = [];
+      field = "";
+      continue;
+    }
+
+    if (!insideQuotes && char === "\r") {
+      continue;
+    }
+
+    field += char;
+  }
+
+  row.push(field);
+  rows.push(row);
+
+  return rows;
+};
+
+const rowIsBlank = (row = []) =>
+  row.every((cell) => !normalizeText(cell));
+
+const getHeaderConfig = (rows = []) => {
+  const headerIndex = rows.findIndex((row) => !rowIsBlank(row));
+
+  if (headerIndex === -1) {
+    throw new FuncionarioServiceError(422, "Arquivo CSV sem cabecalho.");
+  }
+
+  const headerRow = rows[headerIndex];
+  const columnMap = {};
+
+  headerRow.forEach((header, index) => {
+    const normalizedHeader = normalizeHeader(header);
+
+    if (normalizedHeader === "nome") {
+      columnMap.nome = index;
+    }
+
+    if (normalizedHeader === "cpf") {
+      columnMap.cpf = index;
+    }
+
+    if (
+      normalizedHeader === "centrodecusto" ||
+      normalizedHeader === "centrocusto"
+    ) {
+      columnMap.centroCusto = index;
+    }
+  });
+
+  const missingColumns = Object.entries(REQUIRED_CSV_COLUMNS)
+    .filter(([key]) => columnMap[key] === undefined)
+    .map(([, label]) => label);
+
+  if (missingColumns.length) {
+    throw new FuncionarioServiceError(
+      422,
+      "CSV sem colunas obrigatorias.",
+      { missingColumns },
+    );
+  }
+
+  return {
+    headerIndex,
+    columnMap,
+  };
+};
+
+const getCsvCell = (row, index) => normalizeText(row[index]);
+
+const getRowsWithDuplicateCpf = (rows = []) => {
+  const rowsByCpf = rows.reduce((accumulator, row) => {
+    if (!row.cpf) {
+      return accumulator;
+    }
+
+    return {
+      ...accumulator,
+      [row.cpf]: [...(accumulator[row.cpf] || []), row.row],
+    };
+  }, {});
+
+  return new Set(
+    Object.values(rowsByCpf)
+      .filter((rowNumbers) => rowNumbers.length > 1)
+      .flat(),
+  );
+};
+
+const getCsvDataRows = (rows, headerIndex, columnMap) =>
+  rows
+    .map((row, index) => ({
+      rowNumber: index + 1,
+      row,
+    }))
+    .slice(headerIndex + 1)
+    .filter(({ row }) => !rowIsBlank(row))
+    .map(({ rowNumber, row }) => {
+      const nome = getCsvCell(row, columnMap.nome);
+      const rawCpf = getCsvCell(row, columnMap.cpf);
+      const centroCusto = getCsvCell(row, columnMap.centroCusto);
+      const errors = [];
+      let cpf = "";
+
+      if (!nome) {
+        errors.push("Nome obrigatorio");
+      }
+
+      if (!rawCpf) {
+        errors.push("CPF obrigatorio");
+      } else {
+        const cpfResult = validateCpf(rawCpf);
+
+        if (!cpfResult.ok) {
+          errors.push("CPF invalido");
+        } else {
+          cpf = cpfResult.cpf;
+        }
+      }
+
+      if (!centroCusto) {
+        errors.push("Centro de custo obrigatorio");
+      }
+
+      return {
+        row: rowNumber,
+        nome,
+        cpf,
+        centroCusto,
+        errors,
+      };
+    });
+
+const buildCsvImportPreview = async (csvText) => {
+  const delimiter = detectCsvDelimiter(csvText);
+  const rows = parseCsvRows(csvText, delimiter);
+  const { headerIndex, columnMap } = getHeaderConfig(rows);
+  const csvRows = getCsvDataRows(rows, headerIndex, columnMap);
+  const duplicateRows = getRowsWithDuplicateCpf(csvRows);
+
+  const rowsWithDuplicates = csvRows.map((row) => ({
+    ...row,
+    errors: duplicateRows.has(row.row)
+      ? [...row.errors, "CPF duplicado no arquivo"]
+      : row.errors,
+  }));
+  const validCpfs = [
+    ...new Set(
+      rowsWithDuplicates
+        .filter((row) => row.errors.length === 0)
+        .map((row) => row.cpf),
+    ),
+  ];
+  const existingFuncionarios = validCpfs.length
+    ? await Funcionario.find({ cpf: { $in: validCpfs } }).select("_id cpf")
+    : [];
+  const existingCpfs = new Set(
+    existingFuncionarios.map((funcionario) => funcionario.cpf),
+  );
+  const preview = rowsWithDuplicates.map((row) => {
+    const action = row.errors.length
+      ? "error"
+      : existingCpfs.has(row.cpf)
+        ? "update"
+        : "create";
+
+    return {
+      ...row,
+      action,
+    };
+  });
+  const errors = preview
+    .filter((row) => row.errors.length)
+    .map(({ row, errors: rowErrors }) => ({
+      row,
+      errors: rowErrors,
+    }));
+
+  return {
+    summary: {
+      totalRows: preview.length,
+      validRows: preview.filter((row) => row.errors.length === 0).length,
+      createCount: preview.filter((row) => row.action === "create").length,
+      updateCount: preview.filter((row) => row.action === "update").length,
+      errorCount: errors.length,
+      duplicateCount: duplicateRows.size,
+    },
+    preview,
+    errors,
+  };
+};
+
 const listFuncionarios = async (query = {}) => {
   const filters = buildFuncionarioFilters(query);
   const { page, limit } = getPagination(query);
@@ -429,11 +761,82 @@ const inactivateFuncionario = async (id, user) => {
   };
 };
 
+const previewFuncionariosCsvImport = async (files = {}) => {
+  const csvText = await readUploadedCsv(files);
+
+  return buildCsvImportPreview(csvText);
+};
+
+const importFuncionariosCsv = async (files = {}, user) => {
+  ensureAuthenticatedUser(user);
+
+  const csvText = await readUploadedCsv(files);
+  const previewResult = await buildCsvImportPreview(csvText);
+
+  if (previewResult.summary.errorCount > 0) {
+    throw new FuncionarioServiceError(
+      422,
+      "CSV possui erros e nao foi importado.",
+      previewResult,
+    );
+  }
+
+  const validRows = previewResult.preview.filter(
+    (row) => row.errors.length === 0,
+  );
+  const cpfs = validRows.map((row) => row.cpf);
+  const existingFuncionarios = cpfs.length
+    ? await Funcionario.find({ cpf: { $in: cpfs } })
+    : [];
+  const funcionariosByCpf = new Map(
+    existingFuncionarios.map((funcionario) => [funcionario.cpf, funcionario]),
+  );
+  let createdCount = 0;
+  let updatedCount = 0;
+
+  for (const row of validRows) {
+    const existingFuncionario = funcionariosByCpf.get(row.cpf);
+
+    if (existingFuncionario) {
+      existingFuncionario.nome = row.nome;
+      existingFuncionario.centroCusto = row.centroCusto;
+      existingFuncionario.origem = IMPORT_ORIGIN;
+      existingFuncionario.updatedBy = user.id;
+
+      await existingFuncionario.save();
+      updatedCount += 1;
+      continue;
+    }
+
+    await Funcionario.create({
+      nome: row.nome,
+      cpf: row.cpf,
+      centroCusto: row.centroCusto,
+      status: "Ativo",
+      origem: IMPORT_ORIGIN,
+      createdBy: user.id,
+    });
+    createdCount += 1;
+  }
+
+  return {
+    message: "Importacao concluida com sucesso.",
+    summary: {
+      totalRows: previewResult.summary.totalRows,
+      createdCount,
+      updatedCount,
+      errorCount: 0,
+    },
+  };
+};
+
 module.exports = {
   FuncionarioServiceError,
   createFuncionario,
   getFuncionarioById,
+  importFuncionariosCsv,
   inactivateFuncionario,
   listFuncionarios,
+  previewFuncionariosCsvImport,
   updateFuncionario,
 };

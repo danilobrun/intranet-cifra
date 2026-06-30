@@ -2,8 +2,10 @@ const {
   FuncionarioServiceError,
   createFuncionario,
   getFuncionarioById,
+  importFuncionariosCsv,
   inactivateFuncionario,
   listFuncionarios,
+  previewFuncionariosCsvImport,
   updateFuncionario,
 } = require("../../services/funcionarios.service");
 
@@ -54,6 +56,30 @@ const createFuncionarioController = async (req, res) => {
   }
 };
 
+const previewFuncionariosCsvImportController = async (req, res) => {
+  try {
+    const result = await previewFuncionariosCsvImport(req.files);
+
+    return res.status(200).json(result);
+  } catch (error) {
+    return handleFuncionarioError(
+      res,
+      error,
+      "previewFuncionariosCsvImport",
+    );
+  }
+};
+
+const importFuncionariosCsvController = async (req, res) => {
+  try {
+    const result = await importFuncionariosCsv(req.files, req.user);
+
+    return res.status(200).json(result);
+  } catch (error) {
+    return handleFuncionarioError(res, error, "importFuncionariosCsv");
+  }
+};
+
 const updateFuncionarioController = async (req, res) => {
   try {
     const funcionario = await updateFuncionario(
@@ -89,7 +115,9 @@ const inactivateFuncionarioController = async (req, res) => {
 module.exports = {
   createFuncionarioController,
   getFuncionarioController,
+  importFuncionariosCsvController,
   inactivateFuncionarioController,
   listFuncionariosController,
+  previewFuncionariosCsvImportController,
   updateFuncionarioController,
 };
