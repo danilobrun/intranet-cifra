@@ -4,9 +4,10 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faFilter,
   faMagnifyingGlass,
+  faUpload,
   faUsers,
 } from "@fortawesome/free-solid-svg-icons";
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 import { toast } from "react-toastify";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import { PortalHeader } from "../../components/PortalHeader";
@@ -18,6 +19,7 @@ import {
 } from "../../services/Funcionarios.service";
 import { FuncionarioFormModal } from "./FuncionarioFormModal";
 import { FuncionariosTable } from "./FuncionariosTable";
+import { ImportFuncionariosModal } from "./ImportFuncionariosModal";
 import { InactivateFuncionarioModal } from "./InactivateFuncionarioModal";
 import { PaginationControls } from "./PaginationControls";
 
@@ -48,6 +50,7 @@ export function CentroCustoFuncionariosView() {
   const [isFormSubmitting, setIsFormSubmitting] = useState(false);
   const [funcionarioToInactivate, setFuncionarioToInactivate] = useState();
   const [isInactivateSubmitting, setIsInactivateSubmitting] = useState(false);
+  const [showImportModal, setShowImportModal] = useState(false);
 
   const fetchFuncionarios = useCallback(async () => {
     try {
@@ -67,7 +70,7 @@ export function CentroCustoFuncionariosView() {
     } catch (error) {
       setFuncionarios([]);
       setPagination(initialPagination);
-      setErrorMsg(error.message || "Falha ao buscar funcionarios.");
+      setErrorMsg(error.message || "Falha ao buscar funcionários.");
     } finally {
       setLoading(false);
     }
@@ -114,10 +117,10 @@ export function CentroCustoFuncionariosView() {
 
       if (modalMode === "edit" && selectedFuncionario?._id) {
         await updateFuncionario(selectedFuncionario._id, payload);
-        toast.success("Funcionario atualizado com sucesso.");
+        toast.success("Funcionário atualizado com sucesso.");
       } else {
         await createFuncionario(payload);
-        toast.success("Funcionario cadastrado com sucesso.");
+        toast.success("Funcionário cadastrado com sucesso.");
       }
 
       setModalMode(undefined);
@@ -126,7 +129,7 @@ export function CentroCustoFuncionariosView() {
     } catch (error) {
       toast.error(
         error.message ||
-          "Falha ao salvar funcionario. Verifique os dados e tente novamente.",
+          "Falha ao salvar funcionário. Verifique os dados e tente novamente.",
       );
     } finally {
       setIsFormSubmitting(false);
@@ -157,25 +160,38 @@ export function CentroCustoFuncionariosView() {
     try {
       setIsInactivateSubmitting(true);
       await inactivateFuncionario(funcionarioToInactivate._id);
-      toast.success("Funcionario inativado com sucesso.");
+      toast.success("Funcionário inativado com sucesso.");
       setFuncionarioToInactivate(undefined);
       await fetchFuncionarios();
     } catch (error) {
-      toast.error(error.message || "Falha ao inativar funcionario.");
+      toast.error(error.message || "Falha ao inativar funcionário.");
     } finally {
       setIsInactivateSubmitting(false);
     }
   };
 
+  const handleImportedFuncionarios = async () => {
+    await fetchFuncionarios();
+  };
+
   return (
     <LayoutPortal>
       <PortalHeader
-        title="Funcionarios"
+        title="Funcionários"
         icon={faUsers}
-        description="Cadastre e mantenha a base de funcionarios usada nas movimentacoes de centro de custo."
-        buttonText="Novo funcionario"
+        description="Cadastre e mantenha a base de funcionários usada nas movimentações de centro de custo."
+        buttonText="Novo funcionário"
         onButtonClick={handleOpenCreateModal}
-      />
+      >
+        <ImportHeaderAction
+          type="button"
+          disabled={loading}
+          onClick={() => setShowImportModal(true)}
+        >
+          <FontAwesomeIcon icon={faUpload} />
+          Importar CSV
+        </ImportHeaderAction>
+      </PortalHeader>
 
       <FiltersPanel>
         <FiltersHeader>
@@ -186,7 +202,7 @@ export function CentroCustoFuncionariosView() {
           <ResultCount>
             {loading
               ? "Carregando..."
-              : `${pagination.total || 0} funcionario(s)`}
+                : `${pagination.total || 0} funcionário(s)`}
           </ResultCount>
         </FiltersHeader>
 
@@ -200,7 +216,7 @@ export function CentroCustoFuncionariosView() {
                 name="search"
                 type="text"
                 placeholder="Buscar por nome ou CPF"
-                aria-label="Buscar funcionario por nome ou CPF"
+                aria-label="Buscar funcionário por nome ou CPF"
                 value={filters.search}
                 onChange={handleFilterChange}
               />
@@ -213,7 +229,7 @@ export function CentroCustoFuncionariosView() {
               id="funcionario-status"
               name="status"
               value={filters.status}
-              aria-label="Filtrar funcionarios por status"
+              aria-label="Filtrar funcionários por status"
               onChange={handleFilterChange}
             >
               <option value="">Todos</option>
@@ -231,7 +247,7 @@ export function CentroCustoFuncionariosView() {
               name="centroCusto"
               type="text"
               placeholder="Todos"
-              aria-label="Filtrar funcionarios por centro de custo"
+              aria-label="Filtrar funcionários por centro de custo"
               value={filters.centroCusto}
               onChange={handleFilterChange}
             />
@@ -270,9 +286,62 @@ export function CentroCustoFuncionariosView() {
         onHide={handleCloseInactivateModal}
         onConfirm={handleConfirmInactivate}
       />
+
+      <ImportFuncionariosModal
+        show={showImportModal}
+        onHide={() => setShowImportModal(false)}
+        onImported={handleImportedFuncionarios}
+      />
     </LayoutPortal>
   );
 }
+
+const headerActionStyles = css`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 16px;
+  border-radius: 10px;
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  text-decoration: none;
+  white-space: nowrap;
+  transition:
+    background-color 160ms ease,
+    border-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease,
+    transform 160ms ease;
+
+  @media (max-width: 767.98px) {
+    flex: 1 1 170px;
+  }
+`;
+
+const ImportHeaderAction = styled.button`
+  ${headerActionStyles}
+  border: 1px solid oklch(86% 0.012 245);
+  background: oklch(99% 0.004 245);
+  color: oklch(31% 0.018 245);
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    border-color: oklch(78% 0.018 245);
+    background: oklch(96% 0.006 245);
+    color: oklch(22% 0.018 245);
+    text-decoration: none;
+    transform: translateY(-1px);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    opacity: 0.56;
+    transform: none;
+  }
+`;
 
 const FiltersPanel = styled.section`
   display: grid;

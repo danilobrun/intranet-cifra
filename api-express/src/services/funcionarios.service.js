@@ -47,7 +47,7 @@ const ensureAuthenticatedUser = (user) => {
   if (!user?.id) {
     throw new FuncionarioServiceError(
       401,
-      "Usuario autenticado nao identificado.",
+      "Usuário autenticado não identificado.",
     );
   }
 };
@@ -150,7 +150,7 @@ const buildFuncionarioFilters = (query = {}) => {
     const status = normalizeStatus(statusText);
 
     if (!status) {
-      throw new FuncionarioServiceError(422, "Status de funcionario invalido.");
+      throw new FuncionarioServiceError(422, "Status de funcionário inválido.");
     }
 
     filters.status = status;
@@ -187,7 +187,7 @@ const ensureCpfIsAvailable = async (cpf, ignoredFuncionarioId = null) => {
   const existingFuncionario = await Funcionario.findOne(filters);
 
   if (existingFuncionario) {
-    throw new FuncionarioServiceError(409, "Ja existe funcionario com este CPF.", {
+    throw new FuncionarioServiceError(409, "Já existe funcionário com este CPF.", {
       funcionario: {
         _id: existingFuncionario._id,
         nome: existingFuncionario.nome,
@@ -205,18 +205,18 @@ const getCreatePayload = (payload = {}) => {
   const centroCusto = normalizeText(payload.centroCusto);
 
   if (!nome) {
-    throw new FuncionarioServiceError(422, "O nome e obrigatorio.");
+    throw new FuncionarioServiceError(422, "O nome é obrigatório.");
   }
 
   if (!centroCusto) {
-    throw new FuncionarioServiceError(422, "O centro de custo e obrigatorio.");
+    throw new FuncionarioServiceError(422, "O centro de custo é obrigatório.");
   }
 
   if (payload.status !== undefined && payload.status !== null && payload.status !== "") {
     const status = normalizeStatus(payload.status);
 
     if (!status) {
-      throw new FuncionarioServiceError(422, "Status de funcionario invalido.");
+      throw new FuncionarioServiceError(422, "Status de funcionário inválido.");
     }
   }
 
@@ -224,7 +224,7 @@ const getCreatePayload = (payload = {}) => {
     const origem = normalizeOrigem(payload.origem);
 
     if (!origem) {
-      throw new FuncionarioServiceError(422, "Origem de funcionario invalida.");
+      throw new FuncionarioServiceError(422, "Origem de funcionário inválida.");
     }
   }
 
@@ -266,7 +266,7 @@ const getUpdatePayload = (payload = {}) => {
     const nome = normalizeText(payload.nome);
 
     if (!nome) {
-      throw new FuncionarioServiceError(422, "O nome e obrigatorio.");
+      throw new FuncionarioServiceError(422, "O nome é obrigatório.");
     }
 
     updatePayload.nome = nome;
@@ -282,7 +282,7 @@ const getUpdatePayload = (payload = {}) => {
     if (!centroCusto) {
       throw new FuncionarioServiceError(
         422,
-        "O centro de custo e obrigatorio.",
+        "O centro de custo é obrigatório.",
       );
     }
 
@@ -296,7 +296,7 @@ const handleDuplicateMongoError = (error) => {
   if (error?.code === 11000 && error?.keyPattern?.cpf) {
     throw new FuncionarioServiceError(
       409,
-      "Ja existe funcionario com este CPF.",
+      "Já existe funcionário com este CPF.",
     );
   }
 
@@ -331,6 +331,16 @@ const removeUploadedFile = async (file) => {
   }
 };
 
+const decodeCsvBuffer = (buffer) => {
+  const utf8Text = buffer.toString("utf8");
+
+  if (!utf8Text.includes("\uFFFD")) {
+    return utf8Text;
+  }
+
+  return buffer.toString("latin1");
+};
+
 const readUploadedCsv = async (files = {}) => {
   const file = getUploadedFile(files);
   const filePath = getCsvFilePath(file);
@@ -351,7 +361,8 @@ const readUploadedCsv = async (files = {}) => {
   }
 
   try {
-    const csvText = await fs.readFile(filePath, "utf8");
+    const csvBuffer = await fs.readFile(filePath);
+    const csvText = decodeCsvBuffer(csvBuffer);
 
     if (!normalizeText(csvText)) {
       throw new FuncionarioServiceError(422, "Arquivo CSV vazio.");
@@ -452,7 +463,7 @@ const getHeaderConfig = (rows = []) => {
   const headerIndex = rows.findIndex((row) => !rowIsBlank(row));
 
   if (headerIndex === -1) {
-    throw new FuncionarioServiceError(422, "Arquivo CSV sem cabecalho.");
+    throw new FuncionarioServiceError(422, "Arquivo CSV sem cabeçalho.");
   }
 
   const headerRow = rows[headerIndex];
@@ -484,7 +495,7 @@ const getHeaderConfig = (rows = []) => {
   if (missingColumns.length) {
     throw new FuncionarioServiceError(
       422,
-      "CSV sem colunas obrigatorias.",
+      "CSV sem colunas obrigatórias.",
       { missingColumns },
     );
   }
@@ -532,23 +543,23 @@ const getCsvDataRows = (rows, headerIndex, columnMap) =>
       let cpf = "";
 
       if (!nome) {
-        errors.push("Nome obrigatorio");
+        errors.push("Nome obrigatório");
       }
 
       if (!rawCpf) {
-        errors.push("CPF obrigatorio");
+        errors.push("CPF obrigatório");
       } else {
         const cpfResult = validateCpf(rawCpf);
 
         if (!cpfResult.ok) {
-          errors.push("CPF invalido");
+          errors.push("CPF inválido");
         } else {
           cpf = cpfResult.cpf;
         }
       }
 
       if (!centroCusto) {
-        errors.push("Centro de custo obrigatorio");
+        errors.push("Centro de custo obrigatório");
       }
 
       return {
@@ -646,7 +657,7 @@ const listFuncionarios = async (query = {}) => {
 
 const getFuncionarioById = async (id) => {
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new FuncionarioServiceError(422, "Funcionario invalido.");
+    throw new FuncionarioServiceError(422, "Funcionário inválido.");
   }
 
   const funcionario = await Funcionario.findById(id).populate(
@@ -654,7 +665,7 @@ const getFuncionarioById = async (id) => {
   );
 
   if (!funcionario) {
-    throw new FuncionarioServiceError(404, "Funcionario nao encontrado.");
+    throw new FuncionarioServiceError(404, "Funcionário não encontrado.");
   }
 
   return mapFuncionario(funcionario);
@@ -688,14 +699,14 @@ const updateFuncionario = async (id, payload = {}, user) => {
   ensureAuthenticatedUser(user);
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new FuncionarioServiceError(422, "Funcionario invalido.");
+    throw new FuncionarioServiceError(422, "Funcionário inválido.");
   }
 
   const updatePayload = getUpdatePayload(payload);
   const funcionario = await Funcionario.findById(id);
 
   if (!funcionario) {
-    throw new FuncionarioServiceError(404, "Funcionario nao encontrado.");
+    throw new FuncionarioServiceError(404, "Funcionário não encontrado.");
   }
 
   if (updatePayload.cpf) {
@@ -724,13 +735,13 @@ const inactivateFuncionario = async (id, user) => {
   ensureAuthenticatedUser(user);
 
   if (!mongoose.Types.ObjectId.isValid(id)) {
-    throw new FuncionarioServiceError(422, "Funcionario invalido.");
+    throw new FuncionarioServiceError(422, "Funcionário inválido.");
   }
 
   const funcionario = await Funcionario.findById(id);
 
   if (!funcionario) {
-    throw new FuncionarioServiceError(404, "Funcionario nao encontrado.");
+    throw new FuncionarioServiceError(404, "Funcionário não encontrado.");
   }
 
   if (funcionario.status === "Inativo") {
@@ -776,7 +787,7 @@ const importFuncionariosCsv = async (files = {}, user) => {
   if (previewResult.summary.errorCount > 0) {
     throw new FuncionarioServiceError(
       422,
-      "CSV possui erros e nao foi importado.",
+      "CSV possui erros e não foi importado.",
       previewResult,
     );
   }
@@ -820,7 +831,7 @@ const importFuncionariosCsv = async (files = {}, user) => {
   }
 
   return {
-    message: "Importacao concluida com sucesso.",
+    message: "Importação concluída com sucesso.",
     summary: {
       totalRows: previewResult.summary.totalRows,
       createdCount,

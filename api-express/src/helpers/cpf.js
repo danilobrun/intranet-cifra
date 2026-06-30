@@ -6,14 +6,14 @@ const validateCpf = (cpf) => {
   if (!normalizedCpf) {
     return {
       ok: false,
-      msg: "O CPF e obrigatorio.",
+      msg: "O CPF é obrigatório.",
     };
   }
 
   if (!/^\d{11}$/.test(normalizedCpf)) {
     return {
       ok: false,
-      msg: "Informe um CPF valido com 11 digitos.",
+      msg: "Informe um CPF válido com 11 dígitos.",
     };
   }
 

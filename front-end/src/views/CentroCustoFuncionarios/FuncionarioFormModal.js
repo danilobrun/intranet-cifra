@@ -78,7 +78,7 @@ export function FuncionarioFormModal({
     const cpf = getCpfDigits(formData.cpf);
 
     if (cpf.length !== 11) {
-      setCpfError("Informe um CPF valido com 11 digitos.");
+      setCpfError("Informe um CPF válido com 11 dígitos.");
       return;
     }
 
@@ -93,7 +93,7 @@ export function FuncionarioFormModal({
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton={!isSubmitting}>
         <Modal.Title>
-          {isEditMode ? "Editar funcionario" : "Novo funcionario"}
+          {isEditMode ? "Editar funcionário" : "Novo funcionário"}
         </Modal.Title>
       </Modal.Header>
 
@@ -157,8 +157,8 @@ export function FuncionarioFormModal({
             {isSubmitting
               ? "Salvando..."
               : isEditMode
-                ? "Salvar alteracoes"
-                : "Cadastrar funcionario"}
+                ? "Salvar alterações"
+                : "Cadastrar funcionário"}
           </Button>
         </Modal.Footer>
       </Form>

@@ -86,3 +86,25 @@ export const inactivateFuncionario = async (funcionarioId) => {
     method: "PATCH",
   });
 };
+
+const buildImportFormData = (file) => {
+  const formData = new FormData();
+
+  formData.append("file", file);
+
+  return formData;
+};
+
+export const previewImportacaoFuncionarios = async (file) => {
+  return requestJson(`${apiUrl}/funcionarios/importar/preview`, {
+    method: "POST",
+    body: buildImportFormData(file),
+  });
+};
+
+export const importarFuncionarios = async (file) => {
+  return requestJson(`${apiUrl}/funcionarios/importar`, {
+    method: "POST",
+    body: buildImportFormData(file),
+  });
+};

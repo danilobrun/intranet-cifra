@@ -38,6 +38,14 @@ const formatDate = (value) => {
   }).format(date);
 };
 
+const formatOrigem = (value = "") => {
+  if (value === "Importacao CSV") {
+    return "Importação CSV";
+  }
+
+  return value || "-";
+};
+
 export function FuncionariosTable({
   funcionarios = [],
   isLoading = false,
@@ -68,7 +76,7 @@ export function FuncionariosTable({
               <th>
                 <ColumnTitle>
                   <HeaderIcon icon={faGear} />
-                  Acoes
+                  Ações
                 </ColumnTitle>
               </th>
             </tr>
@@ -92,7 +100,7 @@ export function FuncionariosTable({
                         {funcionario.status || "-"}
                       </StatusBadge>
                     </td>
-                    <td>{funcionario.origem || "-"}</td>
+                    <td>{formatOrigem(funcionario.origem)}</td>
                     <td>{formatDate(funcionario.updatedAt)}</td>
                     <td>
                       <TableActionCell>
@@ -108,7 +116,7 @@ export function FuncionariosTable({
                           type="button"
                           title={
                             isInactive
-                              ? "Funcionario ja esta inativo"
+                              ? "Funcionário já está inativo"
                               : "Inativar"
                           }
                           aria-label={`Inativar ${funcionario.nome}`}
@@ -126,7 +134,7 @@ export function FuncionariosTable({
             ) : (
               <tr>
                 <EmptyCell colSpan={COLUMNS_COUNT}>
-                  Nenhum funcionario encontrado.
+                  Nenhum funcionário encontrado.
                 </EmptyCell>
               </tr>
             )}
@@ -181,7 +189,8 @@ const FuncionariosTableStyled = styled(Table)`
     color: oklch(28% 0.016 245);
     font-size: 0.9rem;
     vertical-align: middle;
-    overflow-wrap: anywhere;
+    overflow-wrap: break-word;
+    word-break: normal;
   }
 
   tbody tr:hover td {

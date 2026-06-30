@@ -15,8 +15,8 @@ export function PaginationControls({ pagination, isLoading, onPageChange }) {
     <PaginationBar>
       <PaginationInfo>
         {total
-          ? `Mostrando ${firstItem} a ${lastItem} de ${total} funcionario(s)`
-          : "Nenhum funcionario para paginar"}
+          ? `Mostrando ${firstItem} a ${lastItem} de ${total} funcionário(s)`
+          : "Nenhum funcionário para paginar"}
       </PaginationInfo>
 
       <PaginationActions>
@@ -29,7 +29,7 @@ export function PaginationControls({ pagination, isLoading, onPageChange }) {
           Anterior
         </PaginationButton>
         <PageIndicator>
-          Pagina {totalPages ? page : 0} de {totalPages}
+          Página {totalPages ? page : 0} de {totalPages}
         </PageIndicator>
         <PaginationButton
           type="button"
@@ -37,7 +37,7 @@ export function PaginationControls({ pagination, isLoading, onPageChange }) {
           disabled={isLoading || !hasNextPage}
           onClick={() => onPageChange(page + 1)}
         >
-          Proxima
+          Próxima
         </PaginationButton>
       </PaginationActions>
     </PaginationBar>

@@ -10,11 +10,11 @@ export function InactivateFuncionarioModal({
   return (
     <Modal show={show} onHide={onHide} centered>
       <Modal.Header closeButton={!isSubmitting}>
-        <Modal.Title>Inativar funcionario</Modal.Title>
+        <Modal.Title>Inativar funcionário</Modal.Title>
       </Modal.Header>
       <Modal.Body>
-        Ao confirmar, <strong>{funcionario?.nome}</strong> nao sera excluido do
-        sistema, apenas inativado e deixara de aparecer na listagem de ativos.
+        Ao confirmar, <strong>{funcionario?.nome}</strong> não será excluído do
+        sistema, apenas inativado e deixará de aparecer na listagem de ativos.
         Deseja continuar?
       </Modal.Body>
       <Modal.Footer>
@@ -22,7 +22,7 @@ export function InactivateFuncionarioModal({
           Cancelar
         </Button>
         <Button variant="danger" onClick={onConfirm} disabled={isSubmitting}>
-          {isSubmitting ? "Inativando..." : "Inativar funcionario"}
+          {isSubmitting ? "Inativando..." : "Inativar funcionário"}
         </Button>
       </Modal.Footer>
     </Modal>
