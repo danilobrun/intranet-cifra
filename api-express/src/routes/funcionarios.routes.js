@@ -6,6 +6,7 @@ const {
   getFuncionarioController,
   importFuncionariosCsvController,
   inactivateFuncionarioController,
+  listCentrosCustoFuncionariosController,
   listFuncionariosController,
   previewFuncionariosCsvImportController,
   updateFuncionarioController,
@@ -19,6 +20,11 @@ const csvUploadMiddleware = formidable({
 const funcionariosRoutes = (app) => {
   app.get("/funcionarios", checkToken, listFuncionariosController);
   app.get("/funcionarios/exportar", checkToken, exportFuncionariosCsvController);
+  app.get(
+    "/funcionarios/centros-custo",
+    checkToken,
+    listCentrosCustoFuncionariosController,
+  );
   app.post(
     "/funcionarios/importar/preview",
     checkToken,

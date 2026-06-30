@@ -214,7 +214,10 @@ const buildFuncionarioFilters = (query = {}) => {
   }
 
   if (centroCusto) {
-    filters.centroCusto = new RegExp(escapeRegex(centroCusto), "i");
+    filters.centroCusto = new RegExp(
+      `^\\s*${escapeRegex(centroCusto)}\\s*$`,
+      "i",
+    );
   }
 
   if (search) {
@@ -712,6 +715,34 @@ const listFuncionarios = async (query = {}) => {
   };
 };
 
+const listCentrosCustoFuncionarios = async () => {
+  const centrosCusto = await Funcionario.distinct("centroCusto");
+  const uniqueCentrosCusto = new Map();
+
+  centrosCusto.forEach((value) => {
+    const centroCusto = normalizeText(value);
+
+    if (!centroCusto) {
+      return;
+    }
+
+    const key = centroCusto.toLocaleLowerCase("pt-BR");
+
+    if (!uniqueCentrosCusto.has(key)) {
+      uniqueCentrosCusto.set(key, centroCusto);
+    }
+  });
+
+  return {
+    centrosCusto: Array.from(uniqueCentrosCusto.values()).sort((first, second) =>
+      first.localeCompare(second, "pt-BR", {
+        numeric: true,
+        sensitivity: "base",
+      }),
+    ),
+  };
+};
+
 const exportFuncionariosCsv = async (query = {}) => {
   const filters = buildFuncionarioFilters(query);
   const funcionarios = await Funcionario.find(filters)
@@ -945,6 +976,7 @@ module.exports = {
   getFuncionarioById,
   importFuncionariosCsv,
   inactivateFuncionario,
+  listCentrosCustoFuncionarios,
   listFuncionarios,
   previewFuncionariosCsvImport,
   updateFuncionario,

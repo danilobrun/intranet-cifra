@@ -16,6 +16,7 @@ import {
   createFuncionario,
   exportarFuncionarios,
   getFuncionarios,
+  getFuncionariosCentrosCusto,
   inactivateFuncionario,
   updateFuncionario,
 } from "../../services/Funcionarios.service";
@@ -54,6 +55,8 @@ export function CentroCustoFuncionariosView() {
   const [isInactivateSubmitting, setIsInactivateSubmitting] = useState(false);
   const [showImportModal, setShowImportModal] = useState(false);
   const [isExporting, setIsExporting] = useState(false);
+  const [centrosCustoOptions, setCentrosCustoOptions] = useState([]);
+  const [isCentrosCustoLoading, setIsCentrosCustoLoading] = useState(false);
 
   const fetchFuncionarios = useCallback(async () => {
     try {
@@ -81,11 +84,35 @@ export function CentroCustoFuncionariosView() {
     }
   }, [filters, page]);
 
+  const fetchCentrosCustoOptions = useCallback(async () => {
+    try {
+      setIsCentrosCustoLoading(true);
+
+      const data = await getFuncionariosCentrosCusto();
+
+      setCentrosCustoOptions(
+        Array.isArray(data?.centrosCusto) ? data.centrosCusto : [],
+      );
+    } catch (error) {
+      setCentrosCustoOptions([]);
+      toast.error(
+        error.message ||
+          "Não foi possível carregar os centros de custo para filtro.",
+      );
+    } finally {
+      setIsCentrosCustoLoading(false);
+    }
+  }, []);
+
   useEffect(() => {
     const timeoutId = setTimeout(fetchFuncionarios, 350);
 
     return () => clearTimeout(timeoutId);
   }, [fetchFuncionarios]);
+
+  useEffect(() => {
+    fetchCentrosCustoOptions();
+  }, [fetchCentrosCustoOptions]);
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
@@ -131,6 +158,7 @@ export function CentroCustoFuncionariosView() {
       setModalMode(undefined);
       setSelectedFuncionario(undefined);
       await fetchFuncionarios();
+      await fetchCentrosCustoOptions();
     } catch (error) {
       toast.error(
         error.message ||
@@ -177,6 +205,7 @@ export function CentroCustoFuncionariosView() {
 
   const handleImportedFuncionarios = async () => {
     await fetchFuncionarios();
+    await fetchCentrosCustoOptions();
   };
 
   const handleExportFuncionarios = async () => {
@@ -202,6 +231,7 @@ export function CentroCustoFuncionariosView() {
     <LayoutPortal>
       <PortalHeader
         title="Funcionários"
+        icon={faUsers}
         description="Cadastre e mantenha a base de funcionários usada nas movimentações de centro de custo."
         buttonText="Novo funcionário"
         onButtonClick={handleOpenCreateModal}
@@ -273,15 +303,23 @@ export function CentroCustoFuncionariosView() {
             <FilterLabel htmlFor="funcionario-centro-custo">
               Centro de custo
             </FilterLabel>
-            <FilterInput
+            <FilterSelect
               id="funcionario-centro-custo"
               name="centroCusto"
-              type="text"
-              placeholder="Todos"
               aria-label="Filtrar funcionários por centro de custo"
               value={filters.centroCusto}
               onChange={handleFilterChange}
-            />
+              disabled={isCentrosCustoLoading && !centrosCustoOptions.length}
+            >
+              <option value="">
+                {isCentrosCustoLoading ? "Carregando..." : "Todos"}
+              </option>
+              {centrosCustoOptions.map((centroCusto) => (
+                <option key={centroCusto} value={centroCusto}>
+                  {centroCusto}
+                </option>
+              ))}
+            </FilterSelect>
           </FilterField>
         </FiltersGrid>
       </FiltersPanel>
@@ -475,15 +513,6 @@ const controlStyles = `
 const SearchInput = styled.input`
   ${controlStyles}
   padding: 9px 14px 9px 38px;
-
-  &::placeholder {
-    color: oklch(52% 0.018 245);
-  }
-`;
-
-const FilterInput = styled.input`
-  ${controlStyles}
-  padding: 9px 12px;
 
   &::placeholder {
     color: oklch(52% 0.018 245);

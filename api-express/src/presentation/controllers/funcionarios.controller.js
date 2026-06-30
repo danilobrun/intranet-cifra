@@ -5,6 +5,7 @@ const {
   getFuncionarioById,
   importFuncionariosCsv,
   inactivateFuncionario,
+  listCentrosCustoFuncionarios,
   listFuncionarios,
   previewFuncionariosCsvImport,
   updateFuncionario,
@@ -31,6 +32,16 @@ const listFuncionariosController = async (req, res) => {
     return res.status(200).json(result);
   } catch (error) {
     return handleFuncionarioError(res, error, "listFuncionarios");
+  }
+};
+
+const listCentrosCustoFuncionariosController = async (req, res) => {
+  try {
+    const result = await listCentrosCustoFuncionarios();
+
+    return res.status(200).json(result);
+  } catch (error) {
+    return handleFuncionarioError(res, error, "listCentrosCustoFuncionarios");
   }
 };
 
@@ -135,6 +146,7 @@ module.exports = {
   getFuncionarioController,
   importFuncionariosCsvController,
   inactivateFuncionarioController,
+  listCentrosCustoFuncionariosController,
   listFuncionariosController,
   previewFuncionariosCsvImportController,
   updateFuncionarioController,

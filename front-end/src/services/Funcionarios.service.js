@@ -121,6 +121,10 @@ export const getFuncionarioById = async (funcionarioId) => {
   return requestJson(`${apiUrl}/funcionarios/${funcionarioId}`);
 };
 
+export const getFuncionariosCentrosCusto = async () => {
+  return requestJson(`${apiUrl}/funcionarios/centros-custo`);
+};
+
 export const createFuncionario = async (funcionarioData) => {
   return requestJson(`${apiUrl}/funcionarios`, {
     method: "POST",
