@@ -15,6 +15,7 @@ import {
 } from "../../components/TableActions";
 import { TableSkeletonRows } from "../../components/TableSkeletonRows";
 import { listarMinhasMovimentacoes } from "../../services/CentroCustoMovimentacoes.service";
+import { getFuncionariosCentrosCusto } from "../../services/Funcionarios.service";
 import { PaginationControls } from "../CentroCustoFuncionarios/PaginationControls";
 
 const PAGE_LIMIT = 50;
@@ -85,6 +86,9 @@ export function MeusRegistrosDrawer({ show, onHide }) {
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState("");
   const [selectedRegistroId, setSelectedRegistroId] = useState();
+  const [centrosCustoOptions, setCentrosCustoOptions] = useState([]);
+  const [isCentrosCustoLoading, setIsCentrosCustoLoading] = useState(false);
+  const [centrosCustoError, setCentrosCustoError] = useState("");
 
   const selectedRegistro = useMemo(() => {
     if (!selectedRegistroId) {
@@ -155,6 +159,51 @@ export function MeusRegistrosDrawer({ show, onHide }) {
 
     return () => clearTimeout(timeoutId);
   }, [fetchMinhasMovimentacoes, show]);
+
+  useEffect(() => {
+    if (!show) {
+      return undefined;
+    }
+
+    let isMounted = true;
+
+    const fetchCentrosCustoOptions = async () => {
+      try {
+        setIsCentrosCustoLoading(true);
+        setCentrosCustoError("");
+
+        const data = await getFuncionariosCentrosCusto();
+
+        if (!isMounted) {
+          return;
+        }
+
+        setCentrosCustoOptions(
+          Array.isArray(data?.centrosCusto) ? data.centrosCusto : [],
+        );
+      } catch (error) {
+        if (!isMounted) {
+          return;
+        }
+
+        setCentrosCustoOptions([]);
+        setCentrosCustoError(
+          error.message ||
+            "Não foi possível carregar os centros de custo para filtro.",
+        );
+      } finally {
+        if (isMounted) {
+          setIsCentrosCustoLoading(false);
+        }
+      }
+    };
+
+    fetchCentrosCustoOptions();
+
+    return () => {
+      isMounted = false;
+    };
+  }, [show]);
 
   useEffect(() => {
     if (!show) {
@@ -239,7 +288,7 @@ export function MeusRegistrosDrawer({ show, onHide }) {
             </FiltersHeader>
 
             <FiltersGrid>
-              <FilterField $wide>
+              <FilterField $span={2}>
                 <FilterLabel htmlFor="meus-registros-search">Busca</FilterLabel>
                 <SearchField>
                   <SearchIcon icon={faMagnifyingGlass} />
@@ -254,35 +303,7 @@ export function MeusRegistrosDrawer({ show, onHide }) {
                 </SearchField>
               </FilterField>
 
-              <FilterField>
-                <FilterLabel htmlFor="meus-registros-centro-anterior">
-                  Centro anterior
-                </FilterLabel>
-                <FilterInput
-                  id="meus-registros-centro-anterior"
-                  name="centroCustoAnterior"
-                  type="text"
-                  placeholder="Centro anterior"
-                  value={filters.centroCustoAnterior}
-                  onChange={handleFilterChange}
-                />
-              </FilterField>
-
-              <FilterField>
-                <FilterLabel htmlFor="meus-registros-novo-centro">
-                  Novo centro
-                </FilterLabel>
-                <FilterInput
-                  id="meus-registros-novo-centro"
-                  name="novoCentroCusto"
-                  type="text"
-                  placeholder="Novo centro"
-                  value={filters.novoCentroCusto}
-                  onChange={handleFilterChange}
-                />
-              </FilterField>
-
-              <FilterField>
+              <FilterField $span={2}>
                 <FilterLabel htmlFor="meus-registros-data-inicio">
                   Data início
                 </FilterLabel>
@@ -295,7 +316,7 @@ export function MeusRegistrosDrawer({ show, onHide }) {
                 />
               </FilterField>
 
-              <FilterField>
+              <FilterField $span={2}>
                 <FilterLabel htmlFor="meus-registros-data-fim">
                   Data fim
                 </FilterLabel>
@@ -307,7 +328,55 @@ export function MeusRegistrosDrawer({ show, onHide }) {
                   onChange={handleFilterChange}
                 />
               </FilterField>
+
+              <FilterField $span={3}>
+                <FilterLabel htmlFor="meus-registros-centro-anterior">
+                  Centro anterior
+                </FilterLabel>
+                <FilterSelect
+                  id="meus-registros-centro-anterior"
+                  name="centroCustoAnterior"
+                  value={filters.centroCustoAnterior}
+                  onChange={handleFilterChange}
+                  disabled={isCentrosCustoLoading && !centrosCustoOptions.length}
+                >
+                  <option value="">
+                    {isCentrosCustoLoading ? "Carregando..." : "Todos"}
+                  </option>
+                  {centrosCustoOptions.map((centroCusto) => (
+                    <option key={centroCusto} value={centroCusto}>
+                      {centroCusto}
+                    </option>
+                  ))}
+                </FilterSelect>
+              </FilterField>
+
+              <FilterField $span={3}>
+                <FilterLabel htmlFor="meus-registros-novo-centro">
+                  Novo centro
+                </FilterLabel>
+                <FilterSelect
+                  id="meus-registros-novo-centro"
+                  name="novoCentroCusto"
+                  value={filters.novoCentroCusto}
+                  onChange={handleFilterChange}
+                  disabled={isCentrosCustoLoading && !centrosCustoOptions.length}
+                >
+                  <option value="">
+                    {isCentrosCustoLoading ? "Carregando..." : "Todos"}
+                  </option>
+                  {centrosCustoOptions.map((centroCusto) => (
+                    <option key={centroCusto} value={centroCusto}>
+                      {centroCusto}
+                    </option>
+                  ))}
+                </FilterSelect>
+              </FilterField>
             </FiltersGrid>
+
+            {centrosCustoError ? (
+              <Alert variant="warning">{centrosCustoError}</Alert>
+            ) : null}
           </FiltersPanel>
 
           {errorMsg ? <Alert variant="danger">{errorMsg}</Alert> : null}
@@ -593,7 +662,7 @@ const LoadingHint = styled.span`
 
 const FiltersGrid = styled.div`
   display: grid;
-  grid-template-columns: minmax(240px, 1.4fr) repeat(4, minmax(140px, 1fr));
+  grid-template-columns: repeat(6, minmax(0, 1fr));
   gap: 12px;
   align-items: end;
 
@@ -610,9 +679,14 @@ const FilterField = styled.div`
   display: grid;
   min-width: 0;
   gap: 7px;
+  grid-column: span ${({ $span }) => $span || 1};
 
   @media (max-width: 991.98px) {
-    grid-column: ${({ $wide }) => ($wide ? "1 / -1" : "auto")};
+    grid-column: span 1;
+  }
+
+  @media (max-width: 575.98px) {
+    grid-column: 1 / -1;
   }
 `;
 
@@ -667,6 +741,11 @@ const FilterInput = styled.input`
 
 const FilterInputWithIcon = styled(FilterInput)`
   padding-left: 38px;
+`;
+
+const FilterSelect = styled.select`
+  ${controlStyles}
+  padding: 9px 12px;
 `;
 
 const TableCard = styled.section`
