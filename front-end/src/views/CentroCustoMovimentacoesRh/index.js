@@ -2,7 +2,6 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
-  faClipboardList,
   faFilter,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
@@ -15,12 +14,14 @@ import {
   buscarMovimentacaoPorId,
   listarMovimentacoes,
 } from "../../services/CentroCustoMovimentacoes.service";
+import { listarCentrosCusto } from "../../services/CentrosCusto.service";
 import { PaginationControls } from "../CentroCustoFuncionarios/PaginationControls";
 import { ApplyMovimentacaoModal } from "./ApplyMovimentacaoModal";
 import { MovimentacaoDetailsModal } from "./MovimentacaoDetailsModal";
 import { MovimentacoesTable } from "./MovimentacoesTable";
 
 const PAGE_LIMIT = 50;
+const CENTROS_CUSTO_FILTER_LIMIT = 1000;
 
 const initialFilters = {
   search: "",
@@ -38,7 +39,8 @@ const initialPagination = {
   totalPages: 0,
 };
 
-const getMovimentacaoId = (movimentacao) => movimentacao?._id || movimentacao?.id;
+const getMovimentacaoId = (movimentacao) =>
+  movimentacao?._id || movimentacao?.id;
 
 const getTotalLabel = (total = 0) =>
   total === 1 ? "1 movimentação" : `${total} movimentações`;
@@ -55,6 +57,8 @@ export function CentroCustoMovimentacoesRhView() {
   const [isDetailsLoading, setIsDetailsLoading] = useState(false);
   const [movimentacaoToApply, setMovimentacaoToApply] = useState();
   const [isApplying, setIsApplying] = useState(false);
+  const [centrosCustoOptions, setCentrosCustoOptions] = useState([]);
+  const [isCentrosCustoLoading, setIsCentrosCustoLoading] = useState(false);
 
   const fetchMovimentacoes = useCallback(async () => {
     try {
@@ -91,6 +95,33 @@ export function CentroCustoMovimentacoesRhView() {
     return () => clearTimeout(timeoutId);
   }, [fetchMovimentacoes]);
 
+  const fetchCentrosCustoOptions = useCallback(async () => {
+    try {
+      setIsCentrosCustoLoading(true);
+
+      const data = await listarCentrosCusto({
+        page: 1,
+        limit: CENTROS_CUSTO_FILTER_LIMIT,
+      });
+
+      setCentrosCustoOptions(
+        Array.isArray(data?.centrosCusto) ? data.centrosCusto : [],
+      );
+    } catch (error) {
+      setCentrosCustoOptions([]);
+      toast.error(
+        error.message ||
+          "Não foi possível carregar os centros de custo para filtro.",
+      );
+    } finally {
+      setIsCentrosCustoLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    fetchCentrosCustoOptions();
+  }, [fetchCentrosCustoOptions]);
+
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
 
@@ -119,7 +150,8 @@ export function CentroCustoMovimentacoesRhView() {
     } catch (error) {
       setDetailsOpen(false);
       toast.error(
-        error.message || "Não foi possível carregar os detalhes da movimentação.",
+        error.message ||
+          "Não foi possível carregar os detalhes da movimentação.",
       );
     } finally {
       setIsDetailsLoading(false);
@@ -190,7 +222,6 @@ export function CentroCustoMovimentacoesRhView() {
     <LayoutPortal>
       <PortalHeader
         title="Movimentações RH"
-        icon={faClipboardList}
         description="Acompanhe as mudanças de centro de custo registradas pelas obras e aplique na folha após conferência."
       />
 
@@ -241,26 +272,50 @@ export function CentroCustoMovimentacoesRhView() {
             <FilterLabel htmlFor="centro-custo-anterior">
               Centro anterior
             </FilterLabel>
-            <FilterInput
+            <FilterSelect
               id="centro-custo-anterior"
               name="centroCustoAnterior"
-              type="text"
-              placeholder="Centro anterior"
+              aria-label="Filtrar movimentações por centro de custo anterior"
               value={filters.centroCustoAnterior}
               onChange={handleFilterChange}
-            />
+              disabled={isCentrosCustoLoading && !centrosCustoOptions.length}
+            >
+              <option value="">
+                {isCentrosCustoLoading ? "Carregando..." : "Todos"}
+              </option>
+              {centrosCustoOptions.map((centroCusto) => (
+                <option
+                  key={centroCusto._id || centroCusto.nome}
+                  value={centroCusto.nome}
+                >
+                  {centroCusto.nome}
+                </option>
+              ))}
+            </FilterSelect>
           </FilterField>
 
           <FilterField>
             <FilterLabel htmlFor="novo-centro-custo">Novo centro</FilterLabel>
-            <FilterInput
+            <FilterSelect
               id="novo-centro-custo"
               name="novoCentroCusto"
-              type="text"
-              placeholder="Novo centro"
+              aria-label="Filtrar movimentações por novo centro de custo"
               value={filters.novoCentroCusto}
               onChange={handleFilterChange}
-            />
+              disabled={isCentrosCustoLoading && !centrosCustoOptions.length}
+            >
+              <option value="">
+                {isCentrosCustoLoading ? "Carregando..." : "Todos"}
+              </option>
+              {centrosCustoOptions.map((centroCusto) => (
+                <option
+                  key={centroCusto._id || centroCusto.nome}
+                  value={centroCusto.nome}
+                >
+                  {centroCusto.nome}
+                </option>
+              ))}
+            </FilterSelect>
           </FilterField>
 
           <FilterField>

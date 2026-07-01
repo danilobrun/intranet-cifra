@@ -231,7 +231,6 @@ export function CentroCustoFuncionariosView() {
     <LayoutPortal>
       <PortalHeader
         title="Funcionários"
-        icon={faUsers}
         description="Cadastre e mantenha a base de funcionários usada nas movimentações de centro de custo."
         buttonText="Novo funcionário"
         onButtonClick={handleOpenCreateModal}

@@ -173,7 +173,6 @@ export function CentrosCustoView() {
     <LayoutPortal>
       <PortalHeader
         title="Centros de Custo"
-        icon={faSitemap}
         description="Cadastre e mantenha a lista oficial usada nos funcionários e nas movimentações."
         buttonText="Novo centro"
         onButtonClick={handleOpenCreateModal}

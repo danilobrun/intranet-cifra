@@ -12,7 +12,10 @@ import styled from "styled-components";
 import { toast } from "react-toastify";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import { PortalHeader } from "../../components/PortalHeader";
-import { getFuncionarios } from "../../services/Funcionarios.service";
+import {
+  getFuncionarios,
+  getFuncionariosCentrosCusto,
+} from "../../services/Funcionarios.service";
 import { criarMovimentacao } from "../../services/CentroCustoMovimentacoes.service";
 import { MeusRegistrosDrawer } from "./MeusRegistrosDrawer";
 
@@ -65,6 +68,8 @@ export function CentroCustoRegistrarMovimentacaoView() {
   const [formError, setFormError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
   const [meusRegistrosOpen, setMeusRegistrosOpen] = useState(false);
+  const [centrosCustoOptions, setCentrosCustoOptions] = useState([]);
+  const [isCentrosCustoLoading, setIsCentrosCustoLoading] = useState(false);
 
   const normalizedSearch = search.trim();
   const shouldSearch = normalizedSearch.length >= 2;
@@ -114,6 +119,46 @@ export function CentroCustoRegistrarMovimentacaoView() {
 
     return () => clearTimeout(timeoutId);
   }, [normalizedSearch, shouldSearch]);
+
+  useEffect(() => {
+    let isMounted = true;
+
+    const fetchCentrosCustoOptions = async () => {
+      try {
+        setIsCentrosCustoLoading(true);
+
+        const data = await getFuncionariosCentrosCusto();
+
+        if (!isMounted) {
+          return;
+        }
+
+        setCentrosCustoOptions(
+          Array.isArray(data?.centrosCusto) ? data.centrosCusto : [],
+        );
+      } catch (error) {
+        if (!isMounted) {
+          return;
+        }
+
+        setCentrosCustoOptions([]);
+        toast.error(
+          error.message ||
+            "Não foi possível carregar os centros de custo disponíveis.",
+        );
+      } finally {
+        if (isMounted) {
+          setIsCentrosCustoLoading(false);
+        }
+      }
+    };
+
+    fetchCentrosCustoOptions();
+
+    return () => {
+      isMounted = false;
+    };
+  }, []);
 
   const handleSelectFuncionario = (funcionario) => {
     setSelectedFuncionario(funcionario);
@@ -344,15 +389,30 @@ export function CentroCustoRegistrarMovimentacaoView() {
           <FieldsGrid>
             <FieldGroup controlId="novo-centro-custo">
               <FieldLabel>Novo centro de custo</FieldLabel>
-              <FieldControl
-                type="text"
+              <FieldSelect
                 name="novoCentroCusto"
                 value={formData.novoCentroCusto}
-                placeholder="Ex.: OBRA-002"
-                disabled={isSubmitting}
+                disabled={
+                  isSubmitting ||
+                  (isCentrosCustoLoading && !centrosCustoOptions.length) ||
+                  (!isCentrosCustoLoading && !centrosCustoOptions.length)
+                }
                 onChange={handleFormChange}
                 required
-              />
+              >
+                <option value="">
+                  {isCentrosCustoLoading
+                    ? "Carregando centros de custo..."
+                    : centrosCustoOptions.length
+                      ? "Selecione o novo centro de custo"
+                      : "Nenhum centro de custo disponível"}
+                </option>
+                {centrosCustoOptions.map((centroCusto) => (
+                  <option key={centroCusto} value={centroCusto}>
+                    {centroCusto}
+                  </option>
+                ))}
+              </FieldSelect>
             </FieldGroup>
 
             <FieldGroup controlId="data-alteracao">
@@ -702,6 +762,11 @@ const FieldLabel = styled(Form.Label)`
 `;
 
 const FieldControl = styled(Form.Control)`
+  ${controlStyles}
+  padding: 9px 12px;
+`;
+
+const FieldSelect = styled(Form.Select)`
   ${controlStyles}
   padding: 9px 12px;
 `;

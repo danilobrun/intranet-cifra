@@ -320,7 +320,7 @@ export function Sidebar({ isOpen, isCollapsed, onClose }) {
       icon: faClipboardList,
       section: "costCenter",
       checkAllPath: false,
-      canShow: (currentUser) => Boolean(currentUser?._id),
+      canShow: canManageCentrosCusto,
     },
     {
       to: "/portal/plates",
