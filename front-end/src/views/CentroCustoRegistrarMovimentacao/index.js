@@ -4,6 +4,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faCheck,
   faCircleNotch,
+  faClockRotateLeft,
   faMagnifyingGlass,
   faUserCheck,
 } from "@fortawesome/free-solid-svg-icons";
@@ -13,6 +14,7 @@ import { LayoutPortal } from "../../components/LayoutPortal";
 import { PortalHeader } from "../../components/PortalHeader";
 import { getFuncionarios } from "../../services/Funcionarios.service";
 import { criarMovimentacao } from "../../services/CentroCustoMovimentacoes.service";
+import { MeusRegistrosDrawer } from "./MeusRegistrosDrawer";
 
 const SEARCH_LIMIT = 8;
 
@@ -62,6 +64,7 @@ export function CentroCustoRegistrarMovimentacaoView() {
   const [searchError, setSearchError] = useState("");
   const [formError, setFormError] = useState("");
   const [successMessage, setSuccessMessage] = useState("");
+  const [meusRegistrosOpen, setMeusRegistrosOpen] = useState(false);
 
   const normalizedSearch = search.trim();
   const shouldSearch = normalizedSearch.length >= 2;
@@ -209,7 +212,15 @@ export function CentroCustoRegistrarMovimentacaoView() {
       <PortalHeader
         title="Registrar Movimentação"
         description="Registre alterações de centro de custo para acompanhamento do RH."
-      />
+      >
+        <HeaderSecondaryButton
+          type="button"
+          onClick={() => setMeusRegistrosOpen(true)}
+        >
+          <FontAwesomeIcon icon={faClockRotateLeft} />
+          Meus Registros
+        </HeaderSecondaryButton>
+      </PortalHeader>
 
       <PageGrid>
         <SearchPanel>
@@ -384,9 +395,53 @@ export function CentroCustoRegistrarMovimentacaoView() {
           </ActionsRow>
         </FormPanel>
       </PageGrid>
+
+      <MeusRegistrosDrawer
+        show={meusRegistrosOpen}
+        onHide={() => setMeusRegistrosOpen(false)}
+      />
     </LayoutPortal>
   );
 }
+
+const HeaderSecondaryButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 16px;
+  border: 1px solid oklch(86% 0.012 245);
+  border-radius: 10px;
+  background: oklch(99% 0.004 245);
+  color: oklch(31% 0.018 245);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:hover,
+  &:focus {
+    border-color: oklch(78% 0.018 245);
+    background: oklch(96% 0.006 245);
+    color: oklch(22% 0.018 245);
+    outline: none;
+  }
+
+  &:focus-visible {
+    border-color: oklch(55% 0.17 253);
+    box-shadow: 0 0 0 0.2rem oklch(55% 0.17 253 / 0.14);
+  }
+
+  @media (max-width: 767.98px) {
+    flex: 1 1 150px;
+  }
+`;
 
 const PageGrid = styled.div`
   display: grid;

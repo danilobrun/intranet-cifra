@@ -59,6 +59,12 @@ export const listarMovimentacoes = async (filters = {}) => {
   );
 };
 
+export const listarMinhasMovimentacoes = async (filters = {}) => {
+  return requestJson(
+    buildUrlWithQuery("/centro-custo-movimentacoes/minhas", filters),
+  );
+};
+
 export const buscarMovimentacaoPorId = async (movimentacaoId) => {
   return requestJson(`${apiUrl}/centro-custo-movimentacoes/${movimentacaoId}`);
 };
