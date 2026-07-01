@@ -167,13 +167,31 @@ const mapMovimentacao = (movimentacao) => ({
   updatedAt: movimentacao.updatedAt,
 });
 
+const mapMinhaMovimentacao = (movimentacao) => ({
+  id: movimentacao._id,
+  nome: movimentacao.nome,
+  cpf: movimentacao.cpf,
+  centroCustoAnterior: movimentacao.centroCustoAnterior,
+  novoCentroCusto: movimentacao.novoCentroCusto,
+  dataAlteracao: movimentacao.dataAlteracao,
+  observacao: movimentacao.observacao,
+  createdBy: mapUser(movimentacao.createdBy),
+  createdAt: movimentacao.createdAt,
+  updatedAt: movimentacao.updatedAt,
+});
+
 const movimentacaoPopulateConfig = [
   { path: "createdBy", select: "_id name email" },
   { path: "updatedBy", select: "_id name email" },
   { path: "appliedBy", select: "_id name email" },
 ];
 
-const buildMovimentacaoFilters = (query = {}) => {
+const minhaMovimentacaoPopulateConfig = [
+  { path: "createdBy", select: "_id name email" },
+];
+
+const buildMovimentacaoFilters = (query = {}, options = {}) => {
+  const includeStatus = options.includeStatus !== false;
   const filters = {};
   const search = normalizeText(query.search || query.q);
   const cpf = normalizeCpf(query.cpf);
@@ -182,7 +200,7 @@ const buildMovimentacaoFilters = (query = {}) => {
   const statusText = normalizeText(query.status);
   const dataAlteracaoFilter = getDateRangeFilter(query);
 
-  if (statusText) {
+  if (includeStatus && statusText) {
     const status = normalizeStatus(statusText);
 
     if (!status) {
@@ -247,6 +265,39 @@ const listCentroCustoMovimentacoes = async (query = {}) => {
 
   return {
     movimentacoes: movimentacoes.map(mapMovimentacao),
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages: Math.ceil(total / limit),
+    },
+  };
+};
+
+const listMinhasCentroCustoMovimentacoes = async (query = {}, user) => {
+  ensureAuthenticatedUser(user);
+
+  const filters = {
+    ...buildMovimentacaoFilters(query, { includeStatus: false }),
+    createdBy: user.id,
+  };
+  const { page, limit } = getPagination(query);
+  const skip = (page - 1) * limit;
+
+  const [movimentacoes, total] = await Promise.all([
+    CentroCustoMovimentacao.find(filters)
+      .select(
+        "_id nome cpf centroCustoAnterior novoCentroCusto dataAlteracao observacao createdBy createdAt updatedAt",
+      )
+      .populate(minhaMovimentacaoPopulateConfig)
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit),
+    CentroCustoMovimentacao.countDocuments(filters),
+  ]);
+
+  return {
+    movimentacoes: movimentacoes.map(mapMinhaMovimentacao),
     pagination: {
       page,
       limit,
@@ -417,4 +468,5 @@ module.exports = {
   createCentroCustoMovimentacao,
   getCentroCustoMovimentacaoById,
   listCentroCustoMovimentacoes,
+  listMinhasCentroCustoMovimentacoes,
 };

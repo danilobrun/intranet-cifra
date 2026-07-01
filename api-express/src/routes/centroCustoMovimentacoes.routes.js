@@ -4,6 +4,7 @@ const {
   createCentroCustoMovimentacaoController,
   getCentroCustoMovimentacaoController,
   listCentroCustoMovimentacoesController,
+  listMinhasCentroCustoMovimentacoesController,
 } = require("../presentation/controllers/centroCustoMovimentacoes.controller");
 
 const centroCustoMovimentacoesRoutes = (app) => {
@@ -11,6 +12,11 @@ const centroCustoMovimentacoesRoutes = (app) => {
     "/centro-custo-movimentacoes",
     checkToken,
     listCentroCustoMovimentacoesController,
+  );
+  app.get(
+    "/centro-custo-movimentacoes/minhas",
+    checkToken,
+    listMinhasCentroCustoMovimentacoesController,
   );
   app.get(
     "/centro-custo-movimentacoes/:id",

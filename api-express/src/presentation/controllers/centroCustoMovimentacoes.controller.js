@@ -4,6 +4,7 @@ const {
   createCentroCustoMovimentacao,
   getCentroCustoMovimentacaoById,
   listCentroCustoMovimentacoes,
+  listMinhasCentroCustoMovimentacoes,
 } = require("../../services/centroCustoMovimentacoes.service");
 
 const handleCentroCustoMovimentacaoError = (res, error, context) => {
@@ -30,6 +31,23 @@ const listCentroCustoMovimentacoesController = async (req, res) => {
       res,
       error,
       "listCentroCustoMovimentacoes",
+    );
+  }
+};
+
+const listMinhasCentroCustoMovimentacoesController = async (req, res) => {
+  try {
+    const result = await listMinhasCentroCustoMovimentacoes(
+      req.query,
+      req.user,
+    );
+
+    return res.status(200).json(result);
+  } catch (error) {
+    return handleCentroCustoMovimentacaoError(
+      res,
+      error,
+      "listMinhasCentroCustoMovimentacoes",
     );
   }
 };
@@ -93,4 +111,5 @@ module.exports = {
   createCentroCustoMovimentacaoController,
   getCentroCustoMovimentacaoController,
   listCentroCustoMovimentacoesController,
+  listMinhasCentroCustoMovimentacoesController,
 };

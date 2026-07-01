@@ -1,7 +1,13 @@
 import { Button } from "react-bootstrap";
 import styled from "styled-components";
 
-export function PaginationControls({ pagination, isLoading, onPageChange }) {
+export function PaginationControls({
+  pagination,
+  isLoading,
+  itemLabel = "funcionário(s)",
+  emptyLabel = "Nenhum funcionário para paginar",
+  onPageChange,
+}) {
   const page = Number(pagination?.page || 1);
   const totalPages = Number(pagination?.totalPages || 0);
   const total = Number(pagination?.total || 0);
@@ -15,8 +21,8 @@ export function PaginationControls({ pagination, isLoading, onPageChange }) {
     <PaginationBar>
       <PaginationInfo>
         {total
-          ? `Mostrando ${firstItem} a ${lastItem} de ${total} funcionário(s)`
-          : "Nenhum funcionário para paginar"}
+          ? `Mostrando ${firstItem} a ${lastItem} de ${total} ${itemLabel}`
+          : emptyLabel}
       </PaginationInfo>
 
       <PaginationActions>
