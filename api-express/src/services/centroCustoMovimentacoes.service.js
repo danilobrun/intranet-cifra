@@ -2,6 +2,9 @@ const mongoose = require("mongoose");
 const CentroCustoMovimentacao = require("../../models/CentroCustoMovimentacao");
 const Funcionario = require("../../models/Funcionario");
 const { normalizeCpf } = require("../helpers/cpf");
+const {
+  notifyNovaCentroCustoMovimentacao,
+} = require("./centroCustoMovimentacaoNotifications.service");
 
 const MOVIMENTACAO_STATUSES = ["Pendente", "Aplicado na Folha"];
 const DEFAULT_PAGE = 1;
@@ -389,6 +392,12 @@ const createCentroCustoMovimentacao = async (payload = {}, user) => {
   const createdMovimentacao = await CentroCustoMovimentacao.findById(
     movimentacao._id,
   ).populate(movimentacaoPopulateConfig);
+
+  try {
+    await notifyNovaCentroCustoMovimentacao(createdMovimentacao);
+  } catch (error) {
+    console.log("notifyNovaCentroCustoMovimentacao error", error);
+  }
 
   return mapMovimentacao(createdMovimentacao);
 };
