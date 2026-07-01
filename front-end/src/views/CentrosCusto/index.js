@@ -1,11 +1,7 @@
 import { useCallback, useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import {
-  faFilter,
-  faMagnifyingGlass,
-  faSitemap,
-} from "@fortawesome/free-solid-svg-icons";
+import { faFilter, faMagnifyingGlass } from "@fortawesome/free-solid-svg-icons";
 import styled from "styled-components";
 import { toast } from "react-toastify";
 import { LayoutPortal } from "../../components/LayoutPortal";

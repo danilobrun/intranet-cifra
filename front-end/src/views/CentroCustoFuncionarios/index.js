@@ -6,7 +6,6 @@ import {
   faFilter,
   faMagnifyingGlass,
   faUpload,
-  faUsers,
 } from "@fortawesome/free-solid-svg-icons";
 import styled, { css } from "styled-components";
 import { toast } from "react-toastify";
