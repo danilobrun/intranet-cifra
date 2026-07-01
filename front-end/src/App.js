@@ -367,7 +367,7 @@ function App() {
       <Route
         path="/portal/centro-custo/movimentacoes"
         element={
-          <PrivateRoute>
+          <PrivateRoute canAccess={canManageCentrosCusto}>
             <CentroCustoMovimentacoesRhView />
           </PrivateRoute>
         }
