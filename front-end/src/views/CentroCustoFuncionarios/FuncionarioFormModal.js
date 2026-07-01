@@ -35,6 +35,8 @@ export function FuncionarioFormModal({
   show,
   mode = "create",
   initialValue,
+  centrosCustoOptions = [],
+  isCentrosCustoLoading = false,
   isSubmitting,
   onHide,
   onSubmit,
@@ -136,15 +138,35 @@ export function FuncionarioFormModal({
 
             <FieldGroup controlId="funcionario-centro-custo">
               <FieldLabel>Centro de custo</FieldLabel>
-              <FieldControl
-                type="text"
+              <FieldSelect
                 name="centroCusto"
                 value={formData.centroCusto}
-                placeholder="Centro de custo"
                 onChange={handleChange}
-                disabled={isSubmitting}
+                disabled={
+                  isSubmitting ||
+                  isCentrosCustoLoading ||
+                  !centrosCustoOptions.length
+                }
                 required
-              />
+              >
+                <option value="">
+                  {isCentrosCustoLoading
+                    ? "Carregando centros de custo..."
+                    : centrosCustoOptions.length
+                      ? "Selecione um centro de custo"
+                      : "Nenhum centro de custo cadastrado"}
+                </option>
+                {centrosCustoOptions.map((centroCusto) => (
+                  <option key={centroCusto} value={centroCusto}>
+                    {centroCusto}
+                  </option>
+                ))}
+              </FieldSelect>
+              {!centrosCustoOptions.length && !isCentrosCustoLoading ? (
+                <FieldHint>
+                  Cadastre centros de custo antes de vincular funcionários.
+                </FieldHint>
+              ) : null}
             </FieldGroup>
           </FieldsGrid>
         </Modal.Body>
@@ -207,9 +229,39 @@ const FieldControl = styled(Form.Control)`
   }
 `;
 
+const FieldSelect = styled(Form.Select)`
+  min-height: 46px;
+  border: 1px solid oklch(87% 0.014 245);
+  border-radius: 10px;
+  background-color: oklch(99% 0.004 240);
+  color: oklch(22% 0.018 245);
+  outline: 0;
+  box-shadow: none;
+  transition:
+    border-color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:focus,
+  &:focus-visible {
+    border-color: oklch(55% 0.17 253);
+    box-shadow: 0 0 0 0.22rem oklch(55% 0.17 253 / 0.14);
+  }
+
+  &:disabled {
+    background-color: oklch(94% 0.006 240);
+    color: oklch(52% 0.014 245);
+  }
+`;
+
 const FieldError = styled.p`
   margin: 0;
   color: oklch(45% 0.18 25);
   font-size: 0.88rem;
   font-weight: 650;
+`;
+
+const FieldHint = styled.p`
+  margin: 0;
+  color: oklch(45% 0.018 245);
+  font-size: 0.86rem;
 `;

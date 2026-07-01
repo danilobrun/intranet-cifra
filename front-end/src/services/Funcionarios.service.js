@@ -163,10 +163,18 @@ export const exportarFuncionarios = async (filters = {}) => {
   downloadBlob(result.blob, result.fileName || "funcionarios-centro-custo.csv");
 };
 
-const buildImportFormData = (file) => {
+const buildImportFormData = (file, options = {}) => {
   const formData = new FormData();
 
   formData.append("file", file);
+
+  Object.entries(options).forEach(([key, value]) => {
+    if (value === undefined || value === null || value === "") {
+      return;
+    }
+
+    formData.append(key, value);
+  });
 
   return formData;
 };
@@ -178,9 +186,9 @@ export const previewImportacaoFuncionarios = async (file) => {
   });
 };
 
-export const importarFuncionarios = async (file) => {
+export const importarFuncionarios = async (file, options = {}) => {
   return requestJson(`${apiUrl}/funcionarios/importar`, {
     method: "POST",
-    body: buildImportFormData(file),
+    body: buildImportFormData(file, options),
   });
 };

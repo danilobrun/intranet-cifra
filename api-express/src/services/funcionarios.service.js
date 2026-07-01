@@ -1,6 +1,11 @@
 const mongoose = require("mongoose");
 const fs = require("fs/promises");
+const CentroCusto = require("../../models/CentroCusto");
 const Funcionario = require("../../models/Funcionario");
+const {
+  normalizeCentroCustoKey,
+  normalizeCentroCustoNome,
+} = require("../helpers/centroCusto");
 const { normalizeCpf, validateCpf } = require("../helpers/cpf");
 
 const FUNCIONARIO_STATUSES = ["Ativo", "Inativo"];
@@ -31,6 +36,14 @@ const normalizeText = (value) => {
   if (value === null || value === undefined) return "";
 
   return String(value).trim();
+};
+
+const parseBoolean = (value) => {
+  if (typeof value === "boolean") return value;
+
+  const normalizedValue = normalizeText(value).toLowerCase();
+
+  return ["true", "1", "sim", "yes"].includes(normalizedValue);
 };
 
 const escapeRegex = (value = "") =>
@@ -587,6 +600,109 @@ const getRowsWithDuplicateCpf = (rows = []) => {
   );
 };
 
+const getUniqueCentrosCustoFromRows = (rows = []) => {
+  const centrosCustoByKey = new Map();
+
+  rows.forEach((row) => {
+    if (row.errors?.length || !row.centroCusto) {
+      return;
+    }
+
+    const nome = normalizeCentroCustoNome(row.centroCusto);
+    const key = normalizeCentroCustoKey(nome);
+
+    if (key && !centrosCustoByKey.has(key)) {
+      centrosCustoByKey.set(key, nome);
+    }
+  });
+
+  return Array.from(centrosCustoByKey.values());
+};
+
+const getMissingCentrosCusto = async (centrosCusto = []) => {
+  const centrosCustoByKey = new Map();
+
+  centrosCusto.forEach((value) => {
+    const nome = normalizeCentroCustoNome(value);
+    const key = normalizeCentroCustoKey(nome);
+
+    if (key && !centrosCustoByKey.has(key)) {
+      centrosCustoByKey.set(key, nome);
+    }
+  });
+
+  const keys = Array.from(centrosCustoByKey.keys());
+
+  if (!keys.length) {
+    return [];
+  }
+
+  const existingCentrosCusto = await CentroCusto.find({
+    nomeNormalizado: { $in: keys },
+  }).select("+nomeNormalizado");
+  const existingKeys = new Set(
+    existingCentrosCusto.map((centroCusto) => centroCusto.nomeNormalizado),
+  );
+
+  return keys
+    .filter((key) => !existingKeys.has(key))
+    .map((key) => centrosCustoByKey.get(key))
+    .sort((first, second) =>
+      first.localeCompare(second, "pt-BR", {
+        numeric: true,
+        sensitivity: "base",
+      }),
+    );
+};
+
+const createMissingCentrosCusto = async (centrosCusto = [], user) => {
+  ensureAuthenticatedUser(user);
+
+  const createdCentrosCusto = [];
+
+  for (const nome of centrosCusto) {
+    try {
+      const centroCusto = await CentroCusto.create({
+        nome,
+        createdBy: user.id,
+      });
+
+      createdCentrosCusto.push({
+        _id: centroCusto._id,
+        nome: centroCusto.nome,
+      });
+    } catch (error) {
+      if (error?.code !== 11000) {
+        throw error;
+      }
+    }
+  }
+
+  return createdCentrosCusto;
+};
+
+const ensureCentroCustoExists = async (centroCusto) => {
+  const nome = normalizeCentroCustoNome(centroCusto);
+
+  if (!nome) {
+    return;
+  }
+
+  const existingCentroCusto = await CentroCusto.findOne({
+    nomeNormalizado: normalizeCentroCustoKey(nome),
+  }).select("_id");
+
+  if (!existingCentroCusto) {
+    throw new FuncionarioServiceError(
+      422,
+      "Centro de custo nao cadastrado.",
+      {
+        centroCusto: nome,
+      },
+    );
+  }
+};
+
 const getCsvDataRows = (rows, headerIndex, columnMap) =>
   rows
     .map((row, index) => ({
@@ -657,6 +773,9 @@ const buildCsvImportPreview = async (csvText) => {
   const existingCpfs = new Set(
     existingFuncionarios.map((funcionario) => funcionario.cpf),
   );
+  const missingCentrosCusto = await getMissingCentrosCusto(
+    getUniqueCentrosCustoFromRows(rowsWithDuplicates),
+  );
   const preview = rowsWithDuplicates.map((row) => {
     const action = row.errors.length
       ? "error"
@@ -684,7 +803,9 @@ const buildCsvImportPreview = async (csvText) => {
       updateCount: preview.filter((row) => row.action === "update").length,
       errorCount: errors.length,
       duplicateCount: duplicateRows.size,
+      missingCentroCustoCount: missingCentrosCusto.length,
     },
+    missingCentrosCusto,
     preview,
     errors,
   };
@@ -716,30 +837,13 @@ const listFuncionarios = async (query = {}) => {
 };
 
 const listCentrosCustoFuncionarios = async () => {
-  const centrosCusto = await Funcionario.distinct("centroCusto");
-  const uniqueCentrosCusto = new Map();
-
-  centrosCusto.forEach((value) => {
-    const centroCusto = normalizeText(value);
-
-    if (!centroCusto) {
-      return;
-    }
-
-    const key = centroCusto.toLocaleLowerCase("pt-BR");
-
-    if (!uniqueCentrosCusto.has(key)) {
-      uniqueCentrosCusto.set(key, centroCusto);
-    }
-  });
+  const centrosCusto = await CentroCusto.find({})
+    .select("nome")
+    .collation({ locale: "pt", strength: 1, numericOrdering: true })
+    .sort({ nome: 1 });
 
   return {
-    centrosCusto: Array.from(uniqueCentrosCusto.values()).sort((first, second) =>
-      first.localeCompare(second, "pt-BR", {
-        numeric: true,
-        sensitivity: "base",
-      }),
-    ),
+    centrosCusto: centrosCusto.map((centroCusto) => centroCusto.nome),
   };
 };
 
@@ -803,6 +907,7 @@ const createFuncionario = async (payload = {}, user) => {
   ensureAuthenticatedUser(user);
 
   const createPayload = getCreatePayload(payload);
+  await ensureCentroCustoExists(createPayload.centroCusto);
   await ensureCpfIsAvailable(createPayload.cpf);
 
   try {
@@ -839,6 +944,10 @@ const updateFuncionario = async (id, payload = {}, user) => {
 
   if (updatePayload.cpf) {
     await ensureCpfIsAvailable(updatePayload.cpf, funcionario._id);
+  }
+
+  if (updatePayload.centroCusto) {
+    await ensureCentroCustoExists(updatePayload.centroCusto);
   }
 
   Object.entries(updatePayload).forEach(([field, value]) => {
@@ -906,7 +1015,7 @@ const previewFuncionariosCsvImport = async (files = {}) => {
   return buildCsvImportPreview(csvText);
 };
 
-const importFuncionariosCsv = async (files = {}, user) => {
+const importFuncionariosCsv = async (files = {}, user, options = {}) => {
   ensureAuthenticatedUser(user);
 
   const csvText = await readUploadedCsv(files);
@@ -917,6 +1026,29 @@ const importFuncionariosCsv = async (files = {}, user) => {
       422,
       "CSV possui erros e não foi importado.",
       previewResult,
+    );
+  }
+
+  const shouldCreateMissingCentrosCusto =
+    parseBoolean(options.criarCentrosCustoInexistentes) ||
+    parseBoolean(options.confirmarCriacaoCentrosCusto);
+  const missingCentrosCusto = Array.isArray(previewResult.missingCentrosCusto)
+    ? previewResult.missingCentrosCusto
+    : [];
+  let createdCentrosCusto = [];
+
+  if (missingCentrosCusto.length && !shouldCreateMissingCentrosCusto) {
+    throw new FuncionarioServiceError(
+      409,
+      "Existem centros de custo nao cadastrados. Confirme a criacao para continuar.",
+      previewResult,
+    );
+  }
+
+  if (missingCentrosCusto.length) {
+    createdCentrosCusto = await createMissingCentrosCusto(
+      missingCentrosCusto,
+      user,
     );
   }
 
@@ -965,7 +1097,9 @@ const importFuncionariosCsv = async (files = {}, user) => {
       createdCount,
       updatedCount,
       errorCount: 0,
+      createdCentroCustoCount: createdCentrosCusto.length,
     },
+    createdCentrosCusto,
   };
 };
 

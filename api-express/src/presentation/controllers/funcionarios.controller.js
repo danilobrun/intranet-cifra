@@ -100,7 +100,7 @@ const previewFuncionariosCsvImportController = async (req, res) => {
 
 const importFuncionariosCsvController = async (req, res) => {
   try {
-    const result = await importFuncionariosCsv(req.files, req.user);
+    const result = await importFuncionariosCsv(req.files, req.user, req.fields);
 
     return res.status(200).json(result);
   } catch (error) {

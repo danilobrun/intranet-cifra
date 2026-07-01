@@ -11,6 +11,7 @@ import CifraLogoWhite from "../../assets/img/logo-cifra-branco.png";
 import { canAccessContracts } from "../../helpers/contractsPermissions";
 import { canAccessBoletins } from "../../helpers/boletinsPermissions";
 import { canAccessResumoContratos } from "../../helpers/resumoContratosPermissions";
+import { canManageCentrosCusto } from "../../helpers/centroCustoPermissions";
 import {
   faAddressBook,
   faBookOpen,
@@ -27,6 +28,7 @@ import {
   faRightLeft,
   faRobot,
   faShieldHalved,
+  faSitemap,
   faUsers,
   faUsersGear,
 } from "@fortawesome/free-solid-svg-icons";
@@ -295,6 +297,14 @@ export function Sidebar({ isOpen, isCollapsed, onClose }) {
       section: "costCenter",
       checkAllPath: false,
       canShow: (currentUser) => Boolean(currentUser?._id),
+    },
+    {
+      to: "/portal/centro-custo/centros-custo",
+      label: "Centros de Custo",
+      icon: faSitemap,
+      section: "costCenter",
+      checkAllPath: false,
+      canShow: canManageCentrosCusto,
     },
     {
       to: "/portal/centro-custo/registrar-movimentacao",

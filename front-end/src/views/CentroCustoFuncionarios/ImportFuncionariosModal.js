@@ -41,6 +41,7 @@ const getSummary = (previewResult) =>
     updateCount: 0,
     errorCount: 0,
     duplicateCount: 0,
+    missingCentroCustoCount: 0,
   };
 
 const formatCpf = (value = "") => {
@@ -65,10 +66,15 @@ export function ImportFuncionariosModal({ show, onHide, onImported }) {
   const [errorMessage, setErrorMessage] = useState("");
   const [isPreviewLoading, setIsPreviewLoading] = useState(false);
   const [isImportLoading, setIsImportLoading] = useState(false);
+  const [shouldCreateMissingCentrosCusto, setShouldCreateMissingCentrosCusto] =
+    useState(false);
 
   const summary = useMemo(() => getSummary(previewResult), [previewResult]);
   const previewRows = Array.isArray(previewResult?.preview)
     ? previewResult.preview
+    : [];
+  const missingCentrosCusto = Array.isArray(previewResult?.missingCentrosCusto)
+    ? previewResult.missingCentrosCusto
     : [];
   const canConfirmImport =
     Boolean(file) &&
@@ -76,6 +82,7 @@ export function ImportFuncionariosModal({ show, onHide, onImported }) {
     !successResult &&
     summary.errorCount === 0 &&
     summary.duplicateCount === 0 &&
+    (!missingCentrosCusto.length || shouldCreateMissingCentrosCusto) &&
     !isPreviewLoading &&
     !isImportLoading;
   const isLoading = isPreviewLoading || isImportLoading;
@@ -85,6 +92,7 @@ export function ImportFuncionariosModal({ show, onHide, onImported }) {
     setPreviewResult(undefined);
     setSuccessResult(undefined);
     setErrorMessage("");
+    setShouldCreateMissingCentrosCusto(false);
     setFileInputKey((currentKey) => currentKey + 1);
   };
 
@@ -104,6 +112,7 @@ export function ImportFuncionariosModal({ show, onHide, onImported }) {
     setPreviewResult(undefined);
     setSuccessResult(undefined);
     setErrorMessage("");
+    setShouldCreateMissingCentrosCusto(false);
   };
 
   const handleClearFile = () => {
@@ -125,6 +134,7 @@ export function ImportFuncionariosModal({ show, onHide, onImported }) {
       setIsPreviewLoading(true);
       setErrorMessage("");
       setSuccessResult(undefined);
+      setShouldCreateMissingCentrosCusto(false);
 
       const result = await previewImportacaoFuncionarios(file);
       setPreviewResult(result);
@@ -145,7 +155,11 @@ export function ImportFuncionariosModal({ show, onHide, onImported }) {
       setIsImportLoading(true);
       setErrorMessage("");
 
-      const result = await importarFuncionarios(file);
+      const result = await importarFuncionarios(file, {
+        criarCentrosCustoInexistentes: shouldCreateMissingCentrosCusto
+          ? "true"
+          : "",
+      });
       setSuccessResult(result);
       await onImported();
     } catch (error) {
@@ -229,7 +243,8 @@ export function ImportFuncionariosModal({ show, onHide, onImported }) {
           <Alert variant="success">
             {successResult.message || "Importação concluída com sucesso."}{" "}
             Criados: {successResult.summary?.createdCount || 0}. Atualizados:{" "}
-            {successResult.summary?.updatedCount || 0}.
+            {successResult.summary?.updatedCount || 0}. Centros de custo
+            criados: {successResult.summary?.createdCentroCustoCount || 0}.
           </Alert>
         ) : null}
 
@@ -262,12 +277,41 @@ export function ImportFuncionariosModal({ show, onHide, onImported }) {
                 <SummaryLabel>CPFs duplicados</SummaryLabel>
                 <SummaryValue>{summary.duplicateCount}</SummaryValue>
               </SummaryCard>
+              <SummaryCard
+                $tone={summary.missingCentroCustoCount ? "warning" : "default"}
+              >
+                <SummaryLabel>Centros novos</SummaryLabel>
+                <SummaryValue>{summary.missingCentroCustoCount || 0}</SummaryValue>
+              </SummaryCard>
             </SummaryGrid>
 
             {summary.errorCount || summary.duplicateCount ? (
               <Alert variant="warning">
                 Corrija os erros do CSV e gere uma nova pré-visualização antes de
                 confirmar a importação.
+              </Alert>
+            ) : missingCentrosCusto.length ? (
+              <Alert variant="warning">
+                <MissingTitle>
+                  O CSV possui centro(s) de custo ainda não cadastrado(s).
+                </MissingTitle>
+                <MissingList>
+                  {missingCentrosCusto.map((centroCusto) => (
+                    <li key={centroCusto}>{centroCusto}</li>
+                  ))}
+                </MissingList>
+                <ConfirmMissingLabel>
+                  <ConfirmMissingInput
+                    type="checkbox"
+                    checked={shouldCreateMissingCentrosCusto}
+                    disabled={isLoading}
+                    onChange={(event) =>
+                      setShouldCreateMissingCentrosCusto(event.target.checked)
+                    }
+                  />
+                  Confirmo a criação dos centros de custo inexistentes ao
+                  importar.
+                </ConfirmMissingLabel>
               </Alert>
             ) : (
               <Alert variant="info">
@@ -530,12 +574,8 @@ const PrimaryButton = styled.button`
 
 const SummaryGrid = styled.section`
   display: grid;
-  grid-template-columns: repeat(6, minmax(0, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
   gap: 10px;
-
-  @media (max-width: 1199.98px) {
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-  }
 
   @media (max-width: 575.98px) {
     grid-template-columns: 1fr;
@@ -549,10 +589,18 @@ const SummaryCard = styled.div`
   padding: 12px;
   border: 1px solid
     ${({ $tone }) =>
-      $tone === "danger" ? "oklch(84% 0.06 25)" : "oklch(89% 0.009 245)"};
+      $tone === "danger"
+        ? "oklch(84% 0.06 25)"
+        : $tone === "warning"
+          ? "oklch(84% 0.08 78)"
+          : "oklch(89% 0.009 245)"};
   border-radius: 8px;
   background: ${({ $tone }) =>
-    $tone === "danger" ? "oklch(97% 0.018 25)" : "oklch(99% 0.004 245)"};
+    $tone === "danger"
+      ? "oklch(97% 0.018 25)"
+      : $tone === "warning"
+        ? "oklch(97% 0.026 78)"
+        : "oklch(99% 0.004 245)"};
 `;
 
 const SummaryLabel = styled.span`
@@ -643,6 +691,31 @@ const ErrorList = styled.ul`
   margin: 0;
   padding-left: 18px;
   color: oklch(45% 0.16 25);
+`;
+
+const MissingTitle = styled.strong`
+  display: block;
+  margin-bottom: 8px;
+`;
+
+const MissingList = styled.ul`
+  display: grid;
+  gap: 4px;
+  margin: 0 0 12px;
+  padding-left: 18px;
+`;
+
+const ConfirmMissingLabel = styled.label`
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+  margin: 0;
+  font-weight: 650;
+`;
+
+const ConfirmMissingInput = styled.input`
+  flex: 0 0 auto;
+  margin-top: 4px;
 `;
 
 const EmptyCell = styled.td`

@@ -34,6 +34,7 @@ import { HomeView } from "./views/Home";
 import { canAccessContracts } from "./helpers/contractsPermissions";
 import { canAccessBoletins } from "./helpers/boletinsPermissions";
 import { canAccessResumoContratos } from "./helpers/resumoContratosPermissions";
+import { canManageCentrosCusto } from "./helpers/centroCustoPermissions";
 import { ResumoContratoDetailView } from "./views/ResumoContratoDetail";
 import { ResumoContratoEditorView } from "./views/ResumoContratoEditor";
 import { ResumoContratos } from "./views/ResumoContratos";
@@ -43,6 +44,7 @@ import { InactivePlatesView } from "./views/InactivePlates";
 import { CentroCustoFuncionariosView } from "./views/CentroCustoFuncionarios";
 import { CentroCustoRegistrarMovimentacaoView } from "./views/CentroCustoRegistrarMovimentacao";
 import { CentroCustoMovimentacoesRhView } from "./views/CentroCustoMovimentacoesRh";
+import { CentrosCustoView } from "./views/CentrosCusto";
 
 function App() {
   return (
@@ -343,6 +345,14 @@ function App() {
         element={
           <PrivateRoute>
             <CentroCustoFuncionariosView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/centro-custo/centros-custo"
+        element={
+          <PrivateRoute canAccess={canManageCentrosCusto}>
+            <CentrosCustoView />
           </PrivateRoute>
         }
       />

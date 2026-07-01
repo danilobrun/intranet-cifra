@@ -343,6 +343,8 @@ export function CentroCustoFuncionariosView() {
         show={Boolean(modalMode)}
         mode={modalMode}
         initialValue={selectedFuncionario}
+        centrosCustoOptions={centrosCustoOptions}
+        isCentrosCustoLoading={isCentrosCustoLoading}
         isSubmitting={isFormSubmitting}
         onHide={handleCloseFormModal}
         onSubmit={handleSubmitFuncionario}
