@@ -2,6 +2,7 @@ const { checkToken } = require("../middleware/checktoken");
 const {
   applyCentroCustoMovimentacaoNaFolhaController,
   createCentroCustoMovimentacaoController,
+  exportCentroCustoMovimentacoesCsvController,
   getCentroCustoMovimentacaoController,
   listCentroCustoMovimentacoesController,
   listMinhasCentroCustoMovimentacoesController,
@@ -17,6 +18,11 @@ const centroCustoMovimentacoesRoutes = (app) => {
     "/centro-custo-movimentacoes/minhas",
     checkToken,
     listMinhasCentroCustoMovimentacoesController,
+  );
+  app.get(
+    "/centro-custo-movimentacoes/exportar",
+    checkToken,
+    exportCentroCustoMovimentacoesCsvController,
   );
   app.get(
     "/centro-custo-movimentacoes/:id",

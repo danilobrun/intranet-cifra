@@ -2,6 +2,8 @@ import { useCallback, useEffect, useState } from "react";
 import { Alert } from "react-bootstrap";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
+  faCircleNotch,
+  faDownload,
   faFilter,
   faMagnifyingGlass,
 } from "@fortawesome/free-solid-svg-icons";
@@ -12,6 +14,7 @@ import { PortalHeader } from "../../components/PortalHeader";
 import {
   aplicarMovimentacaoNaFolha,
   buscarMovimentacaoPorId,
+  exportarMovimentacoes,
   listarMovimentacoes,
 } from "../../services/CentroCustoMovimentacoes.service";
 import { listarCentrosCusto } from "../../services/CentrosCusto.service";
@@ -59,6 +62,7 @@ export function CentroCustoMovimentacoesRhView() {
   const [isApplying, setIsApplying] = useState(false);
   const [centrosCustoOptions, setCentrosCustoOptions] = useState([]);
   const [isCentrosCustoLoading, setIsCentrosCustoLoading] = useState(false);
+  const [isExporting, setIsExporting] = useState(false);
 
   const fetchMovimentacoes = useCallback(async () => {
     try {
@@ -130,6 +134,32 @@ export function CentroCustoMovimentacoesRhView() {
       [name]: value,
     }));
     setPage(1);
+  };
+
+  const handleExportCsv = async () => {
+    if (isExporting) {
+      return;
+    }
+
+    try {
+      setIsExporting(true);
+
+      await exportarMovimentacoes({
+        search: filters.search.trim(),
+        status: filters.status,
+        centroCustoAnterior: filters.centroCustoAnterior.trim(),
+        novoCentroCusto: filters.novoCentroCusto.trim(),
+        dataInicio: filters.dataInicio,
+        dataFim: filters.dataFim,
+      });
+    } catch (error) {
+      toast.error(
+        error.message ||
+          "Não foi possível exportar as movimentações. Tente novamente.",
+      );
+    } finally {
+      setIsExporting(false);
+    }
   };
 
   const handleOpenDetails = async (movimentacao) => {
@@ -223,7 +253,19 @@ export function CentroCustoMovimentacoesRhView() {
       <PortalHeader
         title="Movimentações RH"
         description="Acompanhe as mudanças de centro de custo registradas pelas obras e aplique na folha após conferência."
-      />
+      >
+        <ExportButton
+          type="button"
+          disabled={isExporting}
+          onClick={handleExportCsv}
+        >
+          <FontAwesomeIcon
+            icon={isExporting ? faCircleNotch : faDownload}
+            spin={isExporting}
+          />
+          {isExporting ? "Exportando..." : "Exportar CSV"}
+        </ExportButton>
+      </PortalHeader>
 
       <FiltersPanel>
         <FiltersHeader>
@@ -388,6 +430,49 @@ const FiltersPanel = styled.section`
   border: 1px solid oklch(89% 0.009 245);
   border-radius: 10px;
   background: oklch(99% 0.004 245);
+`;
+
+const ExportButton = styled.button`
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  min-height: 40px;
+  padding: 9px 16px;
+  border: 1px solid oklch(55% 0.17 253);
+  border-radius: 10px;
+  background: oklch(55% 0.17 253);
+  color: oklch(98% 0.004 245);
+  font-size: 0.95rem;
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  transition:
+    border-color 160ms ease,
+    background-color 160ms ease,
+    box-shadow 160ms ease;
+
+  &:hover:not(:disabled),
+  &:focus:not(:disabled) {
+    border-color: oklch(48% 0.19 253);
+    background: oklch(48% 0.19 253);
+    color: oklch(98% 0.004 245);
+    outline: none;
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 0.2rem oklch(55% 0.17 253 / 0.18);
+  }
+
+  &:disabled {
+    cursor: not-allowed;
+    border-color: oklch(73% 0.05 250);
+    background: oklch(73% 0.05 250);
+  }
+
+  @media (max-width: 767.98px) {
+    flex: 1 1 160px;
+  }
 `;
 
 const FiltersHeader = styled.div`

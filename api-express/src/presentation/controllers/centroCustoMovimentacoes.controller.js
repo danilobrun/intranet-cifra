@@ -2,6 +2,7 @@ const {
   CentroCustoMovimentacaoServiceError,
   applyCentroCustoMovimentacaoNaFolha,
   createCentroCustoMovimentacao,
+  exportCentroCustoMovimentacoesCsv,
   getCentroCustoMovimentacaoById,
   listCentroCustoMovimentacoes,
   listMinhasCentroCustoMovimentacoes,
@@ -48,6 +49,26 @@ const listMinhasCentroCustoMovimentacoesController = async (req, res) => {
       res,
       error,
       "listMinhasCentroCustoMovimentacoes",
+    );
+  }
+};
+
+const exportCentroCustoMovimentacoesCsvController = async (req, res) => {
+  try {
+    const result = await exportCentroCustoMovimentacoesCsv(req.query);
+
+    res.set("Content-Type", "text/csv; charset=utf-8");
+    res.set(
+      "Content-Disposition",
+      `attachment; filename="${result.fileName}"`,
+    );
+
+    return res.status(200).send(result.content);
+  } catch (error) {
+    return handleCentroCustoMovimentacaoError(
+      res,
+      error,
+      "exportCentroCustoMovimentacoesCsv",
     );
   }
 };
@@ -109,6 +130,7 @@ const applyCentroCustoMovimentacaoNaFolhaController = async (req, res) => {
 module.exports = {
   applyCentroCustoMovimentacaoNaFolhaController,
   createCentroCustoMovimentacaoController,
+  exportCentroCustoMovimentacoesCsvController,
   getCentroCustoMovimentacaoController,
   listCentroCustoMovimentacoesController,
   listMinhasCentroCustoMovimentacoesController,

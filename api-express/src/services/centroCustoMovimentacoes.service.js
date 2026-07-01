@@ -10,6 +10,7 @@ const MOVIMENTACAO_STATUSES = ["Pendente", "Aplicado na Folha"];
 const DEFAULT_PAGE = 1;
 const DEFAULT_LIMIT = 50;
 const MAX_LIMIT = 100;
+const MOVIMENTACOES_EXPORT_FILE_NAME = "movimentacoes-centro-custo.csv";
 
 class CentroCustoMovimentacaoServiceError extends Error {
   constructor(statusCode, msg, details = {}) {
@@ -31,6 +32,54 @@ const normalizeComparableText = (value) =>
 
 const escapeRegex = (value = "") =>
   value.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+
+const escapeCsvCell = (value) => {
+  const text = String(value ?? "");
+  const safeText = /^[=+\-@]/.test(text.trimStart()) ? `'${text}` : text;
+  const escapedText = safeText.replace(/"/g, '""');
+
+  return /[";\r\n]/.test(escapedText) ? `"${escapedText}"` : escapedText;
+};
+
+const buildCsvContent = (rows = []) =>
+  `\uFEFF${rows
+    .map((row) => row.map(escapeCsvCell).join(";"))
+    .join("\r\n")}`;
+
+const formatCsvDate = (value, includeTime = true) => {
+  if (!value) return "";
+
+  const date = new Date(value);
+
+  if (Number.isNaN(date.getTime())) {
+    return "";
+  }
+
+  return new Intl.DateTimeFormat("pt-BR", {
+    dateStyle: "short",
+    ...(includeTime ? { timeStyle: "short" } : {}),
+    timeZone: includeTime ? "America/Sao_Paulo" : "UTC",
+  }).format(date);
+};
+
+const formatCpfForExport = (value = "") => {
+  const digits = normalizeCpf(value);
+
+  if (digits.length !== 11) {
+    return value || "";
+  }
+
+  return `${digits.slice(0, 3)}.${digits.slice(3, 6)}.${digits.slice(
+    6,
+    9,
+  )}-${digits.slice(9)}`;
+};
+
+const getUserExportName = (user) => {
+  if (!user) return "";
+
+  return user.name || user.email || "";
+};
 
 const ensureAuthenticatedUser = (user) => {
   if (!user?.id) {
@@ -310,6 +359,48 @@ const listMinhasCentroCustoMovimentacoes = async (query = {}, user) => {
   };
 };
 
+const exportCentroCustoMovimentacoesCsv = async (query = {}) => {
+  const filters = buildMovimentacaoFilters(query);
+  const movimentacoes = await CentroCustoMovimentacao.find(filters)
+    .populate(movimentacaoPopulateConfig)
+    .sort({ createdAt: -1 });
+  const rows = [
+    [
+      "Nome",
+      "CPF",
+      "Centro de Custo Anterior",
+      "Novo Centro de Custo",
+      "Data da Alteração",
+      "Quem Registrou",
+      "Observação",
+      "Status",
+      "Registrado Em",
+      "Atualizado Em",
+      "Aplicado Por",
+      "Aplicado Em",
+    ],
+    ...movimentacoes.map((movimentacao) => [
+      movimentacao.nome,
+      formatCpfForExport(movimentacao.cpf),
+      movimentacao.centroCustoAnterior,
+      movimentacao.novoCentroCusto,
+      formatCsvDate(movimentacao.dataAlteracao, false),
+      getUserExportName(movimentacao.createdBy),
+      movimentacao.observacao,
+      movimentacao.status,
+      formatCsvDate(movimentacao.createdAt),
+      formatCsvDate(movimentacao.updatedAt),
+      getUserExportName(movimentacao.appliedBy),
+      formatCsvDate(movimentacao.appliedAt),
+    ]),
+  ];
+
+  return {
+    fileName: MOVIMENTACOES_EXPORT_FILE_NAME,
+    content: buildCsvContent(rows),
+  };
+};
+
 const getCentroCustoMovimentacaoById = async (id) => {
   validateObjectId(id, "Movimentação inválida.");
 
@@ -475,6 +566,7 @@ module.exports = {
   CentroCustoMovimentacaoServiceError,
   applyCentroCustoMovimentacaoNaFolha,
   createCentroCustoMovimentacao,
+  exportCentroCustoMovimentacoesCsv,
   getCentroCustoMovimentacaoById,
   listCentroCustoMovimentacoes,
   listMinhasCentroCustoMovimentacoes,

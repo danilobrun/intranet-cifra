@@ -53,6 +53,66 @@ const requestJson = async (url, options = {}) => {
   return data;
 };
 
+const getFileNameFromContentDisposition = (contentDisposition = "") => {
+  const utf8Match = contentDisposition.match(/filename\*=UTF-8''([^;]+)/i);
+
+  if (utf8Match?.[1]) {
+    return decodeURIComponent(utf8Match[1].replace(/"/g, ""));
+  }
+
+  const fileNameMatch = contentDisposition.match(/filename="?([^"]+)"?/i);
+
+  return fileNameMatch?.[1];
+};
+
+const downloadBlob = (blob, fileName) => {
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+
+  link.href = url;
+  link.download = fileName;
+  link.style.display = "none";
+
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  URL.revokeObjectURL(url);
+};
+
+const requestBlob = async (url, options = {}) => {
+  const response = await fetch(url, {
+    ...options,
+    headers: {
+      ...getAuthorizationHeaders(),
+      ...options.headers,
+    },
+  });
+
+  if (redirectToLoginIfUnauthorized(response)) {
+    return;
+  }
+
+  if (!response.ok) {
+    const contentType = response.headers.get("content-type") || "";
+    const data = contentType.includes("application/json")
+      ? await response.json()
+      : {};
+    const error = new Error(
+      data.msg || "Não foi possível baixar o arquivo CSV.",
+    );
+
+    error.data = data;
+    throw error;
+  }
+
+  return {
+    blob: await response.blob(),
+    fileName: getFileNameFromContentDisposition(
+      response.headers.get("content-disposition") || "",
+    ),
+  };
+};
+
 export const listarMovimentacoes = async (filters = {}) => {
   return requestJson(
     buildUrlWithQuery("/centro-custo-movimentacoes", filters),
@@ -62,6 +122,21 @@ export const listarMovimentacoes = async (filters = {}) => {
 export const listarMinhasMovimentacoes = async (filters = {}) => {
   return requestJson(
     buildUrlWithQuery("/centro-custo-movimentacoes/minhas", filters),
+  );
+};
+
+export const exportarMovimentacoes = async (filters = {}) => {
+  const result = await requestBlob(
+    buildUrlWithQuery("/centro-custo-movimentacoes/exportar", filters),
+  );
+
+  if (!result) {
+    return;
+  }
+
+  downloadBlob(
+    result.blob,
+    result.fileName || "movimentacoes-centro-custo.csv",
   );
 };
 
