@@ -229,7 +229,6 @@ const mapMinhaMovimentacao = (movimentacao) => ({
   observacao: movimentacao.observacao,
   createdBy: mapUser(movimentacao.createdBy),
   createdAt: movimentacao.createdAt,
-  updatedAt: movimentacao.updatedAt,
 });
 
 const movimentacaoPopulateConfig = [
@@ -339,7 +338,7 @@ const listMinhasCentroCustoMovimentacoes = async (query = {}, user) => {
   const [movimentacoes, total] = await Promise.all([
     CentroCustoMovimentacao.find(filters)
       .select(
-        "_id nome cpf centroCustoAnterior novoCentroCusto dataAlteracao observacao createdBy createdAt updatedAt",
+        "_id nome cpf centroCustoAnterior novoCentroCusto dataAlteracao observacao createdBy createdAt",
       )
       .populate(minhaMovimentacaoPopulateConfig)
       .sort({ createdAt: -1 })

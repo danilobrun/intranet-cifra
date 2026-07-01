@@ -449,12 +449,6 @@ export function MeusRegistrosDrawer({ show, onHide }) {
                   </DetailValue>
                 </DetailItem>
 
-                <DetailItem>
-                  <DetailLabel>Atualizado em</DetailLabel>
-                  <DetailValue>
-                    {formatDate(selectedRegistro.updatedAt, true)}
-                  </DetailValue>
-                </DetailItem>
               </DetailsGrid>
 
               <ObservationGroup>
