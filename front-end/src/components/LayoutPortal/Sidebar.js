@@ -11,10 +11,12 @@ import CifraLogoWhite from "../../assets/img/logo-cifra-branco.png";
 import { canAccessContracts } from "../../helpers/contractsPermissions";
 import { canAccessBoletins } from "../../helpers/boletinsPermissions";
 import { canAccessResumoContratos } from "../../helpers/resumoContratosPermissions";
+import { canManageCentrosCusto } from "../../helpers/centroCustoPermissions";
 import {
   faAddressBook,
   faBookOpen,
   faCarSide,
+  faClipboardList,
   faFileContract,
   faFileInvoiceDollar,
   faSackDollar,
@@ -23,8 +25,11 @@ import {
   faHouse,
   faLocationDot,
   faPenToSquare,
+  faRightLeft,
   faRobot,
   faShieldHalved,
+  faSitemap,
+  faUsers,
   faUsersGear,
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -45,6 +50,11 @@ const menuSections = [
     key: "contracts",
     label: "Contratos & BMs",
     icon: faFileContract,
+  },
+  {
+    key: "costCenter",
+    label: "Centro de Custo",
+    icon: faUsers,
   },
 ];
 
@@ -279,6 +289,38 @@ export function Sidebar({ isOpen, isCollapsed, onClose }) {
         "ceo",
         "dono",
       ],
+    },
+    {
+      to: "/portal/centro-custo/funcionarios",
+      label: "Funcionários",
+      icon: faUsers,
+      section: "costCenter",
+      checkAllPath: false,
+      canShow: (currentUser) => Boolean(currentUser?._id),
+    },
+    {
+      to: "/portal/centro-custo/centros-custo",
+      label: "Centros de Custo",
+      icon: faSitemap,
+      section: "costCenter",
+      checkAllPath: false,
+      canShow: canManageCentrosCusto,
+    },
+    {
+      to: "/portal/centro-custo/registrar-movimentacao",
+      label: "Registrar Movimentação",
+      icon: faRightLeft,
+      section: "costCenter",
+      checkAllPath: false,
+      canShow: (currentUser) => Boolean(currentUser?._id),
+    },
+    {
+      to: "/portal/centro-custo/movimentacoes",
+      label: "Movimentações RH",
+      icon: faClipboardList,
+      section: "costCenter",
+      checkAllPath: false,
+      canShow: canManageCentrosCusto,
     },
     {
       to: "/portal/plates",
