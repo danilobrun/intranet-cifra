@@ -296,7 +296,7 @@ export function Sidebar({ isOpen, isCollapsed, onClose }) {
       icon: faUsers,
       section: "costCenter",
       checkAllPath: false,
-      canShow: (currentUser) => Boolean(currentUser?._id),
+      canShow: canManageCentrosCusto,
     },
     {
       to: "/portal/centro-custo/centros-custo",
@@ -312,7 +312,7 @@ export function Sidebar({ isOpen, isCollapsed, onClose }) {
       icon: faRightLeft,
       section: "costCenter",
       checkAllPath: false,
-      canShow: (currentUser) => Boolean(currentUser?._id),
+      canShow: canManageCentrosCusto,
     },
     {
       to: "/portal/centro-custo/movimentacoes",

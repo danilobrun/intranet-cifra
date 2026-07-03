@@ -343,7 +343,7 @@ function App() {
       <Route
         path="/portal/centro-custo/funcionarios"
         element={
-          <PrivateRoute>
+          <PrivateRoute canAccess={canManageCentrosCusto}>
             <CentroCustoFuncionariosView />
           </PrivateRoute>
         }
@@ -359,7 +359,7 @@ function App() {
       <Route
         path="/portal/centro-custo/registrar-movimentacao"
         element={
-          <PrivateRoute>
+          <PrivateRoute canAccess={canManageCentrosCusto}>
             <CentroCustoRegistrarMovimentacaoView />
           </PrivateRoute>
         }
