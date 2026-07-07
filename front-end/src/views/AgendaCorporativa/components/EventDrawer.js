@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { faCircleNotch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import styled from "styled-components";
@@ -16,6 +16,7 @@ export function EventDrawer({
   initialEvent,
   isSubmitting,
   mode = "create",
+  canUseDiretoriaAdminVisibility = false,
   onHide,
   onSubmit,
 }) {
@@ -26,6 +27,15 @@ export function EventDrawer({
       : getDefaultEventFormData(initialDate),
   );
   const [formError, setFormError] = useState("");
+  const visibilityOptions = useMemo(
+    () =>
+      VISIBILITY_OPTIONS.filter(
+        (option) =>
+          option.value !== "DIRETORIA_ADMIN" ||
+          canUseDiretoriaAdminVisibility,
+      ),
+    [canUseDiretoriaAdminVisibility],
+  );
 
   useEffect(() => {
     if (!show) {
@@ -260,7 +270,7 @@ export function EventDrawer({
                     value={formData.visibilidade}
                     onChange={handleFieldChange}
                   >
-                    {VISIBILITY_OPTIONS.map((option) => (
+                    {visibilityOptions.map((option) => (
                       <option key={option.value} value={option.value}>
                         {option.label}
                       </option>

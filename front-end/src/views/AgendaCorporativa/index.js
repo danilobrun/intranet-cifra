@@ -7,6 +7,7 @@ import { PortalHeader } from "../../components/PortalHeader";
 import {
   canDeleteAgendaEvent,
   canEditAgendaEvent,
+  isAgendaDiretoriaAdmin,
 } from "../../helpers/agendaCorporativaPermissions";
 import {
   atualizarEvento,
@@ -88,6 +89,10 @@ export function AgendaCorporativaView() {
   const canDeleteSelectedEvent = useMemo(
     () => canDeleteAgendaEvent(user, selectedEvent),
     [selectedEvent, user],
+  );
+  const canUseDiretoriaAdminVisibility = useMemo(
+    () => isAgendaDiretoriaAdmin(user),
+    [user],
   );
 
   useEffect(() => {
@@ -301,6 +306,7 @@ export function AgendaCorporativaView() {
           show={isEventDrawerOpen}
           initialDate={eventDrawerDate}
           isSubmitting={isCreatingEvent}
+          canUseDiretoriaAdminVisibility={canUseDiretoriaAdminVisibility}
           onHide={handleCloseEventDrawer}
           onSubmit={handleSubmitEvent}
         />
@@ -320,6 +326,7 @@ export function AgendaCorporativaView() {
           mode="edit"
           initialEvent={editingEvent}
           isSubmitting={isUpdatingEvent}
+          canUseDiretoriaAdminVisibility={canUseDiretoriaAdminVisibility}
           onHide={handleCloseEditDrawer}
           onSubmit={handleSubmitEventUpdate}
         />

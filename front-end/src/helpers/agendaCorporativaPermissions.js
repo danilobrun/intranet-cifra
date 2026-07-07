@@ -20,6 +20,30 @@ export const isAgendaAdmin = (user) =>
     return code === "1" || code === "admin" || cargo === "admin" || cargo === "administrador";
   });
 
+export const isAgendaDiretoriaAdmin = (user) => {
+  if (isAgendaAdmin(user)) {
+    return true;
+  }
+
+  return getUserRoles(user).some((role) => {
+    const code = normalizeText(role?.code || role);
+    const cargo = normalizeText(role?.cargo);
+
+    return (
+      code === "ceo" ||
+      code === "dono" ||
+      code === "diretoria" ||
+      code === "diretor" ||
+      code === "diretora" ||
+      cargo === "ceo" ||
+      cargo === "dono" ||
+      cargo === "diretoria" ||
+      cargo === "diretor" ||
+      cargo === "diretora"
+    );
+  });
+};
+
 export const canEditAgendaEvent = (user, event) => {
   const userId = getUserId(user);
   const creatorId = getEventCreatorId(event);
