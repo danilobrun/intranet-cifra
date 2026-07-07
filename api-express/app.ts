@@ -17,7 +17,14 @@ const port = process.env.PORT || 3002;
 // Test conection
 // const PORT = process.env.PORT_HOST;
 
-console.log(port);
+const allowedOrigins = [
+  "http://localhost:3000",
+  "https://intranet-cifra.netlify.app/",
+];
+
+const corsOptions = {
+  origin: allowedOrigins,
+};
 
 // Adapters
 AdminJS.registerAdapter({
@@ -31,11 +38,13 @@ const start = async () => {
   mongoDb;
   const adminOptions = {
     // databases: [mongoDb],
-    resources: [Car, {
-      resource: User
-    },
-    {resource: Rent}
-  ],
+    resources: [
+      Car,
+      {
+        resource: User,
+      },
+      { resource: Rent },
+    ],
     rootPath: "/admin",
     dashboard: {},
     branding: {
@@ -59,7 +68,7 @@ const start = async () => {
   app.use(admin.options.rootPath, adminRouter);
 
   // O Cors serve para liberar requisições externas (portas diferente)
-  app.use(cors());
+  app.use(cors(corsOptions));
 
   // Config JSON response middleware
   app.use(express.json());
@@ -69,7 +78,7 @@ const start = async () => {
 
   app.listen(port);
   console.log(
-    `AdminJS started on http://localhost:${port}${admin.options.rootPath}`
+    `AdminJS started on http://localhost:${port}${admin.options.rootPath}`,
   );
 
   let err: any;
