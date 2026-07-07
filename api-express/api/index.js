@@ -4,12 +4,13 @@ var cors = require("cors");
 const express = require("express");
 const mongoose = require("mongoose");
 const registersRoutes = require("../src/routes");
+const { corsOptions } = require("../src/config/corsOptions");
 const port = process.env.PORT || 3002;
 
 const app = express();
 
 // O Cors serve para liberar requisições externas (portas diferente).
-app.use(cors());
+app.use(cors(corsOptions));
 
 // Config JSON response middleware
 app.use(express.json());

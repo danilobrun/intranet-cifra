@@ -242,6 +242,17 @@ const ensureRequiredText = (value, fieldName) => {
 const getAllowedVisibilityOrDefault = (value) =>
   AGENDA_CORPORATIVA_VISIBILIDADES.includes(value) ? value : "PUBLICO";
 
+const ensureCanUseEventoVisibility = (user, visibilidade) => {
+  if (visibilidade !== "DIRETORIA_ADMIN" || isAgendaDiretoriaAdminUser(user)) {
+    return;
+  }
+
+  throw new AgendaCorporativaServiceError(
+    403,
+    "Apenas usuarios da diretoria ou administradores podem usar esta visibilidade.",
+  );
+};
+
 const buildVisibilityAccessFilter = (user) => {
   const visibleValues = ["PUBLICO"];
 
@@ -293,6 +304,8 @@ const buildPayload = (payload = {}, user, currentEvent = null) => {
           "status",
         )
       : currentEvent?.status || "ATIVO";
+
+  ensureCanUseEventoVisibility(user, visibilidade);
 
   if (!titulo) {
     throw new AgendaCorporativaServiceError(422, "titulo e obrigatorio.");

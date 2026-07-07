@@ -12,19 +12,11 @@ import { Rent } from "./typeModels/Rent";
 require("dotenv").config();
 var cors = require("cors");
 const registersRoutes = require("./src/routes");
+const { corsOptions } = require("./src/config/corsOptions");
 const port = process.env.PORT || 3002;
 
 // Test conection
 // const PORT = process.env.PORT_HOST;
-
-const allowedOrigins = [
-  "http://localhost:3000",
-  "https://intranet-cifra.netlify.app/",
-];
-
-const corsOptions = {
-  origin: allowedOrigins,
-};
 
 // Adapters
 AdminJS.registerAdapter({
