@@ -15,6 +15,7 @@ import { canManageCentrosCusto } from "../../helpers/centroCustoPermissions";
 import {
   faAddressBook,
   faBookOpen,
+  faCalendarDays,
   faCarSide,
   faClipboardList,
   faFileContract,
@@ -266,6 +267,14 @@ export function Sidebar({ isOpen, isCollapsed, onClose }) {
       ],
     },
     {
+      to: "/portal/agenda-corporativa",
+      label: "Calendário",
+      icon: faCalendarDays,
+      section: "general",
+      checkAllPath: false,
+      canShow: (currentUser) => Boolean(currentUser?._id),
+    },
+    {
       to: "/portal/addresses",
       label: "Endereços",
       icon: faLocationDot,
@@ -512,10 +521,17 @@ const SidebarStyled = styled.header`
   height: 100vh;
   padding: ${(props) => (props.$collapsed ? "1rem 0.75rem" : "1rem")};
   overflow-y: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
   transition:
     width 180ms ease-out,
     flex-basis 180ms ease-out,
     padding 180ms ease-out;
+
+  &::-webkit-scrollbar {
+    width: 0;
+    height: 0;
+  }
 
   @media (prefers-reduced-motion: reduce) {
     transition: none;

@@ -8,6 +8,7 @@ import { AdminPortalsView } from "./views/AdminPortals";
 import { AdminAddPortalsView } from "./views/AdminAddPortal";
 import { AdminEditPortalView } from "./views/AdminEditPortal";
 import { EletronicDiary } from "./views/EletronicDiary";
+import { AgendaCorporativaView } from "./views/AgendaCorporativa";
 import { AdminUsersView } from "./views/AdminUsers";
 import { AdminEditUserView } from "./views/AdminEditUser";
 import { AdminAddUserView } from "./views/AdminAddUser";
@@ -176,6 +177,14 @@ function App() {
             ]}
           >
             <EletronicDiary />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/agenda-corporativa"
+        element={
+          <PrivateRoute>
+            <AgendaCorporativaView />
           </PrivateRoute>
         }
       />
