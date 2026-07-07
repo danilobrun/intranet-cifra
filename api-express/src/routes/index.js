@@ -1,3 +1,4 @@
+const agendaCorporativaRoutes = require("./agendaCorporativa.routes");
 const boletinsRoutes = require("./boletins.routes");
 const carsRoutes = require("./cars.routes");
 const centroCustoMovimentacoesRoutes = require("./centroCustoMovimentacoes.routes");
@@ -22,6 +23,7 @@ const registersRoutes = (app) => {
       msg: "Bem vindo a API da Cifra Engenharia.",
     });
   });
+  agendaCorporativaRoutes(app);
   boletinsRoutes(app);
   carsRoutes(app);
   centroCustoMovimentacoesRoutes(app);
