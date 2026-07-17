@@ -8,6 +8,10 @@ const ClienteSchema = new mongoose.Schema(
       trim: true,
       index: true,
     },
+    active: {
+      type: Boolean,
+      default: true,
+    },
   },
   {
     timestamps: true,

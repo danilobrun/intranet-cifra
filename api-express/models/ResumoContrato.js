@@ -12,6 +12,7 @@ const ResumoContratoSchema = new mongoose.Schema(
     orcamento: { type: Number, default: 0 },
     dataInicio: { type: Date, default: null },
     dataFim: { type: Date, default: null },
+    active: { type: Boolean, default: true },
   },
   {
     timestamps: true,

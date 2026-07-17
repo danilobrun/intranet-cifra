@@ -5,6 +5,7 @@ const ResumoContratoBm = require("../../../models/ResumoContratoBm");
 
 const MS_PER_DAY = 24 * 60 * 60 * 1000;
 const MONTHS = Array.from({ length: 12 }, (_, index) => index + 1);
+const ACTIVE_FILTER = { active: { $ne: false } };
 
 const hasOwn = (object, key) =>
   Object.prototype.hasOwnProperty.call(object || {}, key);
@@ -351,7 +352,10 @@ const validateClienteExists = async (clienteId) => {
     };
   }
 
-  const cliente = await Cliente.findById(clienteId);
+  const cliente = await Cliente.findOne({
+    _id: clienteId,
+    ...ACTIVE_FILTER,
+  });
 
   if (!cliente) {
     return {
@@ -386,6 +390,7 @@ const mapContratoResponse = (contrato) => ({
   clienteId: getContratoClienteId(contrato),
   cliente: mapClienteBrief(contrato.clienteId),
   nomeContrato: contrato.nomeContrato ?? "",
+  active: contrato.active !== false,
   orcamento: getSafeNumber(contrato.orcamento),
   dataInicio: contrato.dataInicio || null,
   dataFim: contrato.dataFim || null,
@@ -401,6 +406,7 @@ const mapContratoResumoResponse = (contrato, bm) => {
     clienteId: getContratoClienteId(contrato),
     cliente: mapClienteBrief(contrato.clienteId),
     nomeContrato: contrato.nomeContrato ?? "",
+    active: contrato.active !== false,
     orcamento,
     bm,
     saldo: orcamento - bm,
@@ -419,10 +425,51 @@ const findResumoContratoById = async (id) => {
     };
   }
 
-  const contrato = await ResumoContrato.findById(id).populate({
+  const contrato = await ResumoContrato.findOne({
+    _id: id,
+    ...ACTIVE_FILTER,
+  });
+
+  if (!contrato) {
+    return {
+      ok: false,
+      status: 404,
+      msg: "Contrato nao encontrado.",
+    };
+  }
+
+  const clienteId = contrato.clienteId;
+
+  await contrato.populate({
     path: "clienteId",
     select: "nome",
+    match: ACTIVE_FILTER,
   });
+
+  if (clienteId && !contrato.clienteId) {
+    return {
+      ok: false,
+      status: 404,
+      msg: "Contrato nao encontrado.",
+    };
+  }
+
+  return {
+    ok: true,
+    contrato,
+  };
+};
+
+const findResumoContratoByIdIncludingInactive = async (id) => {
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return {
+      ok: false,
+      status: 422,
+      msg: "Contrato invalido.",
+    };
+  }
+
+  const contrato = await ResumoContrato.findById(id);
 
   if (!contrato) {
     return {
@@ -500,6 +547,7 @@ const getContratoDetailResponse = async (contrato, ano) => {
       clienteId: getContratoClienteId(contrato),
       cliente: mapClienteBrief(contrato.clienteId),
       nomeContrato: contrato.nomeContrato ?? "",
+      active: contrato.active !== false,
       orcamento,
       dataInicio: contrato.dataInicio || null,
       dataFim: contrato.dataFim || null,
@@ -639,23 +687,36 @@ const appendContratoExportRows = ({
 };
 
 const getResumoContratosExportRows = async ({ clienteId, isUnassigned, ano }) => {
-  const contratoFilter = {};
+  const clienteFilter = { ...ACTIVE_FILTER };
 
-  if (isUnassigned) {
-    contratoFilter.$or = [{ clienteId: null }, { clienteId: { $exists: false } }];
-  } else if (clienteId) {
-    contratoFilter.clienteId = clienteId;
+  if (clienteId && !isUnassigned) {
+    clienteFilter._id = clienteId;
   }
 
-  const clienteFilter =
-    clienteId && !isUnassigned ? { _id: clienteId } : {};
+  const clientes = isUnassigned
+    ? []
+    : await Cliente.find(clienteFilter).sort({ nome: 1 });
+  const activeClienteIds = clientes.map((cliente) => cliente._id);
+  const contratoFilter = { ...ACTIVE_FILTER };
 
-  const [clientes, contratos] = await Promise.all([
-    isUnassigned ? [] : Cliente.find(clienteFilter).sort({ nome: 1 }),
-    ResumoContrato.find(contratoFilter)
-      .populate({ path: "clienteId", select: "nome" })
-      .sort({ nomeContrato: 1, createdAt: 1 }),
-  ]);
+  if (isUnassigned) {
+    contratoFilter.$or = [
+      { clienteId: null },
+      { clienteId: { $exists: false } },
+    ];
+  } else if (clienteId) {
+    contratoFilter.clienteId = { $in: activeClienteIds };
+  } else {
+    contratoFilter.$or = [
+      { clienteId: { $in: activeClienteIds } },
+      { clienteId: null },
+      { clienteId: { $exists: false } },
+    ];
+  }
+
+  const contratos = await ResumoContrato.find(contratoFilter)
+    .populate({ path: "clienteId", select: "nome" })
+    .sort({ nomeContrato: 1, createdAt: 1 });
 
   const contratoIds = contratos.map((contrato) => contrato._id);
   const bmFilter = contratoIds.length
@@ -800,12 +861,18 @@ const listResumoContratos = async (req, res) => {
   const ano = yearResult.value;
 
   try {
-    const [clientes, contratos] = await Promise.all([
-      Cliente.find().sort({ nome: 1 }),
-      ResumoContrato.find()
-        .populate({ path: "clienteId", select: "nome" })
-        .sort({ updatedAt: -1 }),
-    ]);
+    const clientes = await Cliente.find(ACTIVE_FILTER).sort({ nome: 1 });
+    const activeClienteIds = clientes.map((cliente) => cliente._id);
+    const contratos = await ResumoContrato.find({
+      ...ACTIVE_FILTER,
+      $or: [
+        { clienteId: { $in: activeClienteIds } },
+        { clienteId: null },
+        { clienteId: { $exists: false } },
+      ],
+    })
+      .populate({ path: "clienteId", select: "nome" })
+      .sort({ updatedAt: -1 });
     const bmTotalsByContract = await getBmTotalsByContract(
       contratos.map((contrato) => contrato._id),
       ano,
@@ -1039,14 +1106,62 @@ const deleteResumoContrato = async (req, res) => {
       return res.status(findResult.status).json({ msg: findResult.msg });
     }
 
-    await ResumoContratoBm.deleteMany({ contratoId: findResult.contrato._id });
-    await ResumoContrato.findByIdAndDelete(findResult.contrato._id);
+    const deletedBms = await ResumoContratoBm.countDocuments({
+      contratoId: findResult.contrato._id,
+    });
+
+    findResult.contrato.active = false;
+    await findResult.contrato.save();
 
     return res.status(200).json({
       msg: "Resumo de contrato removido com sucesso.",
+      deletedBms,
     });
   } catch (error) {
     console.log("deleteResumoContrato error", error);
+    return res.status(500).json({
+      msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
+    });
+  }
+};
+
+const reactivateResumoContrato = async (req, res) => {
+  try {
+    const findResult = await findResumoContratoByIdIncludingInactive(
+      req.params.id,
+    );
+
+    if (!findResult.ok) {
+      return res.status(findResult.status).json({ msg: findResult.msg });
+    }
+
+    if (findResult.contrato.active !== false) {
+      return res.status(409).json({ msg: "Contrato ja esta ativo." });
+    }
+
+    const clienteResult = await validateClienteExists(
+      findResult.contrato.clienteId,
+    );
+
+    if (!clienteResult.ok) {
+      return res.status(409).json({
+        msg: "Reative o cliente antes de reativar este contrato.",
+      });
+    }
+
+    findResult.contrato.active = true;
+    await findResult.contrato.save();
+    await findResult.contrato.populate({
+      path: "clienteId",
+      select: "nome",
+    });
+
+    return res.status(200).json({
+      msg: "Resumo de contrato reativado com sucesso.",
+      contrato: mapContratoResponse(findResult.contrato),
+    });
+  } catch (error) {
+    console.log("reactivateResumoContrato error", error);
     return res.status(500).json({
       msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
     });
@@ -1261,6 +1376,7 @@ module.exports = {
   listResumoContratoById,
   editResumoContrato,
   deleteResumoContrato,
+  reactivateResumoContrato,
   createResumoContratoBm,
   editResumoContratoBm,
   deleteResumoContratoBm,

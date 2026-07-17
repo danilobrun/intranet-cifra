@@ -4,9 +4,11 @@ const {
   createCliente,
   editCliente,
   deleteCliente,
+  reactivateCliente,
 } = require("../presentation/controllers/clientes.controller");
 
 const allowedClienteRoles = ["1", "dono"];
+const allowedClienteReactivationRoles = ["1"];
 
 const clientesRoutes = (app) => {
   app.get(
@@ -32,6 +34,12 @@ const clientesRoutes = (app) => {
     checkToken,
     ensureRoleCodes(allowedClienteRoles),
     deleteCliente,
+  );
+  app.patch(
+    "/clientes/:id/reactivate",
+    checkToken,
+    ensureRoleCodes(allowedClienteReactivationRoles),
+    reactivateCliente,
   );
 };
 

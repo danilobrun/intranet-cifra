@@ -6,6 +6,7 @@ const {
   listResumoContratoById,
   editResumoContrato,
   deleteResumoContrato,
+  reactivateResumoContrato,
   createResumoContratoBm,
   editResumoContratoBm,
   deleteResumoContratoBm,
@@ -13,6 +14,7 @@ const {
 } = require("../presentation/controllers/resumoContratos.controller");
 
 const allowedResumoContratosRoles = ["1", "dono"];
+const allowedResumoContratosReactivationRoles = ["1"];
 
 const resumoContratosRoutes = (app) => {
   app.get(
@@ -50,6 +52,12 @@ const resumoContratosRoutes = (app) => {
     checkToken,
     ensureRoleCodes(allowedResumoContratosRoles),
     deleteResumoContrato,
+  );
+  app.patch(
+    "/resumo-contratos/:id/reactivate",
+    checkToken,
+    ensureRoleCodes(allowedResumoContratosReactivationRoles),
+    reactivateResumoContrato,
   );
   app.put(
     "/resumo-contratos/:id/bms",
