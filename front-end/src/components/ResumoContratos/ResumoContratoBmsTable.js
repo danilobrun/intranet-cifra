@@ -47,7 +47,7 @@ const getDateInputValue = (value) => {
   return date.toISOString().slice(0, 10);
 };
 
-const getShortDate = (value) => {
+const getDisplayDate = (value) => {
   if (!value) {
     return "";
   }
@@ -61,6 +61,7 @@ const getShortDate = (value) => {
   return date.toLocaleDateString("pt-BR", {
     day: "2-digit",
     month: "2-digit",
+    year: "numeric",
     timeZone: "UTC",
   });
 };
@@ -84,8 +85,8 @@ const getFullDate = (value) => {
 };
 
 const getCycleLabel = (bm) => {
-  const startDate = getShortDate(bm?.bmInicio);
-  const endDate = getShortDate(bm?.bmFim);
+  const startDate = getDisplayDate(bm?.bmInicio);
+  const endDate = getDisplayDate(bm?.bmFim);
 
   if (startDate && endDate) {
     return `${startDate} a ${endDate}`;
@@ -196,15 +197,10 @@ export function ResumoContratoBmsTable({
 
   const sortedBms = useMemo(
     () =>
-      [...bms].sort((left, right) => {
-        const monthDiff = Number(left.mes || 0) - Number(right.mes || 0);
-
-        if (monthDiff !== 0) {
-          return monthDiff;
-        }
-
-        return new Date(left.createdAt || 0) - new Date(right.createdAt || 0);
-      }),
+      [...bms].sort(
+        (left, right) =>
+          new Date(right.createdAt || 0) - new Date(left.createdAt || 0),
+      ),
     [bms],
   );
 
@@ -423,7 +419,7 @@ export function ResumoContratoBmsTable({
                       <td>
                         {bm.faturadoData ? (
                           <BillingBadge $status="success">
-                            Faturado em {getShortDate(bm.faturadoData)}
+                            Faturado em {getDisplayDate(bm.faturadoData)}
                           </BillingBadge>
                         ) : (
                           <BillingBadge $status="danger">
