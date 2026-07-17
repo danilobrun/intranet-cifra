@@ -34,11 +34,15 @@ import { TutorialEditorView } from "./views/TutorialEditor";
 import { HomeView } from "./views/Home";
 import { canAccessContracts } from "./helpers/contractsPermissions";
 import { canAccessBoletins } from "./helpers/boletinsPermissions";
-import { canAccessResumoContratos } from "./helpers/resumoContratosPermissions";
+import {
+  canAccessResumoContratos,
+  canReactivateResumoContratos,
+} from "./helpers/resumoContratosPermissions";
 import { canManageCentrosCusto } from "./helpers/centroCustoPermissions";
 import { ResumoContratoDetailView } from "./views/ResumoContratoDetail";
 import { ResumoContratoEditorView } from "./views/ResumoContratoEditor";
 import { ResumoContratos } from "./views/ResumoContratos";
+import { ResumoContratosInactiveView } from "./views/ResumoContratosInactive";
 import { PlatesView } from "./views/Plates";
 import { PlateCreateView } from "./views/PlateCreate";
 import { InactivePlatesView } from "./views/InactivePlates";
@@ -290,6 +294,14 @@ function App() {
         element={
           <PrivateRoute canAccess={canAccessResumoContratos}>
             <ResumoContratoEditorView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/resumo-contratos/inativos"
+        element={
+          <PrivateRoute canAccess={canReactivateResumoContratos}>
+            <ResumoContratosInactiveView />
           </PrivateRoute>
         }
       />

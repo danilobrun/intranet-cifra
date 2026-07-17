@@ -1,6 +1,7 @@
 const { checkToken, ensureRoleCodes } = require("../middleware/checktoken");
 const {
   listResumoContratos,
+  listInactiveResumoContratos,
   exportResumoContratosMacro,
   createResumoContrato,
   listResumoContratoById,
@@ -34,6 +35,12 @@ const resumoContratosRoutes = (app) => {
     checkToken,
     ensureRoleCodes(allowedResumoContratosRoles),
     exportResumoContratosMacro,
+  );
+  app.get(
+    "/resumo-contratos/inactive",
+    checkToken,
+    ensureRoleCodes(allowedResumoContratosReactivationRoles),
+    listInactiveResumoContratos,
   );
   app.get(
     "/resumo-contratos/:id",

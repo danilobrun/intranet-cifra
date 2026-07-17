@@ -1,6 +1,7 @@
 const { checkToken, ensureRoleCodes } = require("../middleware/checktoken");
 const {
   listClientes,
+  listInactiveClientes,
   createCliente,
   editCliente,
   deleteCliente,
@@ -16,6 +17,12 @@ const clientesRoutes = (app) => {
     checkToken,
     ensureRoleCodes(allowedClienteRoles),
     listClientes,
+  );
+  app.get(
+    "/clientes/inactive",
+    checkToken,
+    ensureRoleCodes(allowedClienteReactivationRoles),
+    listInactiveClientes,
   );
   app.post(
     "/clientes",

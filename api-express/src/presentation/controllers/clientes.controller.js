@@ -245,6 +245,45 @@ const deleteCliente = async (req, res) => {
   }
 };
 
+const listInactiveClientes = async (req, res) => {
+  try {
+    const clientes = await Cliente.find({ active: false }).sort({ nome: 1 });
+    const clienteIds = clientes.map((cliente) => cliente._id);
+    const totals = clienteIds.length
+      ? await ResumoContrato.aggregate([
+          {
+            $match: {
+              clienteId: { $in: clienteIds },
+            },
+          },
+          {
+            $group: {
+              _id: "$clienteId",
+              total: { $sum: 1 },
+            },
+          },
+        ])
+      : [];
+    const totalsByCliente = new Map(
+      totals.map((item) => [String(item._id), item.total]),
+    );
+
+    return res.status(200).json(
+      clientes.map((cliente) =>
+        mapClienteResponse(
+          cliente,
+          totalsByCliente.get(String(cliente._id)) || 0,
+        ),
+      ),
+    );
+  } catch (error) {
+    console.log("listInactiveClientes error", error);
+    return res.status(500).json({
+      msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
+    });
+  }
+};
+
 const reactivateCliente = async (req, res) => {
   try {
     const findResult = await findClienteById(req.params.id, {
@@ -292,6 +331,7 @@ const reactivateCliente = async (req, res) => {
 
 module.exports = {
   listClientes,
+  listInactiveClientes,
   createCliente,
   editCliente,
   deleteCliente,

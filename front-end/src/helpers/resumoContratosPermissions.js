@@ -27,3 +27,8 @@ export const canAccessResumoContratos = (user) =>
     (role) =>
       roleIsResumoContratosAdmin(role) || roleIsResumoContratosDono(role),
   );
+
+export const canReactivateResumoContratos = (user) =>
+  getUserRoles(user).some(
+    (role) => normalizeText(role?.code || role) === "1",
+  );

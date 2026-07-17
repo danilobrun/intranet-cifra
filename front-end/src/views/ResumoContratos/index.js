@@ -1,10 +1,12 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
 import { Alert, Button, Form, Modal } from "react-bootstrap";
+import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 import { toast } from "react-toastify";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import {
   faBuilding,
+  faClockRotateLeft,
   faDownload,
   faEye,
   faFileContract,
@@ -23,18 +25,18 @@ import {
   updateCliente,
 } from "../../services/Clientes.service";
 import {
+  deleteResumoContrato,
   getResumoContratos,
   getResumoContratosMacroExport,
 } from "../../services/ResumoContratos.service";
 import { useDailyRefresh } from "../../hooks/useDailyRefresh";
+import { canReactivateResumoContratos } from "../../helpers/resumoContratosPermissions";
+import { selectUser } from "../../store/User/User.selectors";
 import {
   RESUMO_CONTRATO_MONTH_OPTIONS,
   formatCurrency,
 } from "../../components/ResumoContratos/utils";
-import {
-  downloadCsv,
-  normalizeCsvFileName,
-} from "../../helpers/csvExport";
+import { downloadCsv, normalizeCsvFileName } from "../../helpers/csvExport";
 
 const getItemId = (item) => String(item?.id || item?._id || "");
 
@@ -153,6 +155,7 @@ const buildMacroCsvRows = (rows = []) => {
 };
 
 export function ResumoContratos() {
+  const user = useSelector(selectUser);
   const [clientes, setClientes] = useState([]);
   const [contratos, setContratos] = useState([]);
   const [selectedClienteId, setSelectedClienteId] = useState("");
@@ -165,6 +168,8 @@ export function ResumoContratos() {
   const [deleteAction, setDeleteAction] = useState();
   const [deleteConfirmText, setDeleteConfirmText] = useState("");
   const [isDeletingCliente, setIsDeletingCliente] = useState(false);
+  const [contractDeleteAction, setContractDeleteAction] = useState();
+  const [isDeletingContrato, setIsDeletingContrato] = useState(false);
   const [exportingScope, setExportingScope] = useState("");
 
   const fetchResumoContratos = useCallback(async () => {
@@ -232,6 +237,7 @@ export function ResumoContratos() {
     "cliente",
     "clientes",
   );
+  const canViewInactiveRecords = canReactivateResumoContratos(user);
 
   const openCreateClienteModal = () => {
     setClienteModal({ mode: "create" });
@@ -338,6 +344,38 @@ export function ResumoContratos() {
     }
   };
 
+  const openDeleteContratoModal = (contrato) => {
+    setContractDeleteAction({ contrato });
+  };
+
+  const closeDeleteContratoModal = () => {
+    if (isDeletingContrato) {
+      return;
+    }
+
+    setContractDeleteAction(undefined);
+  };
+
+  const handleDeleteContrato = async () => {
+    const contrato = contractDeleteAction?.contrato;
+
+    if (!contrato) {
+      return;
+    }
+
+    try {
+      setIsDeletingContrato(true);
+      await deleteResumoContrato(getItemId(contrato));
+      toast.success("Contrato excluído permanentemente.");
+      setContractDeleteAction(undefined);
+      await fetchResumoContratos();
+    } catch (error) {
+      toast.error(error.message || "Falha ao excluir contrato.");
+    } finally {
+      setIsDeletingContrato(false);
+    }
+  };
+
   const handleExportMacro = async (cliente) => {
     const clienteId = cliente ? getItemId(cliente) : "";
     const scope = cliente ? `cliente-${clienteId}` : "geral";
@@ -393,6 +431,13 @@ export function ResumoContratos() {
         <ClienteCount aria-label={clienteCountLabel}>
           {clienteCountLabel}
         </ClienteCount>
+
+        {canViewInactiveRecords ? (
+          <SecondaryAction as={Link} to="/resumo-contratos/inativos">
+            <FontAwesomeIcon icon={faClockRotateLeft} />
+            Excluídos
+          </SecondaryAction>
+        ) : null}
 
         <SecondaryAction
           type="button"
@@ -520,7 +565,9 @@ export function ResumoContratos() {
               disabled={Boolean(exportingScope)}
             >
               <FontAwesomeIcon icon={faDownload} />
-              {isExportingSelectedCliente ? "Exportando..." : "Exportar cliente"}
+              {isExportingSelectedCliente
+                ? "Exportando..."
+                : "Exportar cliente"}
             </SecondaryAction>
           </ContractsHeader>
 
@@ -556,6 +603,16 @@ export function ResumoContratos() {
                         aria-label={`Editar contrato ${contratoName}`}
                       >
                         <FontAwesomeIcon icon={faPen} />
+                      </IconAction>
+
+                      <IconAction
+                        type="button"
+                        title="Excluir contrato"
+                        aria-label={`Excluir contrato ${contratoName}`}
+                        $variant="danger"
+                        onClick={() => openDeleteContratoModal(contrato)}
+                      >
+                        <FontAwesomeIcon icon={faTrash} />
                       </IconAction>
                     </ContractActions>
                   </ContractCard>
@@ -666,6 +723,49 @@ export function ResumoContratos() {
             onClick={handleDeleteCliente}
           >
             {isDeletingCliente ? "Excluindo..." : "Excluir permanentemente"}
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      <Modal
+        show={Boolean(contractDeleteAction)}
+        onHide={closeDeleteContratoModal}
+        centered
+      >
+        <Modal.Header closeButton>
+          <Modal.Title>Excluir contrato</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          <DeleteIntro>
+            Tem certeza que deseja excluir{" "}
+            <strong>{getContratoName(contractDeleteAction?.contrato)}</strong>?
+          </DeleteIntro>
+
+          <DangerNotice>
+            <FontAwesomeIcon icon={faTriangleExclamation} />
+            <span>
+              Esta ação excluirá permanentemente o contrato e todos os
+              lançamentos de BM vinculados a ele. Essa ação não poderá ser
+              desfeita.
+            </span>
+          </DangerNotice>
+        </Modal.Body>
+        <Modal.Footer>
+          <Button
+            type="button"
+            variant="secondary"
+            onClick={closeDeleteContratoModal}
+            disabled={isDeletingContrato}
+          >
+            Cancelar
+          </Button>
+          <Button
+            type="button"
+            variant="danger"
+            disabled={isDeletingContrato}
+            onClick={handleDeleteContrato}
+          >
+            {isDeletingContrato ? "Excluindo..." : "Excluir permanentemente"}
           </Button>
         </Modal.Footer>
       </Modal>

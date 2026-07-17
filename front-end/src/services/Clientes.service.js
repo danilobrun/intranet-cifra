@@ -39,6 +39,10 @@ export const getClientes = async () => {
   return requestJson(`${apiUrl}/clientes`);
 };
 
+export const getInactiveClientes = async () => {
+  return requestJson(`${apiUrl}/clientes/inactive`);
+};
+
 export const createCliente = async (clienteData) => {
   return requestJson(`${apiUrl}/clientes`, {
     method: "POST",
@@ -62,5 +66,11 @@ export const updateCliente = async (clienteId, clienteData) => {
 export const deleteCliente = async (clienteId) => {
   return requestJson(`${apiUrl}/clientes/${clienteId}`, {
     method: "DELETE",
+  });
+};
+
+export const reactivateCliente = async (clienteId) => {
+  return requestJson(`${apiUrl}/clientes/${clienteId}/reactivate`, {
+    method: "PATCH",
   });
 };

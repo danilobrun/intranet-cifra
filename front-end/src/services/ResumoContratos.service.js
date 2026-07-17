@@ -54,6 +54,10 @@ export const getResumoContratos = async ({ ano } = {}) => {
   );
 };
 
+export const getInactiveResumoContratos = async () => {
+  return requestJson(`${apiUrl}/resumo-contratos/inactive`);
+};
+
 export const getResumoContratoById = async (contratoId, { ano } = {}) => {
   return requestJson(
     `${apiUrl}/resumo-contratos/${contratoId}${getQueryString({ ano })}`,
@@ -128,5 +132,11 @@ export const deleteResumoContratoBm = async (contratoId, bmId) => {
 export const deleteResumoContrato = async (contratoId) => {
   return requestJson(`${apiUrl}/resumo-contratos/${contratoId}`, {
     method: "DELETE",
+  });
+};
+
+export const reactivateResumoContrato = async (contratoId) => {
+  return requestJson(`${apiUrl}/resumo-contratos/${contratoId}/reactivate`, {
+    method: "PATCH",
   });
 };

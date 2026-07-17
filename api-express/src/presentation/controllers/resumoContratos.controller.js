@@ -337,6 +337,7 @@ const mapClienteBrief = (cliente) => {
   return {
     id: String(cliente._id),
     nome: cliente.nome || "",
+    active: cliente.active !== false,
   };
 };
 
@@ -457,6 +458,27 @@ const findResumoContratoById = async (id) => {
   return {
     ok: true,
     contrato,
+  };
+};
+
+const mapInactiveContratoResponse = (contrato, cliente) => {
+  const clienteId = getIdText(contrato.clienteId) || null;
+  const clienteExists = !clienteId || Boolean(cliente);
+  const clienteActive = !clienteId || cliente?.active !== false;
+
+  return {
+    id: String(contrato._id),
+    clienteId,
+    cliente: mapClienteBrief(cliente),
+    clienteExists,
+    canReactivate: clienteExists && clienteActive,
+    nomeContrato: contrato.nomeContrato ?? "",
+    active: contrato.active !== false,
+    orcamento: getSafeNumber(contrato.orcamento),
+    dataInicio: contrato.dataInicio || null,
+    dataFim: contrato.dataFim || null,
+    createdAt: contrato.createdAt,
+    updatedAt: contrato.updatedAt,
   };
 };
 
@@ -1125,6 +1147,42 @@ const deleteResumoContrato = async (req, res) => {
   }
 };
 
+const listInactiveResumoContratos = async (req, res) => {
+  try {
+    const contratos = await ResumoContrato.find({ active: false }).sort({
+      updatedAt: -1,
+    });
+    const clienteIds = Array.from(
+      new Set(
+        contratos
+          .map((contrato) => getIdText(contrato.clienteId))
+          .filter(Boolean),
+      ),
+    );
+    const clientes = clienteIds.length
+      ? await Cliente.find({ _id: { $in: clienteIds } }).select("nome active")
+      : [];
+    const clientesById = new Map(
+      clientes.map((cliente) => [String(cliente._id), cliente]),
+    );
+
+    return res.status(200).json(
+      contratos.map((contrato) => {
+        const clienteId = getIdText(contrato.clienteId);
+        return mapInactiveContratoResponse(
+          contrato,
+          clienteId ? clientesById.get(clienteId) : null,
+        );
+      }),
+    );
+  } catch (error) {
+    console.log("listInactiveResumoContratos error", error);
+    return res.status(500).json({
+      msg: "Aconteceu um erro no servidor, tente novamente mais tarde!",
+    });
+  }
+};
+
 const reactivateResumoContrato = async (req, res) => {
   try {
     const findResult = await findResumoContratoByIdIncludingInactive(
@@ -1371,6 +1429,7 @@ const manageResumoContratoBms = async (req, res) => {
 
 module.exports = {
   listResumoContratos,
+  listInactiveResumoContratos,
   exportResumoContratosMacro,
   createResumoContrato,
   listResumoContratoById,
