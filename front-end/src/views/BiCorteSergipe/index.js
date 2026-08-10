@@ -358,18 +358,20 @@ const ReportWorkspace = styled.div`
   grid-template-columns: minmax(0, 7fr) minmax(0, 3fr);
   gap: 16px;
   align-items: stretch;
-  flex: 1;
+  height: 75vh;
   min-height: 620px;
 
   @media (max-width: 1199.98px) {
     grid-template-columns: minmax(0, 1fr);
+    height: auto;
+    min-height: 0;
   }
 `;
 
 const ReportFrameContainer = styled.div`
   position: relative;
   min-width: 0;
-  min-height: 620px;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid oklch(88% 0.009 245);
   border-radius: 10px;
@@ -379,13 +381,17 @@ const ReportFrameContainer = styled.div`
     border: 0;
     border-radius: 0;
   }
+
+  @media (max-width: 1199.98px) {
+    height: 75vh;
+    min-height: 620px;
+  }
 `;
 
 const ReportFrame = styled.iframe`
   display: block;
   width: 100%;
   height: 100%;
-  min-height: 75vh;
   border: 0;
   background: oklch(98% 0.004 245);
 `;
@@ -446,7 +452,8 @@ const FrameError = styled.div`
   display: grid;
   place-items: center;
   align-content: center;
-  min-height: 620px;
+  height: 100%;
+  min-height: 0;
   padding: 32px;
   text-align: center;
 `;

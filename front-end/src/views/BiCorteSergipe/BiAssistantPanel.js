@@ -61,7 +61,13 @@ export function BiAssistantPanel({
         </ConfigurationAlert>
       ) : null}
 
-      <MessagesArea ref={messagesRef} aria-live="polite">
+      <MessagesArea
+        ref={messagesRef}
+        role="log"
+        aria-label="Conversa com o assistente"
+        aria-live="polite"
+        tabIndex={0}
+      >
         {messages.map((message) => (
           <MessageRow key={message.id} $sender={message.sender}>
             <MessageBubble $sender={message.sender}>
@@ -147,7 +153,8 @@ const AssistantPanel = styled.aside`
   display: grid;
   grid-template-rows: auto auto minmax(0, 1fr) auto;
   width: 100%;
-  min-height: 620px;
+  height: 100%;
+  min-height: 0;
   overflow: hidden;
   border: 1px solid oklch(89% 0.009 245);
   border-radius: 10px;
@@ -155,7 +162,7 @@ const AssistantPanel = styled.aside`
   box-shadow: 0 10px 28px oklch(18% 0.018 245 / 0.1);
 
   @media (max-width: 1199.98px) {
-    min-height: 560px;
+    height: 560px;
   }
 `;
 
@@ -220,6 +227,13 @@ const MessagesArea = styled.div`
   min-height: 0;
   padding: 18px 20px;
   overflow-y: auto;
+  overscroll-behavior: contain;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+
+  &::-webkit-scrollbar {
+    display: none;
+  }
 `;
 
 const MessageRow = styled.div`
