@@ -50,6 +50,8 @@ import { CentroCustoFuncionariosView } from "./views/CentroCustoFuncionarios";
 import { CentroCustoRegistrarMovimentacaoView } from "./views/CentroCustoRegistrarMovimentacao";
 import { CentroCustoMovimentacoesRhView } from "./views/CentroCustoMovimentacoesRh";
 import { CentrosCustoView } from "./views/CentrosCusto";
+import { BiCorteSergipeView } from "./views/BiCorteSergipe";
+import { canAccessBiCorteSergipe } from "./helpers/biCorteSergipePermissions";
 
 function App() {
   return (
@@ -318,6 +320,14 @@ function App() {
         element={
           <PrivateRoute canAccess={canAccessResumoContratos}>
             <ResumoContratoDetailView />
+          </PrivateRoute>
+        }
+      />
+      <Route
+        path="/portal/bi-corte-sergipe"
+        element={
+          <PrivateRoute canAccess={canAccessBiCorteSergipe}>
+            <BiCorteSergipeView />
           </PrivateRoute>
         }
       />

@@ -12,11 +12,13 @@ import { canAccessContracts } from "../../helpers/contractsPermissions";
 import { canAccessBoletins } from "../../helpers/boletinsPermissions";
 import { canAccessResumoContratos } from "../../helpers/resumoContratosPermissions";
 import { canManageCentrosCusto } from "../../helpers/centroCustoPermissions";
+import { canAccessBiCorteSergipe } from "../../helpers/biCorteSergipePermissions";
 import {
   faAddressBook,
   faBookOpen,
   faCalendarDays,
   faCarSide,
+  faChartBar,
   faClipboardList,
   faFileContract,
   faFileInvoiceDollar,
@@ -396,6 +398,14 @@ export function Sidebar({ isOpen, isCollapsed, onClose }) {
         "ceo",
         "dono",
       ],
+    },
+    {
+      to: "/portal/bi-corte-sergipe",
+      label: "BI Corte Sergipe",
+      icon: faChartBar,
+      section: "general",
+      checkAllPath: false,
+      canShow: canAccessBiCorteSergipe,
     },
     {
       to: "/portal/chatbot",
