@@ -17,11 +17,7 @@ import { BiAssistantPanel } from "./BiAssistantPanel";
 export const BI_CORTE_SERGIPE_URL =
   "https://app.powerbi.com/view?r=eyJrIjoiMGM5MTkxY2UtMGJjMC00MmJhLTgxNTQtMzMxOTA2NmI0YjdiIiwidCI6IjNlNWViODEwLTc2ZjctNGM1ZS1iMmEyLTcxZDQ0NjIwNzY1NiJ9";
 
-const quickPrompts = [
-  "Resuma os principais indicadores do período.",
-  "Quais pontos precisam de atenção?",
-  "Compare os resultados apresentados.",
-];
+const quickPrompts = ["Quantas OS concluídas hoje?"];
 
 const FRAME_LOAD_TIMEOUT_MS = 30000;
 
@@ -188,63 +184,63 @@ export function BiCorteSergipeView() {
 
         <ReportWorkspace>
           <ReportFrameContainer ref={frameContainerRef}>
-          {isFrameLoading && !hasFrameError ? (
-            <FrameSkeleton
-              role="status"
-              aria-label="Carregando BI Corte Sergipe"
-            >
-              <SkeletonToolbar />
-              <SkeletonMetrics>
-                {Array.from({ length: 4 }).map((_, index) => (
-                  <SkeletonMetric key={index} />
-                ))}
-              </SkeletonMetrics>
-              <SkeletonCharts>
-                <SkeletonChart />
-                <SkeletonChart />
-              </SkeletonCharts>
-            </FrameSkeleton>
-          ) : null}
+            {isFrameLoading && !hasFrameError ? (
+              <FrameSkeleton
+                role="status"
+                aria-label="Carregando BI Corte Sergipe"
+              >
+                <SkeletonToolbar />
+                <SkeletonMetrics>
+                  {Array.from({ length: 4 }).map((_, index) => (
+                    <SkeletonMetric key={index} />
+                  ))}
+                </SkeletonMetrics>
+                <SkeletonCharts>
+                  <SkeletonChart />
+                  <SkeletonChart />
+                </SkeletonCharts>
+              </FrameSkeleton>
+            ) : null}
 
-          {hasFrameError ? (
-            <FrameError role="alert">
-              <ErrorIcon icon={faChartBar} aria-hidden="true" />
-              <ErrorTitle>Não foi possível carregar o relatório.</ErrorTitle>
-              <ErrorText>
-                Tente novamente ou abra o Power BI em uma nova aba.
-              </ErrorText>
-              <ErrorActions>
-                <SecondaryAction type="button" onClick={handleRetryFrame}>
-                  <FontAwesomeIcon icon={faRotateRight} aria-hidden="true" />
-                  Tentar novamente
-                </SecondaryAction>
-                <ExternalAction
-                  href={BI_CORTE_SERGIPE_URL}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <FontAwesomeIcon
-                    icon={faExternalLinkAlt}
-                    aria-hidden="true"
-                  />
-                  Abrir relatório em nova aba
-                </ExternalAction>
-              </ErrorActions>
-            </FrameError>
-          ) : (
-            <ReportFrame
-              key={frameKey}
-              title="BI Corte Sergipe"
-              src={BI_CORTE_SERGIPE_URL}
-              frameBorder="0"
-              allowFullScreen
-              onLoad={() => setIsFrameLoading(false)}
-              onError={() => {
-                setIsFrameLoading(false);
-                setHasFrameError(true);
-              }}
-            />
-          )}
+            {hasFrameError ? (
+              <FrameError role="alert">
+                <ErrorIcon icon={faChartBar} aria-hidden="true" />
+                <ErrorTitle>Não foi possível carregar o relatório.</ErrorTitle>
+                <ErrorText>
+                  Tente novamente ou abra o Power BI em uma nova aba.
+                </ErrorText>
+                <ErrorActions>
+                  <SecondaryAction type="button" onClick={handleRetryFrame}>
+                    <FontAwesomeIcon icon={faRotateRight} aria-hidden="true" />
+                    Tentar novamente
+                  </SecondaryAction>
+                  <ExternalAction
+                    href={BI_CORTE_SERGIPE_URL}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <FontAwesomeIcon
+                      icon={faExternalLinkAlt}
+                      aria-hidden="true"
+                    />
+                    Abrir relatório em nova aba
+                  </ExternalAction>
+                </ErrorActions>
+              </FrameError>
+            ) : (
+              <ReportFrame
+                key={frameKey}
+                title="BI Corte Sergipe"
+                src={BI_CORTE_SERGIPE_URL}
+                frameBorder="0"
+                allowFullScreen
+                onLoad={() => setIsFrameLoading(false)}
+                onError={() => {
+                  setIsFrameLoading(false);
+                  setHasFrameError(true);
+                }}
+              />
+            )}
           </ReportFrameContainer>
 
           <BiAssistantPanel

@@ -1,9 +1,9 @@
 const REQUEST_TIMEOUT_MS = 60000;
 
-const getWebhookUrl = () =>
-  String(process.env.REACT_APP_BI_CORTE_SERGIPE_WEBHOOK_URL || "").trim();
+const getWebhookUrl =
+  "https://rabid-yeah-unrest.ngrok-free.dev/webhook/corte-sergipe";
 
-export const isBiCorteSergipeChatbotConfigured = () => Boolean(getWebhookUrl());
+export const isBiCorteSergipeChatbotConfigured = () => Boolean(getWebhookUrl);
 
 const parseResponse = async (response) => {
   const rawBody = await response.text();
@@ -23,7 +23,7 @@ export const sendBiCorteSergipeMessage = async (
   { message, sessionId },
   externalSignal,
 ) => {
-  const webhookUrl = getWebhookUrl();
+  const webhookUrl = getWebhookUrl;
 
   if (!webhookUrl) {
     throw new Error("O webhook do assistente ainda nao foi configurado.");
@@ -77,7 +77,9 @@ export const sendBiCorteSergipeMessage = async (
     return data.answer.trim();
   } catch (error) {
     if (didTimeout) {
-      throw new Error("A consulta demorou mais que o esperado. Tente novamente.");
+      throw new Error(
+        "A consulta demorou mais que o esperado. Tente novamente.",
+      );
     }
 
     throw error;
