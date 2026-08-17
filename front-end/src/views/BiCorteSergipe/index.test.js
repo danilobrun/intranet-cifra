@@ -29,6 +29,26 @@ const mockedQuestionsAndAnswers = [
     "Qual ciclo está carregado na base?",
     "Está carregado o ciclo de julho, de 10/07/2026 a 08/08/2026.",
   ],
+  [
+    "Qual o dia que tivemos mais OS executadas e porque?",
+    "No dia 31 de julho de 2026 (sexta-feira), foram executadas 1.294 OS. A média de execução neste ciclo é de aproximadamente 926 OS por dia. O volume acima da média ocorreu porque houve mais religações que o normal: foram executadas cerca de 1.261 religações, enquanto a média diária do ciclo é de 418.",
+  ],
+  [
+    "Quantas suspensões foram geradas nesse ciclo?",
+    "- Total de OS: 15.284\n- Total concluídas: 11.926\n- Não concluídas: 3.358\n- Conclusão: 78,03%",
+  ],
+  [
+    "Quantas religações foram geradas nesse ciclo?",
+    "- Total de OS: 10.942\n- Total concluídas: 10.942\n- Não concluídas: 0\n- Conclusão: 100%",
+  ],
+  [
+    "Quantas substituição foram geradas nesse ciclo?",
+    "- Total de OS: 426\n- Total concluídas: 426\n- Não concluídas: 0\n- Conclusão: 100%",
+  ],
+  [
+    "Quantas supressão foram geradas nesse ciclo?",
+    "- Total de OS: 13\n- Total concluídas: 13\n- Não concluídas: 0\n- Conclusão: 100%",
+  ],
 ];
 
 const attentionTeams = [
@@ -82,6 +102,19 @@ const finishThinking = async (milliseconds = 2000) => {
     jest.advanceTimersByTime(milliseconds);
     await Promise.resolve();
   });
+};
+
+const expectMockedAnswer = (answer) => {
+  if (answer.startsWith("- ")) {
+    answer.split("\n").forEach((item) => {
+      expect(
+        screen.getByText(item.replace("- ", ""), { exact: false }),
+      ).toBeInTheDocument();
+    });
+    return;
+  }
+
+  expect(screen.getByText(answer)).toBeInTheDocument();
 };
 
 describe("BiCorteSergipeView", () => {
@@ -156,7 +189,7 @@ describe("BiCorteSergipeView", () => {
 
       await finishThinking(1);
 
-      expect(screen.getByText(answer)).toBeInTheDocument();
+      expectMockedAnswer(answer);
       expect(global.fetch).not.toHaveBeenCalled();
     },
   );
