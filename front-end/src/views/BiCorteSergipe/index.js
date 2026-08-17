@@ -9,15 +9,15 @@ import {
 import styled, { keyframes } from "styled-components";
 import { LayoutPortal } from "../../components/LayoutPortal";
 import {
-  isBiCorteSergipeChatbotConfigured,
-  sendBiCorteSergipeMessage,
-} from "../../services/BiCorteSergipeChatbot.service";
+  BI_CORTE_SERGIPE_RECOMMENDED_QUESTIONS,
+  getBiCorteSergipeMockedAnswer,
+} from "./BiCorteSergipeChatbot.mock";
 import { BiAssistantPanel } from "./BiAssistantPanel";
 
 export const BI_CORTE_SERGIPE_URL =
   "https://app.powerbi.com/view?r=eyJrIjoiMGM5MTkxY2UtMGJjMC00MmJhLTgxNTQtMzMxOTA2NmI0YjdiIiwidCI6IjNlNWViODEwLTc2ZjctNGM1ZS1iMmEyLTcxZDQ0NjIwNzY1NiJ9";
 
-const quickPrompts = ["Quantas OS concluídas hoje?"];
+const quickPrompts = BI_CORTE_SERGIPE_RECOMMENDED_QUESTIONS;
 
 const FRAME_LOAD_TIMEOUT_MS = 30000;
 
@@ -29,16 +29,6 @@ const initialMessages = [
   },
 ];
 
-const createSessionId = () => {
-  if (window.crypto?.randomUUID) {
-    return window.crypto.randomUUID();
-  }
-
-  return `bi-corte-sergipe-${Date.now()}-${Math.random()
-    .toString(36)
-    .slice(2)}`;
-};
-
 export function BiCorteSergipeView() {
   const [isFrameLoading, setIsFrameLoading] = useState(true);
   const [hasFrameError, setHasFrameError] = useState(false);
@@ -48,8 +38,6 @@ export function BiCorteSergipeView() {
   const [isAnswering, setIsAnswering] = useState(false);
   const frameContainerRef = useRef(null);
   const requestAbortRef = useRef(null);
-  const sessionIdRef = useRef(createSessionId());
-  const isConfigured = isBiCorteSergipeChatbotConfigured();
 
   useEffect(() => {
     return () => {
@@ -94,7 +82,6 @@ export function BiCorteSergipeView() {
   const handleClearConversation = () => {
     requestAbortRef.current?.abort();
     requestAbortRef.current = null;
-    sessionIdRef.current = createSessionId();
     setMessages(initialMessages);
     setDraft("");
     setIsAnswering(false);
@@ -104,7 +91,7 @@ export function BiCorteSergipeView() {
     event?.preventDefault();
     const content = draft.trim();
 
-    if (!content || isAnswering || !isConfigured) return;
+    if (!content || isAnswering) return;
 
     setMessages((currentMessages) => [
       ...currentMessages,
@@ -121,11 +108,10 @@ export function BiCorteSergipeView() {
     requestAbortRef.current = requestController;
 
     try {
-      const answer = await sendBiCorteSergipeMessage(
-        {
-          message: content,
-          sessionId: sessionIdRef.current,
-        },
+      // Integração com o n8n temporariamente pausada para a demonstração.
+      // const answer = await sendBiCorteSergipeMessage(...);
+      const answer = await getBiCorteSergipeMockedAnswer(
+        content,
         requestController.signal,
       );
 
@@ -246,7 +232,7 @@ export function BiCorteSergipeView() {
           <BiAssistantPanel
             draft={draft}
             isAnswering={isAnswering}
-            isConfigured={isConfigured}
+            isConfigured
             messages={messages}
             onClear={handleClearConversation}
             onDraftChange={(event) => setDraft(event.target.value)}
