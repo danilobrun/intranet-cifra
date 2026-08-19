@@ -103,7 +103,7 @@ export function PublicAuthLayout({ children }) {
                 />
                 <SlideOverlay>
                   <SlideTitle>
-                    Portais e informacoes internas em um so lugar
+                    Portais e informações internas em um so lugar
                   </SlideTitle>
                   <SlideText>
                     Acesse links, contratos e dados operacionais conforme o seu
