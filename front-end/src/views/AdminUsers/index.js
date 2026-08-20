@@ -41,7 +41,15 @@ export function AdminUsersView() {
         .includes(normalizedSearch) ||
       user.function?.toLowerCase().includes(normalizedSearch) ||
       user.state?.toLowerCase().includes(normalizedSearch) ||
-      user.lotation?.toLowerCase().includes(normalizedSearch)
+      user.lotation?.toLowerCase().includes(normalizedSearch) ||
+      (Array.isArray(user.roles) &&
+        user.roles.some(
+          (role) =>
+            role?.cargo?.toLowerCase().includes(normalizedSearch) ||
+            String(role?.code || "")
+              .toLowerCase()
+              .includes(normalizedSearch),
+        ))
     );
   });
 
